@@ -1,5 +1,5 @@
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { PayBitcoinButton } from "@/components/pay-bitcoin-button";
+import { DealButtons } from "@/components/pay-bitcoin-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -77,7 +77,7 @@ export default function App() {
           </nav>
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
-            <PayBitcoinButton className="hidden sm:inline-flex" />
+            <DealButtons className="hidden sm:flex sm:flex-row" />
           </div>
         </div>
       </header>
@@ -111,11 +111,11 @@ export default function App() {
             <p className="max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
               {copy.heroBody(formatUsd(DEAL_USD))}
             </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <PayBitcoinButton className="h-12 px-6 text-base" />
+            <div className="flex flex-col gap-3">
+              <DealButtons buttonClassName="h-12 px-6 text-base" />
               <a
                 href="#terms"
-                className="inline-flex h-12 items-center justify-center border border-primary/25 px-5 text-sm tracking-[0.16em] text-primary uppercase hover:bg-primary/10"
+                className="inline-flex h-12 w-fit items-center justify-center border border-primary/25 px-5 text-sm tracking-[0.16em] text-primary uppercase hover:bg-primary/10"
               >
                 {copy.readTerms}
               </a>
@@ -249,7 +249,7 @@ export default function App() {
               </p>
             </div>
             <div className="flex flex-col items-start justify-center gap-3">
-              <PayBitcoinButton className="h-12 px-6 text-base" />
+              <DealButtons buttonClassName="h-12 px-6 text-base" />
               <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
                 {BTC_ADDRESS}
               </p>

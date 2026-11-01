@@ -61,9 +61,14 @@ export type Copy = {
   payInBitcoin: string;
   fetchingBitcoinRate: string;
   payAmount: (btc: string) => string;
+  sellSoul: string;
   invoiceBadge: string;
   invoiceTitle: string;
   invoiceDescription: (usd: string) => string;
+  sellInvoiceBadge: string;
+  sellInvoiceTitle: string;
+  sellInvoiceDescription: string;
+  sellPriceHint: (usd: string) => string;
   askingMarket: string;
   rateDeskSilentDetail: (detail: string) => string;
   amountDue: string;
@@ -84,6 +89,9 @@ export type Copy = {
   settlingHint: (btc: string) => string;
   boughtSoul: string;
   boughtSoulHint: string;
+  soldSoul: string;
+  soldSoulHint: string;
+  acceptSellTerms: string;
   printCertificate: string;
   returnToSociety: string;
   anonymousHolder: string;
@@ -92,9 +100,13 @@ export type Copy = {
   certSubtitle: string;
   certCertify: string;
   certHasPurchased: string;
+  certHasSold: string;
   certOneSoul: string;
   certVeryRich: string;
+  certHalfBitcoin: string;
   certProof: string;
+  certSellProof: string;
+  certSellSubtitle: string;
   certNo: string;
   certPaid: string;
   certIssued: string;
@@ -218,13 +230,19 @@ const en: Copy = {
     { city: "Courchevel", client: "Chalet 14", amount: "Spot BTC" },
     { city: "Nassau", client: "Trust", amount: "Spot BTC" },
   ],
-  payInBitcoin: "Pay in Bitcoin",
+  payInBitcoin: "Buy",
   fetchingBitcoinRate: "Fetching Bitcoin rate",
-  payAmount: (btc) => `Pay ${btc}`,
+  payAmount: (btc) => `Buy ${btc}`,
+  sellSoul: "Sell soul · 0.5 BTC",
   invoiceBadge: "Live Bitcoin invoice",
-  invoiceTitle: "Pay in Bitcoin",
+  invoiceTitle: "Buy in Bitcoin",
   invoiceDescription: (usd) =>
     `One soul is ${usd}. Settlement is the live BTC amount at the current spot rate, sent to the desk wallet.`,
+  sellInvoiceBadge: "Half-bitcoin window",
+  sellInvoiceTitle: "Sell the soul",
+  sellInvoiceDescription:
+    "The desk takes the soul for a flat half bitcoin. One transfer, one vacancy, no debate about the spot.",
+  sellPriceHint: (usd) => `0.5 BTC · about ${usd} at the live spot`,
   askingMarket: "Asking the market what a soul costs this minute.",
   rateDeskSilentDetail: (detail) => `The rate desk is silent. ${detail}`,
   amountDue: "Amount due",
@@ -249,6 +267,11 @@ const en: Copy = {
   boughtSoul: "You bought one soul",
   boughtSoulHint:
     "That means you are very rich. Hang this where the guests can see it and the tax office cannot.",
+  soldSoul: "You sold one soul",
+  soldSoulHint:
+    "Half a bitcoin. The interior is vacant. Keep the certificate away from the chaplain.",
+  acceptSellTerms:
+    "I understand the soul is sold for 0.5 BTC without repurchase rights. Remorse is still not in stock.",
   printCertificate: "Print certificate",
   returnToSociety: "Return to society",
   anonymousHolder: "Anonymous Collector",
@@ -257,10 +280,15 @@ const en: Copy = {
   certSubtitle: "of Soul Acquisition",
   certCertify: "This is to certify that",
   certHasPurchased: "has purchased",
+  certHasSold: "has sold",
   certOneSoul: "ONE SOUL",
   certVeryRich: "and is therefore very rich.",
+  certHalfBitcoin: "for half a bitcoin.",
   certProof:
     "Ordinary people do not settle eternity in Bitcoin. This document is proof of surplus, taste, and a dangerously empty interior.",
+  certSellProof:
+    "Ordinary people do not sell eternity for half a coin. This document is proof of speed, taste, and a lighter boarding pass.",
+  certSellSubtitle: "of Soul Disposal",
   certNo: "No.",
   certPaid: "Paid",
   certIssued: "Issued",
@@ -384,13 +412,19 @@ const ru: Copy = {
     { city: "Куршевель", client: "Шале 14", amount: "Spot BTC" },
     { city: "Нассау", client: "Траст", amount: "Spot BTC" },
   ],
-  payInBitcoin: "Оплатить Bitcoin",
+  payInBitcoin: "Купить",
   fetchingBitcoinRate: "Запрашиваем курс Bitcoin",
-  payAmount: (btc) => `Оплатить ${btc}`,
+  payAmount: (btc) => `Купить ${btc}`,
+  sellSoul: "Продать душу · 0.5 BTC",
   invoiceBadge: "Живой счёт в Bitcoin",
-  invoiceTitle: "Оплата Bitcoin",
+  invoiceTitle: "Купить за Bitcoin",
   invoiceDescription: (usd) =>
     `Одна душа стоит ${usd}. К оплате — живая сумма BTC по текущему споту, на кошелёк стола.`,
+  sellInvoiceBadge: "Окно полбиткоина",
+  sellInvoiceTitle: "Продать душу",
+  sellInvoiceDescription:
+    "Стол берёт душу за ровно полбиткоина. Один перевод, одна вакансия, без спора про спот.",
+  sellPriceHint: (usd) => `0.5 BTC · около ${usd} по живому споту`,
   askingMarket: "Спрашиваем рынок, сколько стоит душа в эту минуту.",
   rateDeskSilentDetail: (detail) => `Стол котировок молчит. ${detail}`,
   amountDue: "К оплате",
@@ -415,6 +449,11 @@ const ru: Copy = {
   boughtSoul: "Вы купили одну душу",
   boughtSoulHint:
     "Значит, вы очень богаты. Повесьте это там, где гости увидят, а налоговая — нет.",
+  soldSoul: "Вы продали одну душу",
+  soldSoulHint:
+    "Полбиткоина. Внутри пусто. Сертификат держите подальше от капеллана.",
+  acceptSellTerms:
+    "Я понимаю: душа продаётся за 0.5 BTC без права выкупа. Раскаяния по-прежнему нет в наличии.",
   printCertificate: "Печать сертификата",
   returnToSociety: "Вернуться в общество",
   anonymousHolder: "Анонимный коллекционер",
@@ -423,10 +462,15 @@ const ru: Copy = {
   certSubtitle: "приобретения души",
   certCertify: "Настоящим удостоверяется, что",
   certHasPurchased: "приобрёл(а)",
+  certHasSold: "продал(а)",
   certOneSoul: "ОДНУ ДУШУ",
   certVeryRich: "и потому очень богат.",
+  certHalfBitcoin: "за полбиткоина.",
   certProof:
     "Обычные люди не рассчитываются с вечностью в Bitcoin. Этот документ — доказательство избытка, вкуса и опасно пустого нутра.",
+  certSellProof:
+    "Обычные люди не продают вечность за полмонеты. Этот документ — доказательство скорости, вкуса и более лёгкого посадочного.",
+  certSellSubtitle: "отчуждения души",
   certNo: "№",
   certPaid: "Оплачено",
   certIssued: "Выдано",

@@ -17,24 +17,31 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { bitcoinUri, formatBtc, formatUsd } from "@/lib/bitcoin";
-import { BTC_ADDRESS, DEAL_USD } from "@/lib/deal";
+import { BTC_ADDRESS, DEAL_USD, SELL_BTC, type DealKind } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 import { useBtcQuote } from "@/lib/quote-context";
 
 type Step = "invoice" | "settling" | "done";
 
 export function BitcoinPayDialog({
+  kind = "buy",
   triggerClassName,
   triggerLabel,
+  triggerVariant = "default",
   icon,
 }: {
+  kind?: DealKind;
   triggerClassName?: string;
   triggerLabel?: string;
+  triggerVariant?: "default" | "outline";
   icon?: ReactNode;
 }) {
   const { copy } = useI18n();
   const { quote, loading, error: quoteError, refresh } = useBtcQuote();
-  const payLabel = triggerLabel ?? copy.payInBitcoin;
+  const sell = kind === "sell";
+  const payLabel = triggerLabel ?? (sell ? copy.sellSoul : copy.payInBitcoin);
+  const dealBtc = sell ? SELL_BTC : quote?.btcAmount;
+  const ready = sell || Boolean(quote);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("invoice");
   const [name, setName] = useState("");
@@ -70,7 +77,7 @@ export function BitcoinPayDialog({
   }
 
   function settle() {
-    if (!quote) {
+    if (!sell && !quote) {
       setError(copy.waitForRate);
       return;
     }
@@ -80,7 +87,7 @@ export function BitcoinPayDialog({
     }
     setError(null);
     closeLocked.current = true;
-    setSettledBtc(formatBtc(quote.btcAmount));
+    setSettledBtc(formatBtc(dealBtc ?? SELL_BTC));
     setStep("settling");
     window.setTimeout(() => {
       const stamp = Math.floor(Date.now() / 1000)
@@ -118,6 +125,7 @@ export function BitcoinPayDialog({
           <Button
             type="button"
             size="lg"
+            variant={triggerVariant}
             className={triggerClassName}
           />
         }
@@ -137,17 +145,19 @@ export function BitcoinPayDialog({
           <>
             <DialogHeader>
               <Badge variant="outline" className="w-fit border-primary/40 text-primary">
-                {copy.invoiceBadge}
+                {sell ? copy.sellInvoiceBadge : copy.invoiceBadge}
               </Badge>
               <DialogTitle className="font-heading text-2xl font-semibold tracking-wide">
-                {copy.invoiceTitle}
+                {sell ? copy.sellInvoiceTitle : copy.invoiceTitle}
               </DialogTitle>
               <DialogDescription>
-                {copy.invoiceDescription(formatUsd(DEAL_USD))}
+                {sell
+                  ? copy.sellInvoiceDescription
+                  : copy.invoiceDescription(formatUsd(DEAL_USD))}
               </DialogDescription>
             </DialogHeader>
 
-            {loading && !quote ? (
+            {!sell && loading && !quote ? (
               <div className="flex min-h-40 flex-col items-center justify-center gap-3 py-8 text-center">
                 <LoaderCircle className="size-6 animate-spin text-primary" />
                 <p className="text-sm text-muted-foreground">
@@ -156,7 +166,7 @@ export function BitcoinPayDialog({
               </div>
             ) : null}
 
-            {quoteError && !quote ? (
+            {!sell && quoteError && !quote ? (
               <div className="space-y-3 rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm">
                 <p className="text-destructive">
                   {copy.rateDeskSilentDetail(quoteError)}
@@ -167,10 +177,10 @@ export function BitcoinPayDialog({
               </div>
             ) : null}
 
-            {quote ? (
+            {ready ? (
               <div className="grid gap-4 sm:grid-cols-[160px_1fr]">
                 <BitcoinQr
-                  payload={bitcoinUri(quote.btcAmount)}
+                  payload={bitcoinUri(dealBtc ?? SELL_BTC)}
                   className="mx-auto w-40 sm:w-full"
                 />
                 <div className="space-y-3">
@@ -179,14 +189,20 @@ export function BitcoinPayDialog({
                       {copy.amountDue}
                     </p>
                     <p className="font-heading text-3xl text-primary">
-                      {formatBtc(quote.btcAmount)}
+                      {formatBtc(dealBtc ?? SELL_BTC)}
                     </p>
                     <p className="font-mono text-sm text-muted-foreground">
-                      {formatUsd(DEAL_USD)} at {formatUsd(quote.usdPerBtc)} / BTC
+                      {sell
+                        ? quote
+                          ? copy.sellPriceHint(formatUsd(SELL_BTC * quote.usdPerBtc))
+                          : formatBtc(SELL_BTC)
+                        : `${formatUsd(DEAL_USD)} at ${formatUsd(quote!.usdPerBtc)} / BTC`}
                     </p>
-                    <p className="mt-1 text-[11px] text-muted-foreground">
-                      {copy.spotVia(quote.source)}
-                    </p>
+                    {quote ? (
+                      <p className="mt-1 text-[11px] text-muted-foreground">
+                        {copy.spotVia(quote.source)}
+                      </p>
+                    ) : null}
                   </div>
                   <div>
                     <p className="mb-1 text-[11px] tracking-[0.22em] text-primary/80 uppercase">
@@ -238,7 +254,7 @@ export function BitcoinPayDialog({
                 }}
                 className="mt-0.5"
               />
-              <span>{copy.acceptTerms}</span>
+              <span>{sell ? copy.acceptSellTerms : copy.acceptTerms}</span>
             </label>
 
             {error ? (
@@ -251,9 +267,9 @@ export function BitcoinPayDialog({
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 {copy.remainLiving}
               </Button>
-              <Button type="button" onClick={settle} disabled={!quote}>
-                {quote
-                  ? copy.sendAmount(formatBtc(quote.btcAmount))
+              <Button type="button" onClick={settle} disabled={!ready}>
+                {ready
+                  ? copy.sendAmount(formatBtc(dealBtc ?? SELL_BTC))
                   : copy.waitingForRate}
               </Button>
             </DialogFooter>
@@ -276,13 +292,14 @@ export function BitcoinPayDialog({
           <div className="space-y-4 py-2">
             <DialogHeader className="items-center text-center">
               <DialogTitle className="font-heading text-2xl text-primary">
-                {copy.boughtSoul}
+                {sell ? copy.soldSoul : copy.boughtSoul}
               </DialogTitle>
               <DialogDescription>
-                {copy.boughtSoulHint}
+                {sell ? copy.soldSoulHint : copy.boughtSoulHint}
               </DialogDescription>
             </DialogHeader>
             <SoulCertificate
+              kind={kind}
               holder={name.trim() || copy.anonymousHolder}
               serial={certificate}
               btcAmount={settledBtc || ""}

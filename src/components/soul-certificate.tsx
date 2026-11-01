@@ -1,3 +1,4 @@
+import type { DealKind } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 
 export function SoulCertificate({
@@ -5,11 +6,13 @@ export function SoulCertificate({
   serial,
   btcAmount,
   issuedAt,
+  kind = "buy",
 }: {
   holder: string;
   serial: string;
   btcAmount: string;
   issuedAt: Date;
+  kind?: DealKind;
 }) {
   const { copy } = useI18n();
   const date = new Intl.DateTimeFormat(copy.dateLocale, {
@@ -33,7 +36,7 @@ export function SoulCertificate({
           {copy.certTitle}
         </p>
         <p className="font-heading text-lg tracking-[0.18em] text-[#1e3a6e] uppercase">
-          {copy.certSubtitle}
+          {kind === "sell" ? copy.certSellSubtitle : copy.certSubtitle}
         </p>
 
         <p className="mt-5 text-[11px] tracking-[0.18em] text-[#6b4b2a] uppercase">
@@ -42,15 +45,17 @@ export function SoulCertificate({
         <p className="font-heading mt-2 text-3xl font-semibold text-[#7a1f2b] italic sm:text-4xl">
           {holder}
         </p>
-        <p className="mt-3 text-sm text-[#2a1a12]">{copy.certHasPurchased}</p>
+        <p className="mt-3 text-sm text-[#2a1a12]">
+          {kind === "sell" ? copy.certHasSold : copy.certHasPurchased}
+        </p>
         <p className="font-heading mt-1 text-4xl font-bold tracking-wide text-[#c9a227] sm:text-5xl">
           {copy.certOneSoul}
         </p>
         <p className="font-heading mt-4 text-2xl font-semibold text-[#1f6b4a] sm:text-3xl">
-          {copy.certVeryRich}
+          {kind === "sell" ? copy.certHalfBitcoin : copy.certVeryRich}
         </p>
         <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[#5c3d24]">
-          {copy.certProof}
+          {kind === "sell" ? copy.certSellProof : copy.certProof}
         </p>
 
         <div className="mt-6 flex flex-col items-center justify-center gap-5 sm:flex-row sm:gap-10">
