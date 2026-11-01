@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { Bitcoin, Check, Copy, LoaderCircle, ScrollText } from "lucide-react";
 
 import { BitcoinQr } from "@/components/bitcoin-qr";
@@ -39,8 +39,10 @@ export function BitcoinPayDialog({
   const [error, setError] = useState<string | null>(null);
   const [certificate, setCertificate] = useState("");
   const [settledBtc, setSettledBtc] = useState<string | null>(null);
+  const closeLocked = useRef(false);
 
   function reset() {
+    closeLocked.current = false;
     setStep("invoice");
     setName("");
     setAccepted(false);
@@ -71,6 +73,7 @@ export function BitcoinPayDialog({
       return;
     }
     setError(null);
+    closeLocked.current = true;
     setSettledBtc(formatBtc(quote.btcAmount));
     setStep("settling");
     window.setTimeout(() => {
@@ -80,20 +83,33 @@ export function BitcoinPayDialog({
         .toUpperCase();
       setCertificate(`AE-1666-${stamp}`);
       setStep("done");
+      closeLocked.current = false;
     }, 1600);
   }
 
   return (
     <Dialog
       open={open}
-      onOpenChange={(next) => {
+      disablePointerDismissal={step === "settling"}
+      onOpenChange={(next, details) => {
+        if (
+          !next &&
+          (closeLocked.current ||
+            step === "settling" ||
+            details.reason === "focus-out")
+        ) {
+          details.cancel();
+          return;
+        }
         setOpen(next);
         if (!next) reset();
       }}
     >
       <DialogTrigger
+        nativeButton
         render={
           <Button
+            type="button"
             size="lg"
             className={triggerClassName}
           />
@@ -225,10 +241,10 @@ export function BitcoinPayDialog({
             ) : null}
 
             <DialogFooter className="border-primary/10 bg-transparent">
-              <Button variant="outline" onClick={() => setOpen(false)}>
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Remain among the living
               </Button>
-              <Button onClick={settle} disabled={!quote}>
+              <Button type="button" onClick={settle} disabled={!quote}>
                 {quote ? `Send ${formatBtc(quote.btcAmount)}` : "Waiting for the rate"}
               </Button>
             </DialogFooter>
@@ -275,7 +291,9 @@ export function BitcoinPayDialog({
               <p className="mt-3 text-xs text-primary">{VAT_LINE}</p>
             </div>
             <DialogFooter className="border-primary/10 bg-transparent sm:justify-center">
-              <Button onClick={() => setOpen(false)}>Return to society</Button>
+              <Button type="button" onClick={() => setOpen(false)}>
+                Return to society
+              </Button>
             </DialogFooter>
           </div>
         ) : null}
