@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Bitcoin, Check, Copy, LoaderCircle, ScrollText } from "lucide-react";
 
@@ -17,12 +15,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { BTC_ADDRESS, DEAL_BTC, DEAL_USD } from "@/lib/deal";
+import { BTC_ADDRESS, DEAL_BTC, DEAL_USD, VAT_LINE } from "@/lib/deal";
 
 type Step = "invoice" | "settling" | "done";
 
 function formatUsd(value: number) {
-  return new Intl.NumberFormat("ru-RU", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
@@ -31,7 +29,7 @@ function formatUsd(value: number) {
 
 export function BitcoinPayDialog({
   triggerClassName,
-  triggerLabel = "Оплатить в Bitcoin",
+  triggerLabel = "Pay 1 Bitcoin",
 }: {
   triggerClassName?: string;
   triggerLabel?: string;
@@ -60,13 +58,13 @@ export function BitcoinPayDialog({
       setError(null);
       window.setTimeout(() => setCopied(false), 1800);
     } catch {
-      setError("Буфер обмена отказал. Перепишите адрес от руки — как в хороших семьях.");
+      setError("The clipboard declined. Copy the address by hand, as good families do.");
     }
   }
 
   function settle() {
     if (!accepted) {
-      setError("Поставьте галочку. Душа не уходит по устному поручению.");
+      setError("Tick the box. A soul does not leave on a verbal instruction.");
       return;
     }
     setError(null);
@@ -108,14 +106,14 @@ export function BitcoinPayDialog({
           <>
             <DialogHeader>
               <Badge variant="outline" className="w-fit border-primary/40 text-primary">
-                Ceremonial invoice
+                Private invoice
               </Badge>
               <DialogTitle className="font-heading text-2xl font-semibold tracking-wide">
-                Оплата в Bitcoin
+                Pay 1 Bitcoin
               </DialogTitle>
               <DialogDescription>
-                Сто тысяч долларов фиксируем как {DEAL_BTC} BTC. Курс вечный.
-                Настоящих монет мы не принимаем: это театр для тех, кто уже всё купил.
+                One soul. One bitcoin. The dollar figure is a courtesy for the family
+                office. Settlement is 1.00000000 BTC, fixed for eternity.
               </DialogDescription>
             </DialogHeader>
 
@@ -124,18 +122,16 @@ export function BitcoinPayDialog({
               <div className="space-y-3">
                 <div>
                   <p className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">
-                    Сумма
+                    Amount due
                   </p>
-                  <p className="font-heading text-3xl text-primary">
-                    {formatUsd(DEAL_USD)}
-                  </p>
+                  <p className="font-heading text-3xl text-primary">1 BTC</p>
                   <p className="font-mono text-sm text-muted-foreground">
-                    {DEAL_BTC} BTC · settlement only
+                    {DEAL_BTC} · {formatUsd(DEAL_USD)} reference
                   </p>
                 </div>
                 <div>
                   <p className="mb-1 text-[11px] tracking-[0.22em] text-primary/80 uppercase">
-                    Адрес (демо)
+                    Bitcoin address
                   </p>
                   <div className="flex items-start gap-2">
                     <code className="block flex-1 break-all rounded-md border border-primary/20 bg-black/40 px-2 py-2 font-mono text-[11px] leading-relaxed text-primary">
@@ -145,26 +141,30 @@ export function BitcoinPayDialog({
                       variant="outline"
                       size="icon"
                       onClick={copyAddress}
-                      aria-label="Скопировать адрес"
+                      aria-label="Copy Bitcoin address"
                     >
                       {copied ? <Check /> : <Copy />}
                     </Button>
                   </div>
                   {copied ? (
-                    <p className="mt-1 text-xs text-primary">Скопировано в карман смокинга.</p>
+                    <p className="mt-1 text-xs text-primary">Copied to the dinner jacket.</p>
                   ) : null}
                 </div>
               </div>
             </div>
 
+            <p className="border border-primary/20 bg-black/30 px-3 py-2 text-sm text-primary">
+              {VAT_LINE}
+            </p>
+
             <label className="grid gap-1.5">
               <span className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">
-                Как вас записать в книге
+                Name in the ledger
               </span>
               <Input
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                placeholder="Аноним / family office / яхта «Елена»"
+                placeholder="Anonymous / family office / yacht Elena"
                 className="h-10 bg-black/30"
               />
             </label>
@@ -179,8 +179,8 @@ export function BitcoinPayDialog({
                 className="mt-0.5"
               />
               <span>
-                Понимаю: душа уходит без права выкупа. Раскаяние — отдельный продукт
-                от $2.4M, и его всё равно не будет в наличии.
+                I understand the soul leaves without repurchase rights. Remorse is a
+                separate product from $2.4M, and it will not be in stock.
               </span>
             </label>
 
@@ -192,10 +192,10 @@ export function BitcoinPayDialog({
 
             <DialogFooter className="border-primary/10 bg-transparent">
               <Button variant="outline" onClick={() => setOpen(false)}>
-                Ещё поживу
+                Remain among the living
               </Button>
               <Button onClick={settle}>
-                Подтвердить перевод
+                Confirm 1 BTC
               </Button>
             </DialogFooter>
           </>
@@ -205,10 +205,10 @@ export function BitcoinPayDialog({
           <div className="flex min-h-64 flex-col items-center justify-center gap-4 py-10 text-center">
             <LoaderCircle className="size-8 animate-spin text-primary" />
             <DialogTitle className="font-heading text-2xl">
-              Сверяем мемпул с вечностью
+              Reconciling the mempool with eternity
             </DialogTitle>
             <DialogDescription>
-              Ваш хеш ещё тёплый. Не закрывайте вкладку — совесть уже в пути.
+              Your hash is still warm. Do not close the tab. Conscience is already in transit.
             </DialogDescription>
           </div>
         ) : null}
@@ -218,11 +218,11 @@ export function BitcoinPayDialog({
             <DialogHeader className="items-center text-center">
               <ScrollText className="size-8 text-primary" />
               <DialogTitle className="font-heading text-2xl">
-                Добро пожаловать в портфель
+                Welcome to the portfolio
               </DialogTitle>
               <DialogDescription>
-                {name.trim() || "Аноним"}, сделка закрыта по цене {formatUsd(DEAL_USD)}.
-                Вы легче ровно на одну душу и тяжелее на ноль сатоши: это была церемония.
+                {name.trim() || "Anonymous"}, the desk has closed at 1 BTC
+                ({formatUsd(DEAL_USD)} reference). You are lighter by one soul.
               </DialogDescription>
             </DialogHeader>
             <div className="rounded-md border border-primary/25 bg-black/30 px-4 py-5 text-center">
@@ -231,11 +231,12 @@ export function BitcoinPayDialog({
               </p>
               <p className="font-heading mt-2 text-3xl text-primary">{certificate}</p>
               <p className="mt-2 text-xs text-muted-foreground">
-                Храните номер рядом с офшорными бумагами. На таможне не показывают.
+                Keep the number with the offshore papers. Do not present it at customs.
               </p>
+              <p className="mt-3 text-xs text-primary">{VAT_LINE}</p>
             </div>
             <DialogFooter className="border-primary/10 bg-transparent sm:justify-center">
-              <Button onClick={() => setOpen(false)}>Вернуться в свет</Button>
+              <Button onClick={() => setOpen(false)}>Return to society</Button>
             </DialogFooter>
           </div>
         ) : null}

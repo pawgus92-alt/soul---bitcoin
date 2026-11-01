@@ -1,24 +1,20 @@
 # Maison Æternum
 
-Сатирический лендинг частного стола, который покупает души по фиксированной цене **$100 000**. Оплата — церемониальный счёт в Bitcoin. Тон: чёрный международный юмор для тех, кому совесть уже мешает в портфеле.
+A private-desk landing page that buys one soul for **1 Bitcoin** ($100,000 reference). Black international humor for people whose conscience already clutters the portfolio.
 
-Это шутка. Реальных платежей, кошельков и оферт нет.
+The Bitcoin checkout is ceremonial. There is no live wallet and no real offer.
 
-## Запуск
+VAT is not charged, because eternity has no jurisdiction.
+
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Откройте [http://127.0.0.1:43177](http://127.0.0.1:43177).
+Open [http://127.0.0.1:43177](http://127.0.0.1:43177).
 
-## Стек
+## Stack
 
 Vite, React, TypeScript, Tailwind CSS, shadcn/ui.
-
-## Что внутри
-
-- Одна позиция: душа за $100 000 / 1 BTC
-- Кнопка **Оплатить в Bitcoin** с демо-инвойсом, копированием адреса и сертификатом пустоты
-- Условия, инвентарь «что остаётся / что забираем» и тихие рекомендации клиентов

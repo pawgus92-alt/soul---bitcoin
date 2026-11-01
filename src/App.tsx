@@ -2,10 +2,10 @@ import { BitcoinPayDialog } from "@/components/bitcoin-pay-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { CITIES, KEEP, LEDGER, TAKE, TESTIMONIALS } from "@/lib/deal";
+import { CITIES, KEEP, LEDGER, TAKE, TESTIMONIALS, VAT_LINE } from "@/lib/deal";
 
 function formatUsd() {
-  return new Intl.NumberFormat("ru-RU", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
@@ -27,20 +27,20 @@ export default function App() {
           </a>
           <nav className="hidden items-center gap-6 text-[11px] tracking-[0.2em] text-muted-foreground uppercase md:flex">
             <a href="#terms" className="hover:text-primary">
-              Условия
+              Terms
             </a>
             <a href="#inventory" className="hover:text-primary">
-              Что остаётся
+              Inventory
             </a>
             <a href="#clients" className="hover:text-primary">
-              Клиенты
+              Clients
             </a>
             <a href="#contract" className="hover:text-primary">
-              Контракт
+              Contract
             </a>
           </nav>
           <BitcoinPayDialog
-            triggerLabel="Bitcoin"
+            triggerLabel="Pay 1 Bitcoin"
             triggerClassName="hidden sm:inline-flex"
           />
         </div>
@@ -71,30 +71,30 @@ export default function App() {
               {CITIES.join(" · ")}
             </p>
             <h1 className="font-heading max-w-xl text-5xl leading-[0.95] font-semibold text-balance sm:text-6xl md:text-7xl">
-              Продайте душу.
-              <span className="block text-primary">Сохраните яхту.</span>
+              Sell the soul.
+              <span className="block text-primary">Keep the yacht.</span>
             </h1>
             <p className="max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
-              Фиксированная цена для тех, кому совесть уже мешает в портфеле.
-              Мы не торгуемся, не берём процент и не задаём, зачем вам стало
-              легче дышать после совета директоров.
+              A fixed acquisition for people whose conscience already clutters the
+              portfolio. We do not negotiate, we take no percentage, and we do not
+              ask why the boardroom air got lighter.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <BitcoinPayDialog
                 triggerClassName="h-12 px-6 text-base"
-                triggerLabel="Оплатить в Bitcoin"
+                triggerLabel="Pay 1 Bitcoin"
               />
               <a
                 href="#terms"
                 className="inline-flex h-12 items-center justify-center border border-primary/25 px-5 text-sm tracking-[0.16em] text-primary uppercase hover:bg-primary/10"
               >
-                Читать условия
+                Read the terms
               </a>
             </div>
+            <p className="max-w-lg text-sm leading-6 text-primary">{VAT_LINE}</p>
             <p className="max-w-md text-xs leading-5 text-muted-foreground">
-              Банковский перевод оставлен для людей, которые ещё верят в
-              государства. Наличные пахнут моралью. Bitcoin — единственный
-              приличный язык в этой комнате.
+              Wire transfers remain for people who still believe in states. Cash
+              smells of morals. One bitcoin is the only decent language in this room.
             </p>
           </div>
 
@@ -104,24 +104,23 @@ export default function App() {
                 The only SKU
               </p>
               <CardTitle className="font-heading text-4xl font-semibold text-primary sm:text-5xl">
-                {formatUsd()}
+                1 BTC
               </CardTitle>
               <p className="font-mono text-sm text-muted-foreground">
-                1.00000000 BTC · курс фиксирован на вечность
+                {formatUsd()} reference · rate fixed for eternity
               </p>
             </CardHeader>
             <CardContent className="space-y-4 pt-1">
               <ul className="space-y-3 text-sm leading-6 text-muted-foreground">
-                <li>Одна душа. Без рассрочки и без семейного пакета.</li>
-                <li>Минимальный чек — сто тысяч. Это не цена. Это фильтр.</li>
-                <li>Возврат не предусмотрен. Раскаяние — платная опция.</li>
-                <li>НДС нет: у вечности нет юрисдикции.</li>
+                <li>One soul. No instalments. No family package.</li>
+                <li>Settlement is exactly 1.00000000 BTC. That is the filter.</li>
+                <li>No refunds. Remorse is a separate, overpriced product.</li>
+                <li>{VAT_LINE}</li>
               </ul>
               <Separator className="bg-primary/15" />
               <p className="text-xs leading-5 text-muted-foreground">
-                Мы не покупаем души среднего класса. Если вам нужно посчитать,
-                хватит ли ста тысяч, вам ещё рано. Приходите после первого
-                фонда.
+                We do not acquire middle-class souls. If you need to check whether
+                one bitcoin is affordable, you are early. Return after the first fund.
               </p>
             </CardContent>
           </Card>
@@ -132,18 +131,18 @@ export default function App() {
             {[
               {
                 step: "01",
-                title: "Назначьте себя",
-                text: "Имя, family office или борт. Анонимность сохраняем так же тщательно, как ваши офшоры.",
+                title: "Name yourself",
+                text: "A name, a family office, or a hull number. Discretion is kept as carefully as your offshore papers.",
               },
               {
                 step: "02",
-                title: "Оплатите в Bitcoin",
-                text: "Один перевод, один хеш, одна вечность. Курс круглый, чтобы ваш бухгалтер не страдал лишний раз.",
+                title: "Pay 1 Bitcoin",
+                text: "One transfer, one hash, one eternity. A round number, so the accountant does not suffer twice.",
               },
               {
                 step: "03",
-                title: "Получите вакансию внутри",
-                text: "Сертификат пустоты. Носите его рядом с паспортом второго гражданства.",
+                title: "Receive the vacancy",
+                text: "A certificate of emptiness. Keep it beside the second passport.",
               },
             ].map((item) => (
               <div key={item.step} className="space-y-3">
@@ -168,7 +167,7 @@ export default function App() {
               <p className="text-[11px] tracking-[0.24em] text-primary/80 uppercase">
                 Assets retained
               </p>
-              <CardTitle className="font-heading text-3xl">Что остаётся вам</CardTitle>
+              <CardTitle className="font-heading text-3xl">What you keep</CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
               {KEEP.map((item) => (
@@ -186,7 +185,7 @@ export default function App() {
               <p className="text-[11px] tracking-[0.24em] text-primary/80 uppercase">
                 Assets acquired
               </p>
-              <CardTitle className="font-heading text-3xl">Что забираем мы</CardTitle>
+              <CardTitle className="font-heading text-3xl">What we take</CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
               {TAKE.map((item) => (
@@ -207,7 +206,7 @@ export default function App() {
               Quiet references
             </p>
             <h2 className="font-heading mt-2 max-w-xl text-4xl sm:text-5xl">
-              Клиенты, которых нельзя называть вслух
+              Clients who cannot be named aloud
             </h2>
             <div className="mt-10 grid gap-6 md:grid-cols-3">
               {TESTIMONIALS.map((item) => (
@@ -235,27 +234,23 @@ export default function App() {
                 Closing
               </p>
               <h2 className="font-heading text-4xl sm:text-5xl">
-                Контракт на одну вечность
+                A contract for one eternity
               </h2>
               <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                Нажимая кнопку, вы не покупаете спасение. Вы продаёте единственную
-                вещь, которую нельзя показать гостям на яхте. Мы берём её за сто
-                тысяч, потому что больше — vulgar, меньше — несерьёзно.
+                You are not buying salvation. You are selling the one thing that
+                cannot be shown to guests on the boat. The price is one bitcoin
+                because more is vulgar and less is unserious.
               </p>
-              <p className="max-w-xl text-xs leading-5 text-muted-foreground">
-                Это сатирический стол. Реальных биткоинов, душ и оферт дьявола
-                здесь нет. Если вы искали настоящий ад, он обычно начинается с
-                семейного офиса и плохого юриста.
-              </p>
+              <p className="max-w-xl text-sm leading-6 text-primary">{VAT_LINE}</p>
             </div>
             <div className="flex flex-col items-start justify-center gap-3">
               <BitcoinPayDialog
                 triggerClassName="h-12 px-6 text-base"
-                triggerLabel="Оплатить в Bitcoin"
+                triggerLabel="Pay 1 Bitcoin"
               />
               <p className="max-w-xs text-xs text-muted-foreground">
-                Счёт церемониальный. Адрес кошелька — бутафория. Пустота настоящая
-                только если вы сами её принесёте.
+                Settlement is one bitcoin. The address is ceremonial. The vacancy
+                is real only if you bring it yourself.
               </p>
             </div>
           </div>
@@ -265,7 +260,7 @@ export default function App() {
       <footer className="border-t border-primary/15">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-5 py-8 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>Maison Æternum · Private Acquisition Desk · Est. 1666</p>
-          <p>Не является офертой. Не является религией. Является плохим вкусом высокого полёта.</p>
+          <p>{VAT_LINE}</p>
         </div>
       </footer>
     </div>
