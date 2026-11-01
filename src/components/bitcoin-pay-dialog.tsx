@@ -17,21 +17,24 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { bitcoinUri, formatBtc, formatUsd } from "@/lib/bitcoin";
-import { BTC_ADDRESS, DEAL_USD, VAT_LINE } from "@/lib/deal";
+import { BTC_ADDRESS, DEAL_USD } from "@/lib/deal";
+import { useI18n } from "@/lib/i18n";
 import { useBtcQuote } from "@/lib/quote-context";
 
 type Step = "invoice" | "settling" | "done";
 
 export function BitcoinPayDialog({
   triggerClassName,
-  triggerLabel = "Pay in Bitcoin",
+  triggerLabel,
   icon,
 }: {
   triggerClassName?: string;
   triggerLabel?: string;
   icon?: ReactNode;
 }) {
+  const { copy } = useI18n();
   const { quote, loading, error: quoteError, refresh } = useBtcQuote();
+  const payLabel = triggerLabel ?? copy.payInBitcoin;
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("invoice");
   const [name, setName] = useState("");
@@ -62,17 +65,17 @@ export function BitcoinPayDialog({
       setError(null);
       window.setTimeout(() => setCopied(false), 1800);
     } catch {
-      setError("The clipboard declined. Copy the address by hand, as good families do.");
+      setError(copy.clipboardDeclined);
     }
   }
 
   function settle() {
     if (!quote) {
-      setError("Wait for the live Bitcoin rate before sending.");
+      setError(copy.waitForRate);
       return;
     }
     if (!accepted) {
-      setError("Tick the box. A soul does not leave on a verbal instruction.");
+      setError(copy.tickTheBox);
       return;
     }
     setError(null);
@@ -120,7 +123,7 @@ export function BitcoinPayDialog({
         }
       >
         {icon ?? <Bitcoin data-icon="inline-start" />}
-        {triggerLabel}
+        {payLabel}
       </DialogTrigger>
       <DialogContent
         className={
@@ -134,14 +137,13 @@ export function BitcoinPayDialog({
           <>
             <DialogHeader>
               <Badge variant="outline" className="w-fit border-primary/40 text-primary">
-                Live Bitcoin invoice
+                {copy.invoiceBadge}
               </Badge>
               <DialogTitle className="font-heading text-2xl font-semibold tracking-wide">
-                Pay in Bitcoin
+                {copy.invoiceTitle}
               </DialogTitle>
               <DialogDescription>
-                One soul is {formatUsd(DEAL_USD)}. Settlement is the live BTC amount
-                at the current spot rate, sent to the desk wallet.
+                {copy.invoiceDescription(formatUsd(DEAL_USD))}
               </DialogDescription>
             </DialogHeader>
 
@@ -149,7 +151,7 @@ export function BitcoinPayDialog({
               <div className="flex min-h-40 flex-col items-center justify-center gap-3 py-8 text-center">
                 <LoaderCircle className="size-6 animate-spin text-primary" />
                 <p className="text-sm text-muted-foreground">
-                  Asking the market what a soul costs this minute.
+                  {copy.askingMarket}
                 </p>
               </div>
             ) : null}
@@ -157,10 +159,10 @@ export function BitcoinPayDialog({
             {quoteError && !quote ? (
               <div className="space-y-3 rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm">
                 <p className="text-destructive">
-                  The rate desk is silent. {quoteError}
+                  {copy.rateDeskSilentDetail(quoteError)}
                 </p>
                 <Button variant="outline" onClick={refresh}>
-                  Fetch the rate again
+                  {copy.fetchRateAgain}
                 </Button>
               </div>
             ) : null}
@@ -174,7 +176,7 @@ export function BitcoinPayDialog({
                 <div className="space-y-3">
                   <div>
                     <p className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">
-                      Amount due
+                      {copy.amountDue}
                     </p>
                     <p className="font-heading text-3xl text-primary">
                       {formatBtc(quote.btcAmount)}
@@ -183,12 +185,12 @@ export function BitcoinPayDialog({
                       {formatUsd(DEAL_USD)} at {formatUsd(quote.usdPerBtc)} / BTC
                     </p>
                     <p className="mt-1 text-[11px] text-muted-foreground">
-                      Spot via {quote.source}
+                      {copy.spotVia(quote.source)}
                     </p>
                   </div>
                   <div>
                     <p className="mb-1 text-[11px] tracking-[0.22em] text-primary/80 uppercase">
-                      Bitcoin address
+                      {copy.bitcoinAddress}
                     </p>
                     <div className="flex items-start gap-2">
                       <code className="block flex-1 break-all rounded-md border border-primary/20 bg-black/40 px-2 py-2 font-mono text-[11px] leading-relaxed text-primary">
@@ -198,13 +200,13 @@ export function BitcoinPayDialog({
                         variant="outline"
                         size="icon"
                         onClick={copyAddress}
-                        aria-label="Copy Bitcoin address"
+                        aria-label={copy.copyAddress}
                       >
                         {copied ? <Check /> : <Copy />}
                       </Button>
                     </div>
                     {copied ? (
-                      <p className="mt-1 text-xs text-primary">Copied to the dinner jacket.</p>
+                      <p className="mt-1 text-xs text-primary">{copy.copiedJacket}</p>
                     ) : null}
                   </div>
                 </div>
@@ -212,17 +214,17 @@ export function BitcoinPayDialog({
             ) : null}
 
             <p className="border border-primary/20 bg-black/30 px-3 py-2 text-sm text-primary">
-              {VAT_LINE}
+              {copy.vatLine}
             </p>
 
             <label className="grid gap-1.5">
               <span className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">
-                Name in the ledger
+                {copy.ledgerName}
               </span>
               <Input
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                placeholder="Anonymous / family office / yacht Elena"
+                placeholder={copy.ledgerPlaceholder}
                 className="h-10 bg-black/30"
               />
             </label>
@@ -236,10 +238,7 @@ export function BitcoinPayDialog({
                 }}
                 className="mt-0.5"
               />
-              <span>
-                I understand the soul leaves without repurchase rights. Remorse is a
-                separate product from $2.4M, and it will not be in stock.
-              </span>
+              <span>{copy.acceptTerms}</span>
             </label>
 
             {error ? (
@@ -250,10 +249,12 @@ export function BitcoinPayDialog({
 
             <DialogFooter className="border-primary/10 bg-transparent">
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Remain among the living
+                {copy.remainLiving}
               </Button>
               <Button type="button" onClick={settle} disabled={!quote}>
-                {quote ? `Send ${formatBtc(quote.btcAmount)}` : "Waiting for the rate"}
+                {quote
+                  ? copy.sendAmount(formatBtc(quote.btcAmount))
+                  : copy.waitingForRate}
               </Button>
             </DialogFooter>
           </>
@@ -263,11 +264,10 @@ export function BitcoinPayDialog({
           <div className="flex min-h-64 flex-col items-center justify-center gap-4 py-10 text-center">
             <LoaderCircle className="size-8 animate-spin text-primary" />
             <DialogTitle className="font-heading text-2xl">
-              Watching the mempool
+              {copy.watchingMempool}
             </DialogTitle>
             <DialogDescription>
-              Send {settledBtc} to the desk wallet. Do not close the tab while the
-              hash is still warm.
+              {copy.settlingHint(settledBtc || "")}
             </DialogDescription>
           </div>
         ) : null}
@@ -276,15 +276,14 @@ export function BitcoinPayDialog({
           <div className="space-y-4 py-2">
             <DialogHeader className="items-center text-center">
               <DialogTitle className="font-heading text-2xl text-primary">
-                You bought one soul
+                {copy.boughtSoul}
               </DialogTitle>
               <DialogDescription>
-                That means you are very rich. Hang this where the guests can see it
-                and the tax office cannot.
+                {copy.boughtSoulHint}
               </DialogDescription>
             </DialogHeader>
             <SoulCertificate
-              holder={name.trim() || "Anonymous Collector"}
+              holder={name.trim() || copy.anonymousHolder}
               serial={certificate}
               btcAmount={settledBtc || ""}
               issuedAt={issuedAt ?? new Date()}
@@ -292,10 +291,10 @@ export function BitcoinPayDialog({
             <DialogFooter className="border-primary/10 bg-transparent sm:justify-end">
               <Button type="button" variant="outline" onClick={() => window.print()}>
                 <Printer data-icon="inline-start" />
-                Print certificate
+                {copy.printCertificate}
               </Button>
               <Button type="button" onClick={() => setOpen(false)}>
-                Return to society
+                {copy.returnToSociety}
               </Button>
             </DialogFooter>
           </div>

@@ -4,11 +4,13 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 
 import { fetchBtcQuote, type BtcQuote } from "@/lib/bitcoin";
+import { useI18n } from "@/lib/i18n";
 
 type QuoteState = {
   quote: BtcQuote | null;
@@ -20,9 +22,12 @@ type QuoteState = {
 const QuoteContext = createContext<QuoteState | null>(null);
 
 export function QuoteProvider({ children }: { children: ReactNode }) {
+  const { copy } = useI18n();
   const [quote, setQuote] = useState<BtcQuote | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const fallbackError = useRef(`${copy.rateDeskSilent} ${copy.fetchRateAgain}.`);
+  fallbackError.current = `${copy.rateDeskSilent} ${copy.fetchRateAgain}.`;
 
   const refresh = useCallback(() => {
     const request = fetchBtcQuote();
@@ -35,9 +40,7 @@ export function QuoteProvider({ children }: { children: ReactNode }) {
       })
       .catch((reason: unknown) => {
         setError(
-          reason instanceof Error
-            ? reason.message
-            : "The rate desk is silent. Refresh and try again.",
+          reason instanceof Error ? reason.message : fallbackError.current,
         );
       })
       .finally(() => {

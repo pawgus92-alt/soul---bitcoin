@@ -2,6 +2,7 @@ import { Bitcoin, LoaderCircle } from "lucide-react";
 
 import { BitcoinPayDialog } from "@/components/bitcoin-pay-dialog";
 import { formatBtc } from "@/lib/bitcoin";
+import { useI18n } from "@/lib/i18n";
 import { useBtcQuote } from "@/lib/quote-context";
 
 export function PayBitcoinButton({
@@ -9,12 +10,13 @@ export function PayBitcoinButton({
 }: {
   className?: string;
 }) {
+  const { copy } = useI18n();
   const { quote, loading } = useBtcQuote();
   const label = quote
-    ? `Pay ${formatBtc(quote.btcAmount)}`
+    ? copy.payAmount(formatBtc(quote.btcAmount))
     : loading
-      ? "Fetching Bitcoin rate"
-      : "Pay in Bitcoin";
+      ? copy.fetchingBitcoinRate
+      : copy.payInBitcoin;
 
   return (
     <BitcoinPayDialog
