@@ -263,6 +263,10 @@ export default function App() {
           <p>{copy.footerDesk}</p>
           <p>{copy.vatLine}</p>
         </div>
+        <p className="mx-auto max-w-6xl px-5 pb-8 text-center text-[11px] leading-5 text-muted-foreground">
+          © All rights reserved! The fundamental set of rules concerning the
+          attainment of souls and the greater good!
+        </p>
       </footer>
     </div>
   );
