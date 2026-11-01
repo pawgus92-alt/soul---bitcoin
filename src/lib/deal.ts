@@ -1,18 +1,17 @@
 export const DEAL_USD = 100_000;
-export const DEAL_BTC = "1.00000000";
-export const BTC_ADDRESS = "bc1qDEMOAETERNUMSOULDESK1666NOTREAL0000";
+export const BTC_ADDRESS = "bc1q5v3rtce5zrwuw4vvk7v705v5qdrgqj2xuxgsnj";
 export const VAT_LINE =
   "VAT is not charged, because eternity has no jurisdiction.";
 
 export const CITIES = ["Geneva", "London", "Dubai", "Moscow", "Nassau"] as const;
 
 export const LEDGER = [
-  { city: "Geneva", client: "Family office", amount: "1.00000000 BTC" },
-  { city: "Mayfair", client: "Anonymous", amount: "1.00000000 BTC" },
-  { city: "Dubai", client: "Yacht desk", amount: "1.00000000 BTC" },
-  { city: "Moscow", client: "Private", amount: "1.00000000 BTC" },
-  { city: "Courchevel", client: "Chalet 14", amount: "1.00000000 BTC" },
-  { city: "Nassau", client: "Trust", amount: "1.00000000 BTC" },
+  { city: "Geneva", client: "Family office", amount: "Spot BTC" },
+  { city: "Mayfair", client: "Anonymous", amount: "Spot BTC" },
+  { city: "Dubai", client: "Yacht desk", amount: "Spot BTC" },
+  { city: "Moscow", client: "Private", amount: "Spot BTC" },
+  { city: "Courchevel", client: "Chalet 14", amount: "Spot BTC" },
+  { city: "Nassau", client: "Trust", amount: "Spot BTC" },
 ] as const;
 
 export const KEEP = [

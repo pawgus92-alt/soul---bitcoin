@@ -14,6 +14,13 @@ export default defineConfig({
     host: "127.0.0.1",
     port: 43177,
     strictPort: true,
+    proxy: {
+      "/api/btc-usd": {
+        target: "https://api.coinbase.com",
+        changeOrigin: true,
+        rewrite: () => "/v2/prices/BTC-USD/spot",
+      },
+    },
   },
   preview: {
     host: "127.0.0.1",

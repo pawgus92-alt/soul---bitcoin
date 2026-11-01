@@ -1,8 +1,10 @@
 # Maison Æternum
 
-A private-desk landing page that buys one soul for **1 Bitcoin** ($100,000 reference). Black international humor for people whose conscience already clutters the portfolio.
+A private-desk landing page that buys one soul for **$100,000**, settled in Bitcoin at the live spot rate.
 
-The Bitcoin checkout is ceremonial. There is no live wallet and no real offer.
+Payment goes to:
+
+`bc1q5v3rtce5zrwuw4vvk7v705v5qdrgqj2xuxgsnj`
 
 VAT is not charged, because eternity has no jurisdiction.
 
@@ -17,4 +19,4 @@ Open [http://127.0.0.1:43177](http://127.0.0.1:43177).
 
 ## Stack
 
-Vite, React, TypeScript, Tailwind CSS, shadcn/ui.
+Vite, React, TypeScript, Tailwind CSS, shadcn/ui. The BTC/USD rate is fetched from Coinbase, with CoinGecko as fallback.

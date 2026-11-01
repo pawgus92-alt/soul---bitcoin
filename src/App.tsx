@@ -1,18 +1,46 @@
-import { BitcoinPayDialog } from "@/components/bitcoin-pay-dialog";
+import { PayBitcoinButton } from "@/components/pay-bitcoin-button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { CITIES, KEEP, LEDGER, TAKE, TESTIMONIALS, VAT_LINE } from "@/lib/deal";
+import { formatBtc, formatUsd } from "@/lib/bitcoin";
+import { CITIES, DEAL_USD, KEEP, LEDGER, TAKE, TESTIMONIALS, VAT_LINE } from "@/lib/deal";
+import { useBtcQuote } from "@/lib/quote-context";
 
-function formatUsd() {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(100_000);
+function LivePrice() {
+  const { quote, loading, error, refresh } = useBtcQuote();
+
+  if (loading && !quote) {
+    return (
+      <p className="font-mono text-sm text-muted-foreground">
+        Fetching the live Bitcoin rate…
+      </p>
+    );
+  }
+
+  if (error && !quote) {
+    return (
+      <div className="space-y-2">
+        <p className="text-sm text-destructive">The rate desk is silent.</p>
+        <Button variant="outline" size="sm" onClick={refresh}>
+          Fetch the rate again
+        </Button>
+      </div>
+    );
+  }
+
+  if (!quote) return null;
+
+  return (
+    <p className="font-mono text-sm text-muted-foreground">
+      {formatUsd(DEAL_USD)} ÷ {formatUsd(quote.usdPerBtc)} · {quote.source} spot
+    </p>
+  );
 }
 
 export default function App() {
+  const { quote } = useBtcQuote();
+
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <header className="sticky top-0 z-40 border-b border-primary/15 bg-background/80 backdrop-blur-md">
@@ -39,10 +67,7 @@ export default function App() {
               Contract
             </a>
           </nav>
-          <BitcoinPayDialog
-            triggerLabel="Pay 1 Bitcoin"
-            triggerClassName="hidden sm:inline-flex"
-          />
+          <PayBitcoinButton className="hidden sm:inline-flex" />
         </div>
       </header>
 
@@ -75,15 +100,12 @@ export default function App() {
               <span className="block text-primary">Keep the yacht.</span>
             </h1>
             <p className="max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
-              A fixed acquisition for people whose conscience already clutters the
-              portfolio. We do not negotiate, we take no percentage, and we do not
-              ask why the boardroom air got lighter.
+              {formatUsd(DEAL_USD)} at the live Bitcoin spot rate. We do not
+              negotiate, we take no percentage, and we do not ask why the
+              boardroom air got lighter.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <BitcoinPayDialog
-                triggerClassName="h-12 px-6 text-base"
-                triggerLabel="Pay 1 Bitcoin"
-              />
+              <PayBitcoinButton className="h-12 px-6 text-base" />
               <a
                 href="#terms"
                 className="inline-flex h-12 items-center justify-center border border-primary/25 px-5 text-sm tracking-[0.16em] text-primary uppercase hover:bg-primary/10"
@@ -94,7 +116,8 @@ export default function App() {
             <p className="max-w-lg text-sm leading-6 text-primary">{VAT_LINE}</p>
             <p className="max-w-md text-xs leading-5 text-muted-foreground">
               Wire transfers remain for people who still believe in states. Cash
-              smells of morals. One bitcoin is the only decent language in this room.
+              smells of morals. Bitcoin at the spot rate is the only decent
+              language in this room.
             </p>
           </div>
 
@@ -104,23 +127,25 @@ export default function App() {
                 The only SKU
               </p>
               <CardTitle className="font-heading text-4xl font-semibold text-primary sm:text-5xl">
-                1 BTC
+                {quote ? formatBtc(quote.btcAmount) : formatUsd(DEAL_USD)}
               </CardTitle>
-              <p className="font-mono text-sm text-muted-foreground">
-                {formatUsd()} reference · rate fixed for eternity
-              </p>
+              <LivePrice />
             </CardHeader>
             <CardContent className="space-y-4 pt-1">
               <ul className="space-y-3 text-sm leading-6 text-muted-foreground">
                 <li>One soul. No instalments. No family package.</li>
-                <li>Settlement is exactly 1.00000000 BTC. That is the filter.</li>
+                <li>
+                  Settlement is {formatUsd(DEAL_USD)} converted at the live BTC/USD
+                  spot rate.
+                </li>
                 <li>No refunds. Remorse is a separate, overpriced product.</li>
                 <li>{VAT_LINE}</li>
               </ul>
               <Separator className="bg-primary/15" />
               <p className="text-xs leading-5 text-muted-foreground">
                 We do not acquire middle-class souls. If you need to check whether
-                one bitcoin is affordable, you are early. Return after the first fund.
+                {` ${formatUsd(DEAL_USD)} `}
+                is affordable, you are early. Return after the first fund.
               </p>
             </CardContent>
           </Card>
@@ -136,8 +161,8 @@ export default function App() {
               },
               {
                 step: "02",
-                title: "Pay 1 Bitcoin",
-                text: "One transfer, one hash, one eternity. A round number, so the accountant does not suffer twice.",
+                title: "Pay the spot Bitcoin",
+                text: "The invoice is $100,000 divided by the live BTC price. One transfer, one hash, one eternity.",
               },
               {
                 step: "03",
@@ -238,19 +263,15 @@ export default function App() {
               </h2>
               <p className="max-w-xl text-sm leading-6 text-muted-foreground">
                 You are not buying salvation. You are selling the one thing that
-                cannot be shown to guests on the boat. The price is one bitcoin
-                because more is vulgar and less is unserious.
+                cannot be shown to guests on the boat. The price is{" "}
+                {formatUsd(DEAL_USD)}, paid in bitcoin at the live spot rate.
               </p>
               <p className="max-w-xl text-sm leading-6 text-primary">{VAT_LINE}</p>
             </div>
             <div className="flex flex-col items-start justify-center gap-3">
-              <BitcoinPayDialog
-                triggerClassName="h-12 px-6 text-base"
-                triggerLabel="Pay 1 Bitcoin"
-              />
-              <p className="max-w-xs text-xs text-muted-foreground">
-                Settlement is one bitcoin. The address is ceremonial. The vacancy
-                is real only if you bring it yourself.
+              <PayBitcoinButton className="h-12 px-6 text-base" />
+              <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
+                bc1q5v3rtce5zrwuw4vvk7v705v5qdrgqj2xuxgsnj
               </p>
             </div>
           </div>

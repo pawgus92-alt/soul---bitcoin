@@ -2,10 +2,13 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import App from "./App";
+import { QuoteProvider } from "./lib/quote-context";
 import "./app/globals.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <QuoteProvider>
+      <App />
+    </QuoteProvider>
   </StrictMode>,
 );
