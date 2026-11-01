@@ -1,7 +1,8 @@
 import { useRef, useState, type ReactNode } from "react";
-import { Bitcoin, Check, Copy, LoaderCircle, ScrollText } from "lucide-react";
+import { Bitcoin, Check, Copy, LoaderCircle, Printer } from "lucide-react";
 
 import { BitcoinQr } from "@/components/bitcoin-qr";
+import { SoulCertificate } from "@/components/soul-certificate";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -39,6 +40,7 @@ export function BitcoinPayDialog({
   const [error, setError] = useState<string | null>(null);
   const [certificate, setCertificate] = useState("");
   const [settledBtc, setSettledBtc] = useState<string | null>(null);
+  const [issuedAt, setIssuedAt] = useState<Date | null>(null);
   const closeLocked = useRef(false);
 
   function reset() {
@@ -50,6 +52,7 @@ export function BitcoinPayDialog({
     setError(null);
     setCertificate("");
     setSettledBtc(null);
+    setIssuedAt(null);
   }
 
   async function copyAddress() {
@@ -82,6 +85,7 @@ export function BitcoinPayDialog({
         .slice(-6)
         .toUpperCase();
       setCertificate(`AE-1666-${stamp}`);
+      setIssuedAt(new Date());
       setStep("done");
       closeLocked.current = false;
     }, 1600);
@@ -119,7 +123,11 @@ export function BitcoinPayDialog({
         {triggerLabel}
       </DialogTrigger>
       <DialogContent
-        className="max-h-[90vh] overflow-y-auto border border-primary/25 bg-[#14110d] sm:max-w-lg"
+        className={
+          step === "done"
+            ? "max-h-[92vh] overflow-y-auto border border-primary/25 bg-[#14110d] sm:max-w-2xl"
+            : "max-h-[90vh] overflow-y-auto border border-primary/25 bg-[#14110d] sm:max-w-lg"
+        }
         showCloseButton
       >
         {step === "invoice" ? (
@@ -267,30 +275,25 @@ export function BitcoinPayDialog({
         {step === "done" ? (
           <div className="space-y-4 py-2">
             <DialogHeader className="items-center text-center">
-              <ScrollText className="size-8 text-primary" />
-              <DialogTitle className="font-heading text-2xl">
-                Welcome to the portfolio
+              <DialogTitle className="font-heading text-2xl text-primary">
+                You bought one soul
               </DialogTitle>
               <DialogDescription>
-                {name.trim() || "Anonymous"}, the invoice is {settledBtc} for{" "}
-                {formatUsd(DEAL_USD)} at the live spot rate. Send it to the address
-                you copied.
+                That means you are very rich. Hang this where the guests can see it
+                and the tax office cannot.
               </DialogDescription>
             </DialogHeader>
-            <div className="rounded-md border border-primary/25 bg-black/30 px-4 py-5 text-center">
-              <p className="text-[11px] tracking-[0.28em] text-primary/80 uppercase">
-                Certificate of vacancy
-              </p>
-              <p className="font-heading mt-2 text-3xl text-primary">{certificate}</p>
-              <p className="mt-3 break-all font-mono text-[11px] text-primary">
-                {BTC_ADDRESS}
-              </p>
-              <p className="mt-2 text-xs text-muted-foreground">
-                Keep the number with the offshore papers. Do not present it at customs.
-              </p>
-              <p className="mt-3 text-xs text-primary">{VAT_LINE}</p>
-            </div>
-            <DialogFooter className="border-primary/10 bg-transparent sm:justify-center">
+            <SoulCertificate
+              holder={name.trim() || "Anonymous Collector"}
+              serial={certificate}
+              btcAmount={settledBtc || ""}
+              issuedAt={issuedAt ?? new Date()}
+            />
+            <DialogFooter className="border-primary/10 bg-transparent sm:justify-end">
+              <Button type="button" variant="outline" onClick={() => window.print()}>
+                <Printer data-icon="inline-start" />
+                Print certificate
+              </Button>
               <Button type="button" onClick={() => setOpen(false)}>
                 Return to society
               </Button>
