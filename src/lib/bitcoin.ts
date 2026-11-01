@@ -86,3 +86,16 @@ export function bitcoinPayUri(
 export function bitcoinUri(amount: number) {
   return bitcoinPayUri(BTC_ADDRESS, amount);
 }
+
+export function solanaPayUri(
+  address: string,
+  amount: number,
+  mint?: string,
+) {
+  const params = new URLSearchParams({
+    amount: String(amount),
+    label: "Maison Aeternum",
+  });
+  if (mint) params.set("spl-token", mint);
+  return `solana:${address}?${params.toString()}`;
+}

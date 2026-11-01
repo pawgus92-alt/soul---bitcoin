@@ -44,12 +44,20 @@ function certificateSvg(payload) {
   const serial = escapeXml(payload.serial);
   const paid = escapeXml(payload.btcAmount);
   const issued = escapeXml(String(payload.issuedAt || "").slice(0, 10));
+  const desk =
+    payload.kind === "sol"
+      ? "MIDDLE DESK · 10 SOL"
+      : payload.kind === "pearl"
+        ? "MIDDLE DESK · 650 PEARL"
+        : sell
+          ? "SOUL DISPOSAL"
+          : "SOUL ACQUISITION";
   return `<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480">
   <rect width="720" height="480" fill="#f4e6c8"/>
   <rect x="14" y="14" width="692" height="452" fill="none" stroke="#7a1f2b" stroke-width="4"/>
   <rect x="24" y="24" width="672" height="432" fill="none" stroke="#c9a227" stroke-width="2"/>
   <text x="360" y="78" text-anchor="middle" fill="#7a1f2b" font-size="28" font-family="Times New Roman,serif">MAISON AETERNUM</text>
-  <text x="360" y="108" text-anchor="middle" fill="#1e3a6e" font-size="16" font-family="Times New Roman,serif">${sell ? "SOUL DISPOSAL" : "SOUL ACQUISITION"}</text>
+  <text x="360" y="108" text-anchor="middle" fill="#1e3a6e" font-size="16" font-family="Times New Roman,serif">${desk}</text>
   <text x="360" y="188" text-anchor="middle" fill="#7a1f2b" font-size="30" font-family="Times New Roman,serif">${holder}</text>
   <text x="360" y="232" text-anchor="middle" fill="#1f6b4a" font-size="20" font-family="Times New Roman,serif">${sell ? "SOLD ONE SOUL" : "BOUGHT ONE SOUL"}</text>
   <text x="360" y="268" text-anchor="middle" fill="#5c3d24" font-size="14" font-family="Times New Roman,serif">${paid} · ${issued}</text>

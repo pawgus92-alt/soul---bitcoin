@@ -62,6 +62,10 @@ export type Copy = {
   fetchingBitcoinRate: string;
   payAmount: (btc: string) => string;
   sellSoul: string;
+  buySol: string;
+  buyPearl: string;
+  midClassLabel: string;
+  midClassHint: string;
   invoiceBadge: string;
   invoiceTitle: string;
   invoiceDescription: (usd: string) => string;
@@ -69,11 +73,18 @@ export type Copy = {
   sellInvoiceTitle: string;
   sellInvoiceDescription: string;
   sellPriceHint: (usd: string) => string;
+  solInvoiceBadge: string;
+  solInvoiceTitle: string;
+  solInvoiceDescription: string;
+  pearlInvoiceBadge: string;
+  pearlInvoiceTitle: string;
+  pearlInvoiceDescription: string;
   askingMarket: string;
   rateDeskSilentDetail: (detail: string) => string;
   amountDue: string;
   spotVia: (source: string) => string;
   bitcoinAddress: string;
+  payAddress: string;
   copyAddress: string;
   copiedJacket: string;
   clipboardDeclined: string;
@@ -86,6 +97,11 @@ export type Copy = {
   waitForRate: string;
   tickTheBox: string;
   watchingMempool: string;
+  watchingChain: string;
+  paymentWaiting: string;
+  paymentSeen: string;
+  receivedOf: (received: string, expected: string) => string;
+  viewPayment: string;
   settlingHint: (btc: string) => string;
   boughtSoul: string;
   boughtSoulHint: string;
@@ -124,9 +140,15 @@ export type Copy = {
   certProof: string;
   certSellProof: string;
   certSellSubtitle: string;
+  certSolSubtitle: string;
+  certPearlSubtitle: string;
+  certTenSol: string;
+  certPearlPaid: string;
+  certMidProof: string;
   certNo: string;
   certPaid: string;
   certIssued: string;
+  certTx: string;
   dateLocale: string;
 };
 
@@ -153,7 +175,7 @@ const en: Copy = {
   vatLine: "VAT is not charged, because eternity has no jurisdiction.",
   heroAside:
     "Wire transfers remain for people who still believe in states. Cash smells of morals. Bitcoin at the spot rate is the only decent language in this room.",
-  skuLabel: "The only SKU",
+  skuLabel: "Private SKU",
   fetchingRate: "Fetching the live Bitcoin rate…",
   rateDeskSilent: "The rate desk is silent.",
   fetchRateAgain: "Fetch the rate again",
@@ -162,7 +184,7 @@ const en: Copy = {
     `Settlement is ${usd} converted at the live BTC/USD spot rate.`,
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `We do not acquire middle-class souls. If you need to check whether ${usd} is affordable, you are early. Return after the first fund.`,
+    `The private desk is still ${usd} in Bitcoin. The middle desk takes 10 SOL or 650 PEARL, without the yacht lighting.`,
   terms: [
     {
       step: "01",
@@ -251,6 +273,11 @@ const en: Copy = {
   fetchingBitcoinRate: "Fetching Bitcoin rate",
   payAmount: (btc) => `Buy ${btc}`,
   sellSoul: "Sell soul · 0.5 BTC",
+  buySol: "Middle class · 10 SOL",
+  buyPearl: "Middle class · 650 PEARL",
+  midClassLabel: "Middle desk",
+  midClassHint:
+    "For households that have Solana and a pearl, but not yet a family office.",
   invoiceBadge: "Live Bitcoin invoice",
   invoiceTitle: "Buy in Bitcoin",
   invoiceDescription: (usd) =>
@@ -260,12 +287,21 @@ const en: Copy = {
   sellInvoiceDescription:
     "The desk takes the soul for a flat half bitcoin. One transfer, one vacancy, no debate about the spot.",
   sellPriceHint: (usd) => `0.5 BTC · about ${usd} at the live spot`,
+  solInvoiceBadge: "Middle desk · Solana",
+  solInvoiceTitle: "Buy with 10 SOL",
+  solInvoiceDescription:
+    "The middle desk takes one soul for ten Solana, sent to the Solana address. The certificate is still a Bitcoin Ordinal NFT.",
+  pearlInvoiceBadge: "Middle desk · Pearl",
+  pearlInvoiceTitle: "Buy with 650 PEARL",
+  pearlInvoiceDescription:
+    "The middle desk takes one soul for 650 PEARL on Solana. Same vacancy, quieter lighting, Bitcoin NFT certificate.",
   askingMarket: "Asking the market what a soul costs this minute.",
   rateDeskSilentDetail: (detail) => `The rate desk is silent. ${detail}`,
   amountDue: "Amount due",
   spotVia: (source) => `Spot via ${source}`,
   bitcoinAddress: "Bitcoin address",
-  copyAddress: "Copy Bitcoin address",
+  payAddress: "Pay to",
+  copyAddress: "Copy address",
   copiedJacket: "Copied to the dinner jacket.",
   clipboardDeclined:
     "The clipboard declined. Copy the address by hand, as good families do.",
@@ -278,9 +314,14 @@ const en: Copy = {
   waitingForRate: "Waiting for the rate",
   waitForRate: "Wait for the live Bitcoin rate before sending.",
   tickTheBox: "Tick the box. A soul does not leave on a verbal instruction.",
-  watchingMempool: "Inscribing the certificate",
+  watchingMempool: "Watching the chain",
+  watchingChain: "Waiting for the payment to hit the desk wallet.",
+  paymentWaiting: "Nothing has arrived yet. Send the invoice, then keep this tab open.",
+  paymentSeen: "Payment seen. Issuing the unique Bitcoin NFT certificate.",
+  receivedOf: (received, expected) => `Received ${received} of ${expected}`,
+  viewPayment: "View payment",
   settlingHint: (btc) =>
-    `Assigning a unique code and opening a Bitcoin Ordinal NFT for ${btc}. Do not close the tab while the hash is still warm.`,
+    `Send ${btc} to the desk wallet. The certificate is issued only after the chain shows the transfer.`,
   boughtSoul: "You bought one soul",
   boughtSoulHint:
     "The certificate has a unique code and is minted as a Bitcoin Ordinal NFT. Hang this where the guests can see it and the tax office cannot.",
@@ -326,9 +367,16 @@ const en: Copy = {
   certSellProof:
     "Ordinary people do not sell eternity for half a coin. This document is proof of speed, taste, and a lighter boarding pass.",
   certSellSubtitle: "of Soul Disposal",
+  certSolSubtitle: "of a Middle-Class Soul",
+  certPearlSubtitle: "of a Pearl-Desk Soul",
+  certTenSol: "paid in ten Solana.",
+  certPearlPaid: "paid in 650 PEARL.",
+  certMidProof:
+    "Ordinary people do not settle eternity in SOL or PEARL. This document is proof of ambition, a thinner wallet, and the same empty interior.",
   certNo: "No.",
   certPaid: "Paid",
   certIssued: "Issued",
+  certTx: "Tx",
   dateLocale: "en-GB",
 };
 
@@ -355,7 +403,7 @@ const ru: Copy = {
   vatLine: "НДС не начисляется: у вечности нет юрисдикции.",
   heroAside:
     "Проводки остаются для тех, кто ещё верит в государства. Наличные пахнут моралью. Bitcoin по споту — единственный приличный язык в этой комнате.",
-  skuLabel: "Единственный SKU",
+  skuLabel: "Частный SKU",
   fetchingRate: "Запрашиваем живой курс Bitcoin…",
   rateDeskSilent: "Стол котировок молчит.",
   fetchRateAgain: "Запросить курс снова",
@@ -364,7 +412,7 @@ const ru: Copy = {
     `Расчёт — ${usd}, конвертированные по живому спот-курсу BTC/USD.`,
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Средний класс мы не берём. Если нужно проверять, по карману ли ${usd}, вы рано. Вернитесь после первого фонда.`,
+    `Частный стол по-прежнему ${usd} в Bitcoin. Средний стол берёт 10 SOL или 650 PEARL, без яхтенного света.`,
   terms: [
     {
       step: "01",
@@ -453,6 +501,11 @@ const ru: Copy = {
   fetchingBitcoinRate: "Запрашиваем курс Bitcoin",
   payAmount: (btc) => `Купить ${btc}`,
   sellSoul: "Продать душу · 0.5 BTC",
+  buySol: "Средний класс · 10 SOL",
+  buyPearl: "Средний класс · 650 PEARL",
+  midClassLabel: "Средний стол",
+  midClassHint:
+    "Для тех, у кого есть Solana и жемчуг, но ещё нет family office.",
   invoiceBadge: "Живой счёт в Bitcoin",
   invoiceTitle: "Купить за Bitcoin",
   invoiceDescription: (usd) =>
@@ -462,12 +515,21 @@ const ru: Copy = {
   sellInvoiceDescription:
     "Стол берёт душу за ровно полбиткоина. Один перевод, одна вакансия, без спора про спот.",
   sellPriceHint: (usd) => `0.5 BTC · около ${usd} по живому споту`,
+  solInvoiceBadge: "Средний стол · Solana",
+  solInvoiceTitle: "Купить за 10 SOL",
+  solInvoiceDescription:
+    "Средний стол берёт одну душу за десять Solana на адрес Solana. Сертификат всё равно Bitcoin Ordinal NFT.",
+  pearlInvoiceBadge: "Средний стол · Pearl",
+  pearlInvoiceTitle: "Купить за 650 PEARL",
+  pearlInvoiceDescription:
+    "Средний стол берёт одну душу за 650 PEARL в сети Solana. Та же вакансия, тише свет, сертификат — Bitcoin NFT.",
   askingMarket: "Спрашиваем рынок, сколько стоит душа в эту минуту.",
   rateDeskSilentDetail: (detail) => `Стол котировок молчит. ${detail}`,
   amountDue: "К оплате",
   spotVia: (source) => `Спот через ${source}`,
   bitcoinAddress: "Адрес Bitcoin",
-  copyAddress: "Скопировать адрес Bitcoin",
+  payAddress: "Куда платить",
+  copyAddress: "Скопировать адрес",
   copiedJacket: "Скопировано во внутренний карман смокинга.",
   clipboardDeclined:
     "Буфер обмена отказал. Скопируйте адрес вручную, как делают приличные семьи.",
@@ -480,9 +542,15 @@ const ru: Copy = {
   waitingForRate: "Ждём курс",
   waitForRate: "Дождитесь живого курса Bitcoin, прежде чем отправлять.",
   tickTheBox: "Поставьте галочку. Душа не уходит по устной инструкции.",
-  watchingMempool: "Вписываем сертификат",
+  watchingMempool: "Смотрим сеть",
+  watchingChain: "Ждём, пока платёж дойдёт до кошелька стола.",
+  paymentWaiting:
+    "Пока ничего не пришло. Отправьте счёт и не закрывайте вкладку.",
+  paymentSeen: "Платёж виден. Выдаём уникальный Bitcoin NFT-сертификат.",
+  receivedOf: (received, expected) => `Получено ${received} из ${expected}`,
+  viewPayment: "Открыть платёж",
   settlingHint: (btc) =>
-    `Выдаём уникальный код и открываем Bitcoin Ordinal NFT на ${btc}. Не закрывайте вкладку, пока хеш ещё тёплый.`,
+    `Отправьте ${btc} на кошелёк стола. Сертификат выдаётся только когда сеть покажет перевод.`,
   boughtSoul: "Вы купили одну душу",
   boughtSoulHint:
     "У сертификата уникальный код, он чеканится как Bitcoin Ordinal NFT. Повесьте это там, где гости увидят, а налоговая — нет.",
@@ -528,9 +596,16 @@ const ru: Copy = {
   certSellProof:
     "Обычные люди не продают вечность за полмонеты. Этот документ — доказательство скорости, вкуса и более лёгкого посадочного.",
   certSellSubtitle: "отчуждения души",
+  certSolSubtitle: "души среднего класса",
+  certPearlSubtitle: "души жемчужного стола",
+  certTenSol: "за десять Solana.",
+  certPearlPaid: "за 650 PEARL.",
+  certMidProof:
+    "Обычные люди не рассчитываются с вечностью в SOL или PEARL. Этот документ — доказательство амбиции, более тонкого кошелька и того же пустого нутра.",
   certNo: "№",
   certPaid: "Оплачено",
   certIssued: "Выдано",
+  certTx: "Tx",
   dateLocale: "ru-RU",
 };
 

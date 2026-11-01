@@ -17,6 +17,26 @@ function nftLabel(
   return copy.certNftPending;
 }
 
+function subtitleFor(kind: DealKind, copy: ReturnType<typeof useI18n>["copy"]) {
+  if (kind === "sell") return copy.certSellSubtitle;
+  if (kind === "sol") return copy.certSolSubtitle;
+  if (kind === "pearl") return copy.certPearlSubtitle;
+  return copy.certSubtitle;
+}
+
+function taglineFor(kind: DealKind, copy: ReturnType<typeof useI18n>["copy"]) {
+  if (kind === "sell") return copy.certHalfBitcoin;
+  if (kind === "sol") return copy.certTenSol;
+  if (kind === "pearl") return copy.certPearlPaid;
+  return copy.certVeryRich;
+}
+
+function proofFor(kind: DealKind, copy: ReturnType<typeof useI18n>["copy"]) {
+  if (kind === "sell") return copy.certSellProof;
+  if (kind === "sol" || kind === "pearl") return copy.certMidProof;
+  return copy.certProof;
+}
+
 export function SoulCertificate({
   holder,
   serial,
@@ -24,6 +44,8 @@ export function SoulCertificate({
   issuedAt,
   kind = "buy",
   nft,
+  txid,
+  explorerUrl,
 }: {
   holder: string;
   serial: string;
@@ -31,6 +53,8 @@ export function SoulCertificate({
   issuedAt: Date;
   kind?: DealKind;
   nft?: CertificateNft | null;
+  txid?: string;
+  explorerUrl?: string;
 }) {
   const { copy } = useI18n();
   const date = new Intl.DateTimeFormat(copy.dateLocale, {
@@ -55,7 +79,7 @@ export function SoulCertificate({
           {copy.certTitle}
         </p>
         <p className="font-heading text-lg tracking-[0.18em] text-[#1e3a6e] uppercase">
-          {kind === "sell" ? copy.certSellSubtitle : copy.certSubtitle}
+          {subtitleFor(kind, copy)}
         </p>
 
         <p className="mt-5 text-[11px] tracking-[0.18em] text-[#6b4b2a] uppercase">
@@ -71,10 +95,10 @@ export function SoulCertificate({
           {copy.certOneSoul}
         </p>
         <p className="font-heading mt-4 text-2xl font-semibold text-[#1f6b4a] sm:text-3xl">
-          {kind === "sell" ? copy.certHalfBitcoin : copy.certVeryRich}
+          {taglineFor(kind, copy)}
         </p>
         <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[#5c3d24]">
-          {kind === "sell" ? copy.certSellProof : copy.certProof}
+          {proofFor(kind, copy)}
         </p>
 
         <div className="mx-auto mt-5 max-w-md border border-[#7a1f2b]/25 bg-[#fff6df]/80 px-3 py-2">
@@ -103,6 +127,20 @@ export function SoulCertificate({
               <dt className="text-[#7a1f2b]">{copy.certNft}</dt>
               <dd className="normal-case">{nftLabel(copy, nft ?? undefined)}</dd>
             </div>
+            {txid ? (
+              <div className="flex gap-2">
+                <dt className="text-[#7a1f2b]">{copy.certTx}</dt>
+                <dd className="break-all font-mono normal-case">
+                  {explorerUrl ? (
+                    <a href={explorerUrl} target="_blank" rel="noreferrer">
+                      {txid}
+                    </a>
+                  ) : (
+                    txid
+                  )}
+                </dd>
+              </div>
+            ) : null}
             {nft?.inscriptionId ? (
               <div className="flex gap-2">
                 <dt className="text-[#7a1f2b]">ID</dt>

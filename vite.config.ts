@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 import inscribe from "./api/inscribe.js";
+import payWatch from "./api/pay-watch.js";
 
 function readJsonBody(request: IncomingMessage) {
   return new Promise<void>((resolve, reject) => {
@@ -33,7 +34,14 @@ export default defineConfig({
       name: "inscribe-api",
       configureServer(server) {
         server.middlewares.use(async (request, response, next) => {
-          if (!request.url?.startsWith("/api/inscribe")) {
+          const pathName = request.url?.split("?")[0] ?? "";
+          const route =
+            pathName === "/api/inscribe"
+              ? inscribe
+              : pathName === "/api/pay-watch"
+                ? payWatch
+                : null;
+          if (!route) {
             next();
             return;
           }
@@ -49,7 +57,7 @@ export default defineConfig({
                 response.end(body);
               },
             };
-            await inscribe(request, wrapped);
+            await route(request, wrapped);
           } catch (error) {
             response.statusCode = 500;
             response.setHeader("content-type", "application/json");

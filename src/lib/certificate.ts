@@ -1,6 +1,6 @@
-import { BTC_ADDRESS, type DealKind } from "@/lib/deal";
+import { BTC_ADDRESS, SERIAL_TAG, type DealKind } from "@/lib/deal";
 
-export const CERTIFICATE_SERIAL_RE = /^AE-1666-(BUY|SELL)-[0-9A-F]{12}$/;
+export const CERTIFICATE_SERIAL_RE = /^AE-1666-(BUY|SELL|SOL|PRL)-[0-9A-F]{12}$/;
 
 export type CertificateRecord = {
   serial: string;
@@ -10,6 +10,8 @@ export type CertificateRecord = {
   btcAmount: string;
   issuedAt: string;
   receiveAddress: string;
+  txid?: string;
+  explorerUrl?: string;
 };
 
 const BECH32 = /^(bc1)[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{25,87}$/i;
@@ -36,6 +38,8 @@ export async function issueCertificate(input: {
   holder: string;
   btcAmount: string;
   receiveAddress: string;
+  txid?: string;
+  explorerUrl?: string;
 }): Promise<CertificateRecord> {
   const entropy = crypto.getRandomValues(new Uint8Array(16));
   const issuedAt = new Date().toISOString();
@@ -53,7 +57,7 @@ export async function issueCertificate(input: {
   const digest = bytesToHex(
     new Uint8Array(await crypto.subtle.digest("SHA-256", material)),
   );
-  const serial = `AE-1666-${input.kind.toUpperCase()}-${digest.slice(0, 12).toUpperCase()}`;
+  const serial = `AE-1666-${SERIAL_TAG[input.kind]}-${digest.slice(0, 12).toUpperCase()}`;
   if (!CERTIFICATE_SERIAL_RE.test(serial)) {
     throw new Error("certificate serial failed its own grammar");
   }
@@ -66,6 +70,8 @@ export async function issueCertificate(input: {
     btcAmount: input.btcAmount,
     issuedAt,
     receiveAddress: input.receiveAddress,
+    txid: input.txid,
+    explorerUrl: input.explorerUrl,
   };
 }
 

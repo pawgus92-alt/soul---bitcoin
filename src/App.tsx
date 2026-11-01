@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatBtc, formatUsd } from "@/lib/bitcoin";
-import { BTC_ADDRESS, DEAL_USD } from "@/lib/deal";
+import { BTC_ADDRESS, DEAL_USD, SOL_ADDRESS } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 import { useBtcQuote } from "@/lib/quote-context";
 
@@ -77,7 +77,10 @@ export default function App() {
           </nav>
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
-            <DealButtons className="hidden sm:flex sm:flex-row" />
+            <DealButtons
+              className="hidden sm:flex"
+              showMiddle={false}
+            />
           </div>
         </div>
       </header>
@@ -113,6 +116,9 @@ export default function App() {
             </p>
             <div className="flex flex-col gap-3">
               <DealButtons buttonClassName="h-12 px-6 text-base" />
+              <p className="max-w-lg text-xs leading-5 text-muted-foreground">
+                {copy.midClassHint}
+              </p>
               <a
                 href="#terms"
                 className="inline-flex h-12 w-fit items-center justify-center border border-primary/25 px-5 text-sm tracking-[0.16em] text-primary uppercase hover:bg-primary/10"
@@ -250,8 +256,14 @@ export default function App() {
             </div>
             <div className="flex flex-col items-start justify-center gap-3">
               <DealButtons buttonClassName="h-12 px-6 text-base" />
+              <p className="max-w-xs text-[11px] tracking-[0.16em] text-primary/80 uppercase">
+                {copy.midClassLabel}
+              </p>
               <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
-                {BTC_ADDRESS}
+                BTC {BTC_ADDRESS}
+              </p>
+              <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
+                SOL {SOL_ADDRESS}
               </p>
             </div>
           </div>

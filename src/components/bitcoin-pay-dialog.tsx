@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Bitcoin, Check, Copy, LoaderCircle, Printer } from "lucide-react";
+import { Check, Copy, LoaderCircle, Printer } from "lucide-react";
 
 import { BitcoinQr } from "@/components/bitcoin-qr";
 import { SoulCertificate } from "@/components/soul-certificate";
@@ -16,7 +16,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { bitcoinPayUri, bitcoinUri, formatBtc, formatUsd } from "@/lib/bitcoin";
+import {
+  bitcoinPayUri,
+  formatBtc,
+  formatUsd,
+  solanaPayUri,
+} from "@/lib/bitcoin";
 import {
   issueCertificate,
   isBitcoinAddress,
@@ -24,7 +29,17 @@ import {
   satsToBtc,
   type CertificateRecord,
 } from "@/lib/certificate";
-import { BTC_ADDRESS, DEAL_USD, SELL_BTC, type DealKind } from "@/lib/deal";
+import {
+  DEAL_USD,
+  PEARL_AMOUNT,
+  SELL_BTC,
+  SOL_AMOUNT,
+  expectedAtomic,
+  formatAtomic,
+  formatDealAmount,
+  getDeal,
+  type DealKind,
+} from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 import {
   createCertificateNft,
@@ -32,8 +47,42 @@ import {
   type CertificateNft,
 } from "@/lib/ordinals";
 import { useBtcQuote } from "@/lib/quote-context";
+import { watchDeskPayment, type PaymentWatch } from "@/lib/watch";
 
-type Step = "invoice" | "settling" | "done";
+type Step = "invoice" | "watching" | "minting" | "done";
+
+function invoiceCopy(
+  kind: DealKind,
+  copy: ReturnType<typeof useI18n>["copy"],
+  usd: string,
+) {
+  if (kind === "sell") {
+    return {
+      badge: copy.sellInvoiceBadge,
+      title: copy.sellInvoiceTitle,
+      description: copy.sellInvoiceDescription,
+    };
+  }
+  if (kind === "sol") {
+    return {
+      badge: copy.solInvoiceBadge,
+      title: copy.solInvoiceTitle,
+      description: copy.solInvoiceDescription,
+    };
+  }
+  if (kind === "pearl") {
+    return {
+      badge: copy.pearlInvoiceBadge,
+      title: copy.pearlInvoiceTitle,
+      description: copy.pearlInvoiceDescription,
+    };
+  }
+  return {
+    badge: copy.invoiceBadge,
+    title: copy.invoiceTitle,
+    description: copy.invoiceDescription(usd),
+  };
+}
 
 export function BitcoinPayDialog({
   kind = "buy",
@@ -50,10 +99,22 @@ export function BitcoinPayDialog({
 }) {
   const { copy } = useI18n();
   const { quote, loading, error: quoteError, refresh } = useBtcQuote();
+  const deal = getDeal(kind);
   const sell = kind === "sell";
+  const btcBuy = kind === "buy";
   const payLabel = triggerLabel ?? (sell ? copy.sellSoul : copy.payInBitcoin);
   const dealBtc = sell ? SELL_BTC : quote?.btcAmount;
-  const ready = sell || Boolean(quote);
+  const paidLabel = formatDealAmount(kind, dealBtc);
+  const ready = !btcBuy || Boolean(quote);
+  const invoice = invoiceCopy(kind, copy, formatUsd(DEAL_USD));
+  const payUri =
+    deal.chain === "solana"
+      ? solanaPayUri(
+          deal.address,
+          kind === "sol" ? SOL_AMOUNT : PEARL_AMOUNT,
+          deal.mint,
+        )
+      : bitcoinPayUri(deal.address, dealBtc ?? SELL_BTC);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("invoice");
   const [name, setName] = useState("");
@@ -66,7 +127,10 @@ export function BitcoinPayDialog({
   const [nft, setNft] = useState<CertificateNft | null>(null);
   const [settledBtc, setSettledBtc] = useState<string | null>(null);
   const [issuedAt, setIssuedAt] = useState<Date | null>(null);
+  const [watch, setWatch] = useState<PaymentWatch | null>(null);
   const closeLocked = useRef(false);
+  const finishing = useRef(false);
+  const expected = expectedAtomic(kind, dealBtc ?? 0);
 
   function reset() {
     closeLocked.current = false;
@@ -81,11 +145,13 @@ export function BitcoinPayDialog({
     setNft(null);
     setSettledBtc(null);
     setIssuedAt(null);
+    setWatch(null);
+    finishing.current = false;
   }
 
-  async function copyAddress() {
+  async function copyPayAddress() {
     try {
-      await navigator.clipboard.writeText(BTC_ADDRESS);
+      await navigator.clipboard.writeText(deal.address);
       setCopied(true);
       setError(null);
       window.setTimeout(() => setCopied(false), 1800);
@@ -113,14 +179,13 @@ export function BitcoinPayDialog({
       setNft({
         receiveAddress: record.receiveAddress,
         status: "error",
-        error:
-          reason instanceof Error ? reason.message : copy.certNftFailed,
+        error: reason instanceof Error ? reason.message : copy.certNftFailed,
       });
     }
   }
 
-  async function settle() {
-    if (!sell && !quote) {
+  function startWatch() {
+    if (btcBuy && !quote) {
       setError(copy.waitForRate);
       return;
     }
@@ -133,30 +198,66 @@ export function BitcoinPayDialog({
       return;
     }
     setError(null);
+    setSettledBtc(paidLabel);
+    setStep("watching");
+  }
+
+  async function finishAfterPayment(payment: PaymentWatch) {
     closeLocked.current = true;
-    const paid = formatBtc(dealBtc ?? SELL_BTC);
-    setSettledBtc(paid);
-    setStep("settling");
+    setStep("minting");
     try {
       const record = await issueCertificate({
         kind,
         holder: name.trim() || copy.anonymousHolder,
-        btcAmount: paid,
+        btcAmount: paidLabel,
         receiveAddress: resolveReceiveAddress(nftAddress),
+        txid: payment.txid || undefined,
+        explorerUrl: payment.explorer,
       });
       setCertificate(record);
       setIssuedAt(new Date(record.issuedAt));
       await mintNft(record);
       setStep("done");
     } catch (reason) {
-      setError(
-        reason instanceof Error ? reason.message : copy.certNftFailed,
-      );
-      setStep("invoice");
+      setError(reason instanceof Error ? reason.message : copy.certNftFailed);
+      setStep("watching");
     } finally {
       closeLocked.current = false;
     }
   }
+
+  useEffect(() => {
+    if (step !== "watching" || expected <= 0) return;
+    let cancelled = false;
+    const tick = async () => {
+      try {
+        const next = await watchDeskPayment({
+          chain: deal.chain,
+          address: deal.address,
+          expected,
+          mint: deal.mint,
+        });
+        if (cancelled) return;
+        setWatch(next);
+        if (next.paid && !finishing.current) {
+          finishing.current = true;
+          await finishAfterPayment(next);
+        }
+      } catch (reason) {
+        if (!cancelled) {
+          setError(reason instanceof Error ? reason.message : copy.watchingChain);
+        }
+      }
+    };
+    void tick();
+    const timer = window.setInterval(tick, 8000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+    // finishAfterPayment is stable enough for this invoice session
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, expected, deal.address, deal.chain, deal.mint]);
 
   useEffect(() => {
     if (step !== "done" || !nft?.orderId || nft.inscriptionId) return;
@@ -166,7 +267,7 @@ export function BitcoinPayDialog({
         const next = await fetchCertificateNft(nft.orderId!);
         if (!cancelled) setNft(next);
       } catch {
-        /* keep the unique code; try again on the next poll */
+        /* keep the unique code */
       }
     };
     const timer = window.setInterval(tick, 8000);
@@ -176,7 +277,9 @@ export function BitcoinPayDialog({
     };
   }, [step, nft?.orderId, nft?.inscriptionId]);
 
-  const postageReady = Boolean(nft?.chargeAddress && nft.chargeSats && !nft.inscriptionId);
+  const postageReady = Boolean(
+    nft?.chargeAddress && nft.chargeSats && !nft.inscriptionId,
+  );
   const postageUri =
     postageReady && nft?.chargeAddress && nft.chargeSats
       ? bitcoinPayUri(
@@ -189,12 +292,12 @@ export function BitcoinPayDialog({
   return (
     <Dialog
       open={open}
-      disablePointerDismissal={step === "settling"}
+      disablePointerDismissal={step === "minting"}
       onOpenChange={(next, details) => {
         if (
           !next &&
           (closeLocked.current ||
-            step === "settling" ||
+            step === "minting" ||
             details.reason === "focus-out")
         ) {
           details.cancel();
@@ -215,7 +318,7 @@ export function BitcoinPayDialog({
           />
         }
       >
-        {icon ?? <Bitcoin data-icon="inline-start" />}
+        {icon}
         {payLabel}
       </DialogTrigger>
       <DialogContent
@@ -230,19 +333,15 @@ export function BitcoinPayDialog({
           <>
             <DialogHeader>
               <Badge variant="outline" className="w-fit border-primary/40 text-primary">
-                {sell ? copy.sellInvoiceBadge : copy.invoiceBadge}
+                {invoice.badge}
               </Badge>
               <DialogTitle className="font-heading text-2xl font-semibold tracking-wide">
-                {sell ? copy.sellInvoiceTitle : copy.invoiceTitle}
+                {invoice.title}
               </DialogTitle>
-              <DialogDescription>
-                {sell
-                  ? copy.sellInvoiceDescription
-                  : copy.invoiceDescription(formatUsd(DEAL_USD))}
-              </DialogDescription>
+              <DialogDescription>{invoice.description}</DialogDescription>
             </DialogHeader>
 
-            {!sell && loading && !quote ? (
+            {btcBuy && loading && !quote ? (
               <div className="flex min-h-40 flex-col items-center justify-center gap-3 py-8 text-center">
                 <LoaderCircle className="size-6 animate-spin text-primary" />
                 <p className="text-sm text-muted-foreground">
@@ -251,7 +350,7 @@ export function BitcoinPayDialog({
               </div>
             ) : null}
 
-            {!sell && quoteError && !quote ? (
+            {btcBuy && quoteError && !quote ? (
               <div className="space-y-3 rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm">
                 <p className="text-destructive">
                   {copy.rateDeskSilentDetail(quoteError)}
@@ -265,7 +364,7 @@ export function BitcoinPayDialog({
             {ready ? (
               <div className="grid gap-4 sm:grid-cols-[160px_1fr]">
                 <BitcoinQr
-                  payload={bitcoinUri(dealBtc ?? SELL_BTC)}
+                  payload={payUri}
                   className="mx-auto w-40 sm:w-full"
                 />
                 <div className="space-y-3">
@@ -274,16 +373,19 @@ export function BitcoinPayDialog({
                       {copy.amountDue}
                     </p>
                     <p className="font-heading text-3xl text-primary">
-                      {formatBtc(dealBtc ?? SELL_BTC)}
+                      {paidLabel}
                     </p>
-                    <p className="font-mono text-sm text-muted-foreground">
-                      {sell
-                        ? quote
-                          ? copy.sellPriceHint(formatUsd(SELL_BTC * quote.usdPerBtc))
-                          : formatBtc(SELL_BTC)
-                        : `${formatUsd(DEAL_USD)} at ${formatUsd(quote!.usdPerBtc)} / BTC`}
-                    </p>
-                    {quote ? (
+                    {kind === "buy" && quote ? (
+                      <p className="font-mono text-sm text-muted-foreground">
+                        {`${formatUsd(DEAL_USD)} at ${formatUsd(quote.usdPerBtc)} / BTC`}
+                      </p>
+                    ) : null}
+                    {sell && quote ? (
+                      <p className="font-mono text-sm text-muted-foreground">
+                        {copy.sellPriceHint(formatUsd(SELL_BTC * quote.usdPerBtc))}
+                      </p>
+                    ) : null}
+                    {quote && deal.chain === "bitcoin" ? (
                       <p className="mt-1 text-[11px] text-muted-foreground">
                         {copy.spotVia(quote.source)}
                       </p>
@@ -291,16 +393,16 @@ export function BitcoinPayDialog({
                   </div>
                   <div>
                     <p className="mb-1 text-[11px] tracking-[0.22em] text-primary/80 uppercase">
-                      {copy.bitcoinAddress}
+                      {deal.chain === "bitcoin" ? copy.bitcoinAddress : copy.payAddress}
                     </p>
                     <div className="flex items-start gap-2">
                       <code className="block flex-1 break-all rounded-md border border-primary/20 bg-black/40 px-2 py-2 font-mono text-[11px] leading-relaxed text-primary">
-                        {BTC_ADDRESS}
+                        {deal.address}
                       </code>
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={copyAddress}
+                        onClick={copyPayAddress}
                         aria-label={copy.copyAddress}
                       >
                         {copied ? <Check /> : <Copy />}
@@ -369,29 +471,45 @@ export function BitcoinPayDialog({
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 {copy.remainLiving}
               </Button>
-              <Button type="button" onClick={settle} disabled={!ready}>
-                {ready
-                  ? copy.sendAmount(formatBtc(dealBtc ?? SELL_BTC))
-                  : copy.waitingForRate}
+              <Button type="button" onClick={startWatch} disabled={!ready}>
+                {ready ? copy.sendAmount(paidLabel) : copy.waitingForRate}
               </Button>
             </DialogFooter>
           </>
         ) : null}
 
-        {step === "settling" ? (
+        {step === "watching" || step === "minting" ? (
           <div className="flex min-h-64 flex-col items-center justify-center gap-4 py-10 text-center">
             <LoaderCircle className="size-8 animate-spin text-primary" />
             <DialogTitle className="font-heading text-2xl">
-              {copy.watchingMempool}
+              {step === "minting" ? copy.watchingMempool : copy.watchingMempool}
             </DialogTitle>
             <DialogDescription>
-              {copy.settlingHint(settledBtc || "")}
+              {step === "minting"
+                ? copy.paymentSeen
+                : copy.settlingHint(settledBtc || paidLabel)}
             </DialogDescription>
-            <p className="text-sm text-primary">{copy.mintingNft}</p>
-            {certificate ? (
-              <p className="font-mono text-xs text-muted-foreground">
-                {certificate.serial}
-              </p>
+            <p className="text-sm text-primary">
+              {watch?.paid ? copy.paymentSeen : copy.paymentWaiting}
+            </p>
+            <p className="font-mono text-xs text-muted-foreground">
+              {copy.receivedOf(
+                formatAtomic(kind, watch?.received ?? 0),
+                formatAtomic(kind, expected),
+              )}
+            </p>
+            {watch?.explorer ? (
+              <a
+                href={watch.explorer}
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs text-primary underline"
+              >
+                {copy.viewPayment}
+              </a>
+            ) : null}
+            {error ? (
+              <p className="text-sm text-destructive">{error}</p>
             ) : null}
           </div>
         ) : null}
@@ -413,6 +531,8 @@ export function BitcoinPayDialog({
               btcAmount={settledBtc || certificate.btcAmount}
               issuedAt={issuedAt ?? new Date(certificate.issuedAt)}
               nft={nft}
+              txid={certificate.txid}
+              explorerUrl={certificate.explorerUrl}
             />
 
             {postageReady ? (
