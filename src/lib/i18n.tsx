@@ -95,6 +95,23 @@ export type Copy = {
   printCertificate: string;
   returnToSociety: string;
   anonymousHolder: string;
+  nftReceiveLabel: string;
+  nftReceivePlaceholder: string;
+  nftReceiveHint: string;
+  invalidReceiveAddress: string;
+  certNft: string;
+  certNftPending: string;
+  certNftInscribing: string;
+  certNftMinted: string;
+  certNftFailed: string;
+  certViewOrdinal: string;
+  certViewOrder: string;
+  nftPostageTitle: string;
+  nftPostageHint: string;
+  nftRetry: string;
+  copySerial: string;
+  copiedSerial: string;
+  mintingNft: string;
   certKicker: string;
   certTitle: string;
   certSubtitle: string;
@@ -159,8 +176,8 @@ const en: Copy = {
     },
     {
       step: "03",
-      title: "Receive the vacancy",
-      text: "A certificate of emptiness. Keep it beside the second passport.",
+      title: "Receive the Bitcoin NFT",
+      text: "A unique certificate code, inscribed on Bitcoin as an Ordinal. Keep it beside the second passport.",
     },
   ],
   assetsRetained: "Assets retained",
@@ -261,20 +278,40 @@ const en: Copy = {
   waitingForRate: "Waiting for the rate",
   waitForRate: "Wait for the live Bitcoin rate before sending.",
   tickTheBox: "Tick the box. A soul does not leave on a verbal instruction.",
-  watchingMempool: "Watching the mempool",
+  watchingMempool: "Inscribing the certificate",
   settlingHint: (btc) =>
-    `Send ${btc} to the desk wallet. Do not close the tab while the hash is still warm.`,
+    `Assigning a unique code and opening a Bitcoin Ordinal NFT for ${btc}. Do not close the tab while the hash is still warm.`,
   boughtSoul: "You bought one soul",
   boughtSoulHint:
-    "That means you are very rich. Hang this where the guests can see it and the tax office cannot.",
+    "The certificate has a unique code and is minted as a Bitcoin Ordinal NFT. Hang this where the guests can see it and the tax office cannot.",
   soldSoul: "You sold one soul",
   soldSoulHint:
-    "Half a bitcoin. The interior is vacant. Keep the certificate away from the chaplain.",
+    "Half a bitcoin, a unique code, and a Bitcoin Ordinal NFT. Keep the certificate away from the chaplain.",
   acceptSellTerms:
     "I understand the soul is sold for 0.5 BTC without repurchase rights. Remorse is still not in stock.",
   printCertificate: "Print certificate",
   returnToSociety: "Return to society",
   anonymousHolder: "Anonymous Collector",
+  nftReceiveLabel: "Bitcoin address for the NFT",
+  nftReceivePlaceholder: "bc1p… taproot preferred",
+  nftReceiveHint:
+    "The certificate is inscribed as a Bitcoin Ordinal and sent here. Leave empty and the desk holds the NFT against the unique code.",
+  invalidReceiveAddress:
+    "That is not a Bitcoin address. Use bc1… or leave the field empty.",
+  certNft: "Bitcoin NFT",
+  certNftPending: "Awaiting inscription postage",
+  certNftInscribing: "Inscribing on Bitcoin",
+  certNftMinted: "Inscribed on Bitcoin",
+  certNftFailed: "Unique code issued · mint desk silent",
+  certViewOrdinal: "View inscription",
+  certViewOrder: "View mint order",
+  nftPostageTitle: "NFT inscription postage",
+  nftPostageHint:
+    "This small Bitcoin payment inscribes the unique certificate as an Ordinal NFT and sends it to the receive address.",
+  nftRetry: "Open the mint again",
+  copySerial: "Copy unique code",
+  copiedSerial: "Unique code copied.",
+  mintingNft: "Minting the Bitcoin NFT…",
   certKicker: "Maison Æternum · Geneva",
   certTitle: "Certificate",
   certSubtitle: "of Soul Acquisition",
@@ -341,8 +378,8 @@ const ru: Copy = {
     },
     {
       step: "03",
-      title: "Получите вакансию",
-      text: "Сертификат пустоты. Держите его рядом со вторым паспортом.",
+      title: "Получите Bitcoin NFT",
+      text: "Уникальный код сертификата, вписанный в Bitcoin как Ordinal. Держите его рядом со вторым паспортом.",
     },
   ],
   assetsRetained: "Оставленные активы",
@@ -443,20 +480,40 @@ const ru: Copy = {
   waitingForRate: "Ждём курс",
   waitForRate: "Дождитесь живого курса Bitcoin, прежде чем отправлять.",
   tickTheBox: "Поставьте галочку. Душа не уходит по устной инструкции.",
-  watchingMempool: "Смотрим мемпул",
+  watchingMempool: "Вписываем сертификат",
   settlingHint: (btc) =>
-    `Отправьте ${btc} на кошелёк стола. Не закрывайте вкладку, пока хеш ещё тёплый.`,
+    `Выдаём уникальный код и открываем Bitcoin Ordinal NFT на ${btc}. Не закрывайте вкладку, пока хеш ещё тёплый.`,
   boughtSoul: "Вы купили одну душу",
   boughtSoulHint:
-    "Значит, вы очень богаты. Повесьте это там, где гости увидят, а налоговая — нет.",
+    "У сертификата уникальный код, он чеканится как Bitcoin Ordinal NFT. Повесьте это там, где гости увидят, а налоговая — нет.",
   soldSoul: "Вы продали одну душу",
   soldSoulHint:
-    "Полбиткоина. Внутри пусто. Сертификат держите подальше от капеллана.",
+    "Полбиткоина, уникальный код и Bitcoin Ordinal NFT. Сертификат держите подальше от капеллана.",
   acceptSellTerms:
     "Я понимаю: душа продаётся за 0.5 BTC без права выкупа. Раскаяния по-прежнему нет в наличии.",
   printCertificate: "Печать сертификата",
   returnToSociety: "Вернуться в общество",
   anonymousHolder: "Анонимный коллекционер",
+  nftReceiveLabel: "Адрес Bitcoin для NFT",
+  nftReceivePlaceholder: "bc1p… лучше taproot",
+  nftReceiveHint:
+    "Сертификат вписывается как Bitcoin Ordinal и уходит сюда. Оставьте пустым — стол будет держать NFT против уникального кода.",
+  invalidReceiveAddress:
+    "Это не адрес Bitcoin. Укажите bc1… или оставьте поле пустым.",
+  certNft: "Bitcoin NFT",
+  certNftPending: "Ждём комиссию за надпись",
+  certNftInscribing: "Вписывается в Bitcoin",
+  certNftMinted: "Вписан в Bitcoin",
+  certNftFailed: "Уникальный код выдан · стол чеканки молчит",
+  certViewOrdinal: "Открыть надпись",
+  certViewOrder: "Открыть заказ чеканки",
+  nftPostageTitle: "Комиссия за NFT-надпись",
+  nftPostageHint:
+    "Этот небольшой платёж в Bitcoin вписывает уникальный сертификат как Ordinal NFT и отправляет его на адрес получения.",
+  nftRetry: "Открыть чеканку снова",
+  copySerial: "Скопировать уникальный код",
+  copiedSerial: "Уникальный код скопирован.",
+  mintingNft: "Чеканим Bitcoin NFT…",
   certKicker: "Maison Æternum · Женева",
   certTitle: "Сертификат",
   certSubtitle: "приобретения души",

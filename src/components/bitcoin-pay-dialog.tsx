@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Bitcoin, Check, Copy, LoaderCircle, Printer } from "lucide-react";
 
 import { BitcoinQr } from "@/components/bitcoin-qr";
@@ -16,9 +16,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { bitcoinUri, formatBtc, formatUsd } from "@/lib/bitcoin";
+import { bitcoinPayUri, bitcoinUri, formatBtc, formatUsd } from "@/lib/bitcoin";
+import {
+  issueCertificate,
+  isBitcoinAddress,
+  resolveReceiveAddress,
+  satsToBtc,
+  type CertificateRecord,
+} from "@/lib/certificate";
 import { BTC_ADDRESS, DEAL_USD, SELL_BTC, type DealKind } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
+import {
+  createCertificateNft,
+  fetchCertificateNft,
+  type CertificateNft,
+} from "@/lib/ordinals";
 import { useBtcQuote } from "@/lib/quote-context";
 
 type Step = "invoice" | "settling" | "done";
@@ -45,10 +57,13 @@ export function BitcoinPayDialog({
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("invoice");
   const [name, setName] = useState("");
+  const [nftAddress, setNftAddress] = useState("");
   const [accepted, setAccepted] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copiedSerial, setCopiedSerial] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [certificate, setCertificate] = useState("");
+  const [certificate, setCertificate] = useState<CertificateRecord | null>(null);
+  const [nft, setNft] = useState<CertificateNft | null>(null);
   const [settledBtc, setSettledBtc] = useState<string | null>(null);
   const [issuedAt, setIssuedAt] = useState<Date | null>(null);
   const closeLocked = useRef(false);
@@ -57,10 +72,13 @@ export function BitcoinPayDialog({
     closeLocked.current = false;
     setStep("invoice");
     setName("");
+    setNftAddress("");
     setAccepted(false);
     setCopied(false);
+    setCopiedSerial(false);
     setError(null);
-    setCertificate("");
+    setCertificate(null);
+    setNft(null);
     setSettledBtc(null);
     setIssuedAt(null);
   }
@@ -76,7 +94,32 @@ export function BitcoinPayDialog({
     }
   }
 
-  function settle() {
+  async function copySerial() {
+    if (!certificate) return;
+    try {
+      await navigator.clipboard.writeText(certificate.serial);
+      setCopiedSerial(true);
+      window.setTimeout(() => setCopiedSerial(false), 1800);
+    } catch {
+      setError(copy.clipboardDeclined);
+    }
+  }
+
+  async function mintNft(record: CertificateRecord) {
+    try {
+      const order = await createCertificateNft(record);
+      setNft(order);
+    } catch (reason) {
+      setNft({
+        receiveAddress: record.receiveAddress,
+        status: "error",
+        error:
+          reason instanceof Error ? reason.message : copy.certNftFailed,
+      });
+    }
+  }
+
+  async function settle() {
     if (!sell && !quote) {
       setError(copy.waitForRate);
       return;
@@ -85,21 +128,63 @@ export function BitcoinPayDialog({
       setError(copy.tickTheBox);
       return;
     }
+    if (nftAddress.trim() && !isBitcoinAddress(nftAddress)) {
+      setError(copy.invalidReceiveAddress);
+      return;
+    }
     setError(null);
     closeLocked.current = true;
-    setSettledBtc(formatBtc(dealBtc ?? SELL_BTC));
+    const paid = formatBtc(dealBtc ?? SELL_BTC);
+    setSettledBtc(paid);
     setStep("settling");
-    window.setTimeout(() => {
-      const stamp = Math.floor(Date.now() / 1000)
-        .toString(16)
-        .slice(-6)
-        .toUpperCase();
-      setCertificate(`AE-1666-${stamp}`);
-      setIssuedAt(new Date());
+    try {
+      const record = await issueCertificate({
+        kind,
+        holder: name.trim() || copy.anonymousHolder,
+        btcAmount: paid,
+        receiveAddress: resolveReceiveAddress(nftAddress),
+      });
+      setCertificate(record);
+      setIssuedAt(new Date(record.issuedAt));
+      await mintNft(record);
       setStep("done");
+    } catch (reason) {
+      setError(
+        reason instanceof Error ? reason.message : copy.certNftFailed,
+      );
+      setStep("invoice");
+    } finally {
       closeLocked.current = false;
-    }, 1600);
+    }
   }
+
+  useEffect(() => {
+    if (step !== "done" || !nft?.orderId || nft.inscriptionId) return;
+    let cancelled = false;
+    const tick = async () => {
+      try {
+        const next = await fetchCertificateNft(nft.orderId!);
+        if (!cancelled) setNft(next);
+      } catch {
+        /* keep the unique code; try again on the next poll */
+      }
+    };
+    const timer = window.setInterval(tick, 8000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [step, nft?.orderId, nft?.inscriptionId]);
+
+  const postageReady = Boolean(nft?.chargeAddress && nft.chargeSats && !nft.inscriptionId);
+  const postageUri =
+    postageReady && nft?.chargeAddress && nft.chargeSats
+      ? bitcoinPayUri(
+          nft.chargeAddress,
+          satsToBtc(nft.chargeSats),
+          "Maison Aeternum NFT",
+        )
+      : "";
 
   return (
     <Dialog
@@ -245,6 +330,23 @@ export function BitcoinPayDialog({
               />
             </label>
 
+            <label className="grid gap-1.5">
+              <span className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">
+                {copy.nftReceiveLabel}
+              </span>
+              <Input
+                value={nftAddress}
+                onChange={(event) => setNftAddress(event.target.value)}
+                placeholder={copy.nftReceivePlaceholder}
+                className="h-10 bg-black/30 font-mono text-sm"
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <span className="text-xs leading-5 text-muted-foreground">
+                {copy.nftReceiveHint}
+              </span>
+            </label>
+
             <label className="flex items-start gap-3 rounded-md border border-primary/15 bg-black/20 p-3 text-sm leading-relaxed">
               <Checkbox
                 checked={accepted}
@@ -285,10 +387,16 @@ export function BitcoinPayDialog({
             <DialogDescription>
               {copy.settlingHint(settledBtc || "")}
             </DialogDescription>
+            <p className="text-sm text-primary">{copy.mintingNft}</p>
+            {certificate ? (
+              <p className="font-mono text-xs text-muted-foreground">
+                {certificate.serial}
+              </p>
+            ) : null}
           </div>
         ) : null}
 
-        {step === "done" ? (
+        {step === "done" && certificate ? (
           <div className="space-y-4 py-2">
             <DialogHeader className="items-center text-center">
               <DialogTitle className="font-heading text-2xl text-primary">
@@ -300,12 +408,54 @@ export function BitcoinPayDialog({
             </DialogHeader>
             <SoulCertificate
               kind={kind}
-              holder={name.trim() || copy.anonymousHolder}
-              serial={certificate}
-              btcAmount={settledBtc || ""}
-              issuedAt={issuedAt ?? new Date()}
+              holder={certificate.holder}
+              serial={certificate.serial}
+              btcAmount={settledBtc || certificate.btcAmount}
+              issuedAt={issuedAt ?? new Date(certificate.issuedAt)}
+              nft={nft}
             />
+
+            {postageReady ? (
+              <div className="grid gap-4 rounded-md border border-primary/20 bg-black/30 p-4 sm:grid-cols-[140px_1fr]">
+                <BitcoinQr payload={postageUri} className="mx-auto w-36 sm:w-full" />
+                <div className="space-y-2">
+                  <p className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">
+                    {copy.nftPostageTitle}
+                  </p>
+                  <p className="font-heading text-2xl text-primary">
+                    {formatBtc(satsToBtc(nft!.chargeSats!))}
+                  </p>
+                  <code className="block break-all font-mono text-[11px] text-primary">
+                    {nft!.chargeAddress}
+                  </code>
+                  <p className="text-xs leading-5 text-muted-foreground">
+                    {copy.nftPostageHint}
+                  </p>
+                </div>
+              </div>
+            ) : null}
+
+            {nft?.status === "error" ? (
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2">
+                <p className="text-sm text-destructive">
+                  {nft.error || copy.certNftFailed}
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => mintNft(certificate)}
+                >
+                  {copy.nftRetry}
+                </Button>
+              </div>
+            ) : null}
+
             <DialogFooter className="border-primary/10 bg-transparent sm:justify-end">
+              <Button type="button" variant="outline" onClick={copySerial}>
+                {copiedSerial ? <Check data-icon="inline-start" /> : <Copy data-icon="inline-start" />}
+                {copiedSerial ? copy.copiedSerial : copy.copySerial}
+              </Button>
               <Button type="button" variant="outline" onClick={() => window.print()}>
                 <Printer data-icon="inline-start" />
                 {copy.printCertificate}

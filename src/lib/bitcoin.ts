@@ -75,6 +75,14 @@ export function formatBtc(value: number) {
   return `${value.toFixed(8)} BTC`;
 }
 
+export function bitcoinPayUri(
+  address: string,
+  amount: number,
+  label = "Maison Aeternum",
+) {
+  return `bitcoin:${address}?amount=${amount.toFixed(8)}&label=${encodeURIComponent(label)}`;
+}
+
 export function bitcoinUri(amount: number) {
-  return `bitcoin:${BTC_ADDRESS}?amount=${amount.toFixed(8)}&label=${encodeURIComponent("Maison Aeternum")}`;
+  return bitcoinPayUri(BTC_ADDRESS, amount);
 }
