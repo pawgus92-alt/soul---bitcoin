@@ -306,7 +306,7 @@ const en: Copy = {
     "The last three Bitcoin Ordinals — Nos. 8, 9 and 10 of ten — are 888 luck charters: the dearest, the richest, the ones that bring luck. Eight bitcoin each. The other seven are one bitcoin each.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is 1 BTC (about ${usd}) for seven ordinary souls, or 8 BTC for a 888 luck charter, or Ethereum: 0.5 / 1 / 2 ETH for fifteen NFTs. The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
+    `The private desk is 1 BTC (about ${usd}) for seven ordinary souls, or 8 BTC for a 888 luck charter, or Ethereum: 0.5 / 1 / 2 ETH for fifteen NFTs. The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at the fifth degree — the most expensive laptop.`,
   terms: [
     {
       step: "01",
@@ -316,7 +316,7 @@ const en: Copy = {
     {
       step: "02",
       title: "Pay one Bitcoin",
-      text: "The invoice is one bitcoin — or 0.5 / 1 / 2 ETH, or 10 SOL at Coinbase. The last three Bitcoin NFTs are 888 luck charters at 8 BTC. Fifteen Ethereum NFTs: first ten at 0.5 ETH, three at 1 ETH, last two at 2 ETH. Washing a crypto sin starts at 1.5 SOL and climbs to 8.88 SOL at Binance. One transfer, one hash, one eternity.",
+      text: "The invoice is one bitcoin — or 0.5 / 1 / 2 ETH, or 10 SOL at Coinbase. The last three Bitcoin NFTs are 888 luck charters at 8 BTC. Fifteen Ethereum NFTs: first ten at 0.5 ETH, three at 1 ETH, last two at 2 ETH. Washing a crypto sin starts at 1.5 SOL and climbs to 8.88 SOL at the fifth degree — the laptop. One transfer, one hash, one eternity.",
     },
     {
       step: "03",
@@ -409,7 +409,7 @@ const en: Copy = {
     "Fifteen Ethereum NFTs: first ten at 0.5 ETH, then three at 1 ETH, last two at 2 ETH.",
   midClassLabel: "Middle desk",
   midClassHint:
-    "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk: 1.5 SOL at the first degree, then dearer until Binance at 8.88 SOL.",
+    "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk: 1.5 SOL at the first degree, then dearer until the fifth — the most expensive laptop — at 8.88 SOL.",
   nftCapsLine: "Bitcoin 10 · last three 888 · Solana 250 · Ethereum 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
@@ -444,10 +444,10 @@ const en: Copy = {
   cleanseKicker: "Cleansing desk",
   cleanseHeading: "Cleanse the soul",
   cleanseBody:
-    "For ignoble sins of the crypto world — the ones that never make the prospectus, only the group chat. Six degrees, like a little monastery of disgrace. The Youth, degree I, is 1.5 SOL. Each stall after that costs more, until Binance at five: 8.88 SOL. The sixth stall is vacant on purpose: when the market invents a meaner sin, the form will write itself.",
+    "For ignoble sins of the crypto world — the ones that never make the prospectus, only the group chat. Six degrees, like a little monastery of disgrace. The Youth, degree I, is 1.5 SOL. Each stall after that costs more, until the most expensive laptop at five: 8.88 SOL. The sixth stall is vacant on purpose: when the market invents a meaner sin, the form will write itself.",
   cleansePickTitle: "Name the degree",
   cleansePickDescription:
-    "The youth begins in the family chat at 1.5 SOL. Binance sits in silk at five for 8.88 SOL: six point three billion walked north as a joke, and love still strikes harder than a knife. The Party may hang a medal. Other people, quietly, will not.",
+    "The youth begins in the family chat at 1.5 SOL. Degree V, 2026, sits at 8.88 SOL: the most expensive laptop in history, about six point three billion, because an engineer opened the wrong PDF. Not every hero wears a cape. If you ever opened one — ease the soul.",
   cleanseContinue: "Wash this degree",
   cleanseReserved: "Reserved for a later sin",
   cleanseAcceptTerms: (amount) =>
@@ -520,9 +520,9 @@ const en: Copy = {
     },
     {
       degree: 5,
-      title: "Binance",
-      kicker: "Degree V",
-      text: "You did it by the book: KYC, VIP, a listing that smelled of a five-year plan and a ministry stamp. The Party is proud of you — solemnly, on the front page. Other people, not so much: they keep a quieter arithmetic, without a banner. Then the north arrived as a joke: six point three billion dollars walked out of Binance at night, as from a stranger’s coat, in the hands of North Korean hackers who still post love-letters from Pyongyang. Love, they say, sometimes strikes harder than a knife — and a knife, at least, leaves a receipt. Binance remains a footnote on the charter, like a discreet war that paid the wrong army.",
+      title: "The Most Expensive Laptop in History",
+      kicker: "Degree V · 2026",
+      text: "About six point three billion dollars. They will file it under the dearest laptop ever bought. The door was a notebook on an engineer’s desk: he opened the wrong PDF, and the exchange parted with billions. In the cinema it is one shot — one employee, one attachment, a house that suddenly has less money than a small country. Not every hero wears a cape; sometimes a phishing letter is enough. If you ever opened one — ease the soul. The desk is open. The chain will remember the click anyway.",
     },
     {
       degree: 6,
@@ -748,7 +748,7 @@ const ru: Copy = {
     "Последние три Bitcoin Ordinal — № 8, 9 и 10 из десяти — грамоты 888: самые дорогие, самые богатые, приносящие удачу. По 8 биткоинов. Остальные семь — по одному биткоину.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол — 1 BTC (около ${usd}) за семь обычных душ, или 8 BTC за грамоту 888, или Ethereum: 0.5 / 1 / 2 ETH, пятнадцать NFT. Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
+    `Частный стол — 1 BTC (около ${usd}) за семь обычных душ, или 8 BTC за грамоту 888, или Ethereum: 0.5 / 1 / 2 ETH, пятнадцать NFT. Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на пятой — самый дорогой ноутбук.`,
   terms: [
     {
       step: "01",
@@ -758,7 +758,7 @@ const ru: Copy = {
     {
       step: "02",
       title: "Оплатите один Bitcoin",
-      text: "Счёт — один биткоин — или 0.5 / 1 / 2 ETH, или 10 SOL по Coinbase. Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Ethereum NFT пятнадцать: первые десять по 0.5 ETH, три по 1 ETH, последние две по 2 ETH. Очищение криптогреха начинается с 1.5 SOL и поднимается до 8.88 SOL на Binance. Один перевод, один хеш, одна вечность.",
+      text: "Счёт — один биткоин — или 0.5 / 1 / 2 ETH, или 10 SOL по Coinbase. Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Ethereum NFT пятнадцать: первые десять по 0.5 ETH, три по 1 ETH, последние две по 2 ETH. Очищение криптогреха начинается с 1.5 SOL и поднимается до 8.88 SOL на пятой — ноутбук. Один перевод, один хеш, одна вечность.",
     },
     {
       step: "03",
@@ -851,7 +851,7 @@ const ru: Copy = {
     "Пятнадцать Ethereum NFT: первые десять по 0.5 ETH, затем три по 1 ETH, последние две по 2 ETH.",
   midClassLabel: "Средний стол",
   midClassHint:
-    "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом: 1.5 SOL на первой степени, дальше дороже, до Binance за 8.88 SOL.",
+    "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом: 1.5 SOL на первой степени, дальше дороже, до пятой — самый дорогой ноутбук — за 8.88 SOL.",
   nftCapsLine: "Bitcoin 10 · последние три 888 · Solana 250 · Ethereum 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
@@ -886,10 +886,10 @@ const ru: Copy = {
   cleanseKicker: "Стол очищения",
   cleanseHeading: "Очистить душу",
   cleanseBody:
-    "За неблагородные грехи криптовалютного мира — те, что не попадают в проспект, только в групповой чат. Шесть степеней, как маленький монастырь бесчестья. Отрок, I степень, стоит 1.5 SOL. Каждая следующая дороже, до Binance на пятой — 8.88 SOL. Шестая келья нарочно пуста: когда рынок изобретёт грех подлее, анкета напишет себя сама.",
+    "За неблагородные грехи криптовалютного мира — те, что не попадают в проспект, только в групповой чат. Шесть степеней, как маленький монастырь бесчестья. Отрок, I степень, стоит 1.5 SOL. Каждая следующая дороже, до самого дорогого ноутбука на пятой — 8.88 SOL. Шестая келья нарочно пуста: когда рынок изобретёт грех подлее, анкета напишет себя сама.",
   cleansePickTitle: "Назовите степень",
   cleansePickDescription:
-    "Отрок начинается в семейном чате за 1.5 SOL. Binance сидит в шелках на пятой за 8.88 SOL: 6,3 миллиарда ушли на север шуткой, а любовь иногда бьёт сильнее ножа. Партия, быть может, вывесит орден. Другие люди — тихо — нет.",
+    "Отрок начинается в семейном чате за 1.5 SOL. Пятая степень, 2026-й, сидит за 8.88 SOL: самый дорогой ноутбук в истории, около 6,3 миллиарда, потому что инженер открыл не тот PDF. Не все герои носят плащи. Если когда-то открывал — облегчи душу.",
   cleanseContinue: "Отмыть эту степень",
   cleanseReserved: "Зарезервировано под будущий грех",
   cleanseAcceptTerms: (amount) =>
@@ -962,9 +962,9 @@ const ru: Copy = {
     },
     {
       degree: 5,
-      title: "Binance",
-      kicker: "V степень",
-      text: "Ты сделал это по уставу: KYC, VIP, листинг с запахом пятилетки и печатью кабинета. Партия гордится тобой — торжественно, в передовице. Другие люди — не очень: у них другая арифметика, тише и без знамени. А потом север пришёл шуткой: 6,3 миллиарда долларов ночью вышли из Binance, как из чужого пальто, на руках северокорейских хакеров, которые до сих пор шлют любовные письма из Пхеньяна. Любовь иногда бьёт сильнее ножа — а нож хотя бы оставляет квитанцию. Binance в грамоте останется сноской, как приличная война, заплатившая не той армии.",
+      title: "Самый дорогой ноутбук в истории",
+      kicker: "V степень · 2026",
+      text: "Около 6,3 миллиарда долларов. Занесут в реестр как самый дорогой ноутбук в истории. Дверью стал ноутбук на столе инженера: он открыл не тот PDF — и биржа попрощалась с миллиардами. В кино это один кадр: один сотрудник, одно вложение, дом, у которого вдруг меньше денег, чем у небольшой страны. Не все герои носят плащи; иногда достаточно фишингового письма. Если когда-то открывал — облегчи душу. Стол открыт. Цепь всё равно запомнит клик.",
     },
     {
       degree: 6,

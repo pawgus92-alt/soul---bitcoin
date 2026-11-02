@@ -15,7 +15,7 @@ export const BTC_REGULAR_AMOUNT = 1;
 /** Last three Bitcoin NFTs: 888 luck charters at a flat 8 BTC. */
 export const BTC_LUCKY_AMOUNT = 8;
 export const PEARL_AMOUNT = 650;
-/** Degree I is 1.5 SOL; each open degree climbs until Binance (V) at 8.88 SOL. */
+/** Degree I is 1.5 SOL; each open degree climbs until V (the dearest laptop) at 8.88 SOL. */
 export const CLEANSE_SOL_FIRST = 1.5;
 export const CLEANSE_SOL_BINANCE = 8.88;
 export const CLEANSE_SOL_BY_DEGREE: Record<1 | 2 | 3 | 4 | 5, number> = {
