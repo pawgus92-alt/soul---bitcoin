@@ -1,5 +1,6 @@
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { DealButtons, PayBitcoinButton } from "@/components/pay-bitcoin-button";
+import { SoulCertificate } from "@/components/soul-certificate";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -106,6 +107,9 @@ export default function App() {
             </a>
             <a href="#clients" className="hover:text-primary">
               {copy.navClients}
+            </a>
+            <a href="#folio" className="hover:text-primary">
+              {copy.navFolio}
             </a>
             <a href="#cleanse" className="hover:text-primary">
               {copy.navCleanse}
@@ -311,6 +315,45 @@ export default function App() {
               ))}
             </CardContent>
           </Card>
+        </section>
+
+        <section id="folio" className="border-y border-primary/10 bg-black/25">
+          <div className="mx-auto w-full max-w-6xl px-5 py-16">
+            <p className={kicker}>{copy.folioKicker}</p>
+            <h2 className="font-heading mt-2 max-w-2xl text-4xl sm:text-5xl">
+              {copy.folioHeading}
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">
+              {copy.folioBody}
+            </p>
+            <div className="mt-10 grid gap-8 lg:grid-cols-2">
+              <SoulCertificate
+                compact
+                kind="buy"
+                holder="Comtesse de la Yacht"
+                serial="AE-1666-BUY-A1B2C3D4E5F6"
+                digest="0a1b2c3d4e5f6aabbccddeeff00112233445566778899aabbccddeeff001122"
+                btcAmount="1.28667035 BTC"
+                issuedAt={new Date("1666-06-06T16:06:00Z")}
+                receiveAddress="bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"
+                edition={1}
+                editionMax={25}
+              />
+              <SoulCertificate
+                compact
+                kind="eth"
+                holder="Князь Пустой"
+                serial="AE-1666-ETH-F00D1E5C0FFE"
+                digest="51f00d1e5c0ffe9876543210aabbccddeeff00112233445566778899aabbccdd"
+                btcAmount="2.00000000 ETH"
+                issuedAt={new Date("1666-06-06T16:06:00Z")}
+                receiveAddress="0x1111111111111111111111111111111111111111"
+                nftChain="ethereum"
+                edition={7}
+                editionMax={50}
+              />
+            </div>
+          </div>
         </section>
 
         <section id="clients" className="border-y border-primary/10 bg-black/15">

@@ -34,6 +34,10 @@ export type Copy = {
   navClients: string;
   navContract: string;
   navCleanse: string;
+  navFolio: string;
+  folioKicker: string;
+  folioHeading: string;
+  folioBody: string;
   langEn: string;
   langRu: string;
   langSwitch: string;
@@ -216,6 +220,11 @@ const en: Copy = {
   navClients: "Clients",
   navContract: "Contract",
   navCleanse: "Cleansing",
+  navFolio: "Folio",
+  folioKicker: "The folio",
+  folioHeading: "Each NFT is a unique gothic charter.",
+  folioBody:
+    "Every certificate is drawn as a blackletter diploma: unique parchment grain, rose window, wax sigil and motto, taken from its serial. The same image is inscribed on-chain for the buyer.",
   langEn: "EN",
   langRu: "RU",
   langSwitch: "Language",
@@ -241,7 +250,7 @@ const en: Copy = {
   skuBulletSol: (usd) =>
     `Solana desk: 10 SOL at the live Coinbase spot, about ${usd}.`,
   skuBulletNft:
-    "Bitcoin Ordinal NFTs: 25. Solana NFTs: 250. Ethereum inner NFTs: 50.",
+    "Bitcoin Ordinal NFTs: 25. Solana NFTs: 250. Ethereum inner NFTs: 50. Each a unique gothic charter.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
     `The private desk is ${usd} in Bitcoin at Coinbase (25 Ordinals) or 2 ETH at Coinbase (50 inner NFTs). The middle desk takes 10 SOL at Coinbase (250 NFTs), including the washing of ignoble crypto sins.`,
@@ -567,6 +576,11 @@ const ru: Copy = {
   navClients: "Клиенты",
   navContract: "Контракт",
   navCleanse: "Очищение",
+  navFolio: "Фолио",
+  folioKicker: "Фолио",
+  folioHeading: "Каждый NFT — уникальная готическая грамота.",
+  folioBody:
+    "Каждый сертификат рисуется как диплом чёрным шрифтом: своё зерно пергамента, своя роза, своя сургучная печать и девиз — из серийного номера. Та же картинка вписывается в сеть покупателю.",
   langEn: "EN",
   langRu: "RU",
   langSwitch: "Язык",
@@ -592,7 +606,7 @@ const ru: Copy = {
   skuBulletSol: (usd) =>
     `Стол Solana: 10 SOL по живому споту Coinbase, около ${usd}.`,
   skuBulletNft:
-    "Bitcoin Ordinal NFT: 25. Solana NFT: 250. Ethereum inner NFT: 50.",
+    "Bitcoin Ordinal NFT: 25. Solana NFT: 250. Ethereum inner NFT: 50. Каждый — уникальная готическая грамота.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
     `Частный стол — ${usd} в Bitcoin по Coinbase (25 Ordinal) или 2 ETH по Coinbase (50 inner NFT). Средний стол берёт 10 SOL по Coinbase (250 NFT), включая отмывание неблагородных криптогрехов.`,

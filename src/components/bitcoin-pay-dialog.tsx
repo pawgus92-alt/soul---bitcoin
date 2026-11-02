@@ -852,6 +852,7 @@ export function BitcoinPayDialog({
               kind={kind}
               holder={certificate.holder}
               serial={certificate.serial}
+              digest={certificate.digest}
               btcAmount={settledBtc || certificate.btcAmount}
               issuedAt={issuedAt ?? new Date(certificate.issuedAt)}
               nft={nft}

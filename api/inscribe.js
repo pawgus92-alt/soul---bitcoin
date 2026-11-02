@@ -1,3 +1,5 @@
+import { certificateSvg } from "../src/lib/gothic-certificate.js";
+
 const CHISEL = "https://api.chisel.xyz";
 const MEMPOOL_FEES = "https://mempool.space/api/v1/fees/recommended";
 
@@ -28,52 +30,6 @@ async function readBody(request) {
   for await (const chunk of request) chunks.push(chunk);
   const raw = Buffer.concat(chunks).toString("utf8");
   return raw ? JSON.parse(raw) : {};
-}
-
-function escapeXml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
-}
-
-function certificateSvg(payload) {
-  const sell = payload.kind === "sell";
-  const holder = escapeXml(String(payload.holder || "Anonymous").slice(0, 42));
-  const serial = escapeXml(payload.serial);
-  const paid = escapeXml(
-    payload.sinDegree
-      ? `${payload.btcAmount} · DEGREE ${payload.sinDegree}`
-      : payload.btcAmount,
-  );
-  const issued = escapeXml(String(payload.issuedAt || "").slice(0, 10));
-  const mintedTo = escapeXml(String(payload.receiveAddress || "").slice(0, 48));
-  const desk =
-    payload.kind === "sol"
-      ? "MIDDLE DESK · 10 SOL"
-      : payload.kind === "pearl"
-        ? "MIDDLE DESK · 650 PEARL"
-        : payload.kind === "eth"
-          ? "PRIVATE DESK · ETH INNER NFT"
-          : payload.kind === "cleanse"
-            ? "CLEANSING DESK · IGNOBLE SIN"
-            : sell
-              ? "SOUL DISPOSAL"
-              : "SOUL ACQUISITION";
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480">
-  <rect width="720" height="480" fill="#f4e6c8"/>
-  <rect x="14" y="14" width="692" height="452" fill="none" stroke="#7a1f2b" stroke-width="4"/>
-  <rect x="24" y="24" width="672" height="432" fill="none" stroke="#c9a227" stroke-width="2"/>
-  <text x="360" y="78" text-anchor="middle" fill="#7a1f2b" font-size="28" font-family="Times New Roman,serif">MAISON AETERNUM</text>
-  <text x="360" y="108" text-anchor="middle" fill="#1e3a6e" font-size="16" font-family="Times New Roman,serif">${desk}</text>
-  <text x="360" y="188" text-anchor="middle" fill="#7a1f2b" font-size="30" font-family="Times New Roman,serif">${holder}</text>
-  <text x="360" y="232" text-anchor="middle" fill="#1f6b4a" font-size="20" font-family="Times New Roman,serif">${payload.kind === "cleanse" ? "WASHED ONE SIN" : sell ? "SOLD ONE SOUL" : "BOUGHT ONE SOUL"}</text>
-  <text x="360" y="268" text-anchor="middle" fill="#5c3d24" font-size="14" font-family="Times New Roman,serif">${paid} · ${issued}</text>
-  <text x="360" y="336" text-anchor="middle" fill="#2a1a12" font-size="18" font-family="Courier New,monospace">${serial}</text>
-  <text x="360" y="392" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="Times New Roman,serif">${payload.kind === "eth" ? "ETHEREUM INNER NFT" : payload.kind === "sol" || payload.kind === "pearl" || payload.kind === "cleanse" ? "SOLANA NFT" : "BITCOIN ORDINAL NFT"}</text>
-  <text x="360" y="428" text-anchor="middle" fill="#5c3d24" font-size="11" font-family="Courier New,monospace">${mintedTo}</text>
-</svg>`;
 }
 
 function extractInscriptionId(data) {
