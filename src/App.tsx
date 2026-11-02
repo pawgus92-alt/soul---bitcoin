@@ -26,6 +26,7 @@ function NftCaps() {
   return (
     <ul className="space-y-1 text-[11px] leading-5 text-primary/80">
       <li>{copy.nftRemaining(supply.bitcoin.remaining, supply.bitcoin.max, "bitcoin")}</li>
+      <li>{copy.nftLuckyRemaining(supply.lucky.remaining, supply.lucky.max)}</li>
       <li>{copy.nftRemaining(supply.solana.remaining, supply.solana.max, "solana")}</li>
       <li>
         {copy.nftRemaining(supply.ethereum.remaining, supply.ethereum.max, "ethereum")}
@@ -161,6 +162,9 @@ export default function App() {
             </p>
             <div className="flex flex-col gap-3">
               <DealButtons buttonClassName="h-12 px-6 text-base" />
+              <p className="max-w-lg text-xs leading-5 text-primary">
+                {copy.luckyHint}
+              </p>
               <p className="max-w-lg text-xs leading-5 text-muted-foreground">
                 {copy.midClassHint}
               </p>
@@ -202,6 +206,7 @@ export default function App() {
                   )}
                 </li>
                 <li>{copy.skuBulletNft}</li>
+                <li>{copy.skuBulletLucky}</li>
                 <li>{copy.skuBulletRefund}</li>
                 <li>{copy.vatLine}</li>
               </ul>
@@ -354,16 +359,16 @@ export default function App() {
             <div className="mt-10 grid gap-8 lg:grid-cols-3">
               <SoulCertificate
                 compact
-                kind="buy"
+                kind="lucky"
                 holder="Comtesse de la Yacht"
-                serial="AE-1666-BUY-A1B2C3D4E5F6"
+                serial="AE-1666-B88-A1B2C3D4E5F6"
                 digest="0a1b2c3d4e5f6aabbccddeeff00112233445566778899aabbccddeeff001122"
-                btcAmount="1.28667035 BTC"
+                btcAmount="8.00000000 BTC"
                 issuedAt={new Date("1666-06-06T16:06:00Z")}
                 receiveAddress="bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"
                 nftChain="bitcoin"
-                edition={1}
-                editionMax={25}
+                edition={10}
+                editionMax={10}
               />
               <SoulCertificate
                 compact

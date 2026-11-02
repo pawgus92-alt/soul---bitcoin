@@ -60,6 +60,7 @@ export type Copy = {
   skuBulletEth: (usd: string) => string;
   skuBulletSol: (usd: string) => string;
   skuBulletNft: string;
+  skuBulletLucky: string;
   skuBulletRefund: string;
   skuFoot: (usd: string) => string;
   terms: Step[];
@@ -92,6 +93,7 @@ export type Copy = {
   nftCapsLine: string;
   nftRemaining: (remaining: number, max: number, chain: NftChain) => string;
   nftSoldOut: string;
+  nftOrdinarySoldOut: string;
   invoiceBadge: string;
   invoiceTitle: string;
   invoiceDescription: (usd: string) => string;
@@ -128,6 +130,18 @@ export type Copy = {
   faAcceptTerms: string;
   faCleansed: string;
   faCleansedHint: string;
+  luckySoul: string;
+  luckyHint: string;
+  luckyInvoiceBadge: string;
+  luckyInvoiceTitle: string;
+  luckyInvoiceDescription: (usd: string) => string;
+  luckyAcceptTerms: string;
+  luckyBought: string;
+  luckyBoughtHint: string;
+  nftLuckyRemaining: (remaining: number, max: number) => string;
+  certLuckySubtitle: string;
+  certLuckyPaid: string;
+  certLuckyProof: string;
   sinDegrees: SinDegreeCopy[];
   ethInvoiceBadge: string;
   ethInvoiceTitle: string;
@@ -266,10 +280,12 @@ const en: Copy = {
   skuBulletSol: (usd) =>
     `Solana desk: 10 SOL at the live Coinbase spot, about ${usd}.`,
   skuBulletNft:
-    "The certificate NFT is minted on the chain you paid. Bitcoin Ordinals: 25. Solana NFTs: 250. Ethereum NFTs: 50. Each a unique mystical charter.",
+    "The certificate NFT is minted on the chain you paid. Bitcoin Ordinals: 10, the last three of them 888 luck charters. Solana NFTs: 250. Ethereum NFTs: 50. Each a unique mystical charter.",
+  skuBulletLucky:
+    "The last three Bitcoin Ordinals — Nos. 8, 9 and 10 of ten — are 888 luck charters: the dearest, the richest, the ones that bring luck. Eight bitcoin each. The other seven keep the $100,000 Coinbase spot.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is ${usd} in Bitcoin at Coinbase (25 Ordinals) or 2 ETH at Coinbase (50 Ethereum NFTs). The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
+    `The private desk is ${usd} in Bitcoin at Coinbase (10 Ordinals) or 2 ETH at Coinbase (50 Ethereum NFTs). The last three Bitcoin NFTs are 888 luck charters at 8 BTC. The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
   terms: [
     {
       step: "01",
@@ -279,12 +295,12 @@ const en: Copy = {
     {
       step: "02",
       title: "Pay Bitcoin at the spot",
-      text: "The invoice is $100,000 divided by the live Coinbase BTC price — or a flat 2 ETH / 10 SOL at Coinbase. Washing a crypto sin starts at 1.5 SOL and climbs to 8.88 SOL at Binance. One transfer, one hash, one eternity.",
+      text: "The invoice is $100,000 divided by the live Coinbase BTC price — or a flat 2 ETH / 10 SOL at Coinbase. The last three Bitcoin NFTs are 888 luck charters at 8 BTC. Washing a crypto sin starts at 1.5 SOL and climbs to 8.88 SOL at Binance. One transfer, one hash, one eternity.",
     },
     {
       step: "03",
       title: "Receive the chain NFT",
-      text: "A unique certificate code. Bitcoin desk: Ordinal, 25 pieces. Solana desk: Solana NFT, 250 pieces. Ethereum desk: Ethereum NFT, 50 pieces.",
+      text: "A unique certificate code. Bitcoin desk: Ordinal, 10 pieces, last three 888 at 8 BTC. Solana desk: Solana NFT, 250 pieces. Ethereum desk: Ethereum NFT, 50 pieces.",
     },
   ],
   assetsRetained: "Assets retained",
@@ -367,7 +383,7 @@ const en: Copy = {
   midClassLabel: "Middle desk",
   midClassHint:
     "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk: 1.5 SOL at the first degree, then dearer until Binance at 8.88 SOL.",
-  nftCapsLine: "Bitcoin 25 · Solana 250 · Ethereum 50",
+  nftCapsLine: "Bitcoin 10 · last three 888 · Solana 250 · Ethereum 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT ${remaining} of ${max} remaining`
@@ -375,6 +391,8 @@ const en: Copy = {
         ? `Ethereum NFT ${remaining} of ${max} remaining`
         : `Bitcoin Ordinal ${remaining} of ${max} remaining`,
   nftSoldOut: "This NFT edition is sold out. The soul will have to wait.",
+  nftOrdinarySoldOut:
+    "The seven ordinary Bitcoin souls are gone. The last three 888 luck charters remain, at 8 BTC.",
   invoiceBadge: "Live Bitcoin invoice",
   invoiceTitle: "Buy in Bitcoin",
   invoiceDescription: (usd) =>
@@ -424,6 +442,24 @@ const en: Copy = {
   faCleansed: "发发发 · washed clean",
   faCleansedHint:
     "All ignoble crypto sins, and the misfortune beside them. Hang the gothic charter where fortune can see the three eights.",
+  luckySoul: "888 · 8 BTC",
+  luckyHint:
+    "The last three Bitcoin NFTs: Nos. 8, 9 and 10 of ten. The dearest, the richest, the ones that bring luck. Eight bitcoin each. The other seven stay at the live $100,000 spot.",
+  luckyInvoiceBadge: "888 · the dearest three",
+  luckyInvoiceTitle: "Buy the luck charter",
+  luckyInvoiceDescription: (usd) =>
+    `Eight bitcoin, about ${usd}. One of three 888 certificates — the dearest, the richest, the ones that bring luck.`,
+  luckyAcceptTerms:
+    "I understand this is one of three 888 Bitcoin NFTs, sold for 8 BTC without repurchase. The dearest desk. Luck is not a refund.",
+  luckyBought: "You bought one of the three 888",
+  luckyBoughtHint:
+    "The dearest Bitcoin NFT, a luck charter. Hang it where fortune can see the three eights.",
+  nftLuckyRemaining: (remaining, max) =>
+    `888 luck charters ${remaining} of ${max} remaining`,
+  certLuckySubtitle: "of a Luck Charter · 888",
+  certLuckyPaid: "paid in eight bitcoin.",
+  certLuckyProof:
+    "Ordinary people do not buy three eights in Bitcoin. This document is proof of surplus, taste, and luck formally invited to stay.",
   sinDegrees: [
     {
       degree: 1,
@@ -656,10 +692,12 @@ const ru: Copy = {
   skuBulletSol: (usd) =>
     `Стол Solana: 10 SOL по живому споту Coinbase, около ${usd}.`,
   skuBulletNft:
-    "NFT-сертификат чеканится в сети оплаты. Bitcoin Ordinal: 25. Solana NFT: 250. Ethereum NFT: 50. Каждый — уникальная мистическая грамота.",
+    "NFT-сертификат чеканится в сети оплаты. Bitcoin Ordinal: 10, последние три — грамоты 888 на удачу. Solana NFT: 250. Ethereum NFT: 50. Каждый — уникальная мистическая грамота.",
+  skuBulletLucky:
+    "Последние три Bitcoin Ordinal — № 8, 9 и 10 из десяти — грамоты 888: самые дорогие, самые богатые, приносящие удачу. По 8 биткоинов. Остальные семь остаются по споту Coinbase $100 000.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол — ${usd} в Bitcoin по Coinbase (25 Ordinals) или 2 ETH по Coinbase (50 Ethereum NFT). Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
+    `Частный стол — ${usd} в Bitcoin по Coinbase (10 Ordinals) или 2 ETH по Coinbase (50 Ethereum NFT). Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
   terms: [
     {
       step: "01",
@@ -669,12 +707,12 @@ const ru: Copy = {
     {
       step: "02",
       title: "Оплатите Bitcoin по споту",
-      text: "Счёт — $100 000, делённые на живую цену Coinbase BTC — или ровно 2 ETH / 10 SOL по Coinbase. Очищение криптогреха начинается с 1.5 SOL и поднимается до 8.88 SOL на Binance. Один перевод, один хеш, одна вечность.",
+      text: "Счёт — $100 000, делённые на живую цену Coinbase BTC — или ровно 2 ETH / 10 SOL по Coinbase. Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Очищение криптогреха начинается с 1.5 SOL и поднимается до 8.88 SOL на Binance. Один перевод, один хеш, одна вечность.",
     },
     {
       step: "03",
       title: "Получите NFT в сети оплаты",
-      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 25 штук. Стол Solana: Solana NFT, 250 штук. Стол Ethereum: Ethereum NFT, 50 штук.",
+      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 10 штук, последние три — 888 по 8 BTC. Стол Solana: Solana NFT, 250 штук. Стол Ethereum: Ethereum NFT, 50 штук.",
     },
   ],
   assetsRetained: "Сохранённые активы",
@@ -757,7 +795,7 @@ const ru: Copy = {
   midClassLabel: "Средний стол",
   midClassHint:
     "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом: 1.5 SOL на первой степени, дальше дороже, до Binance за 8.88 SOL.",
-  nftCapsLine: "Bitcoin 25 · Solana 250 · Ethereum 50",
+  nftCapsLine: "Bitcoin 10 · последние три 888 · Solana 250 · Ethereum 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT: осталось ${remaining} из ${max}`
@@ -765,6 +803,8 @@ const ru: Copy = {
         ? `Ethereum NFT: осталось ${remaining} из ${max}`
         : `Bitcoin Ordinal: осталось ${remaining} из ${max}`,
   nftSoldOut: "Этот тираж NFT распродан. Душе придётся подождать.",
+  nftOrdinarySoldOut:
+    "Семь обычных душ в Bitcoin проданы. Остались три грамоты 888 по 8 BTC.",
   invoiceBadge: "Живой счёт в Bitcoin",
   invoiceTitle: "Купить за Bitcoin",
   invoiceDescription: (usd) =>
@@ -814,6 +854,24 @@ const ru: Copy = {
   faCleansed: "发发发 · отмыто дочиста",
   faCleansedHint:
     "Все неблагородные криптогрехи и неудача рядом с ними. Повесьте готическую грамоту там, где фортуна увидит три восьмёрки.",
+  luckySoul: "888 · 8 BTC",
+  luckyHint:
+    "Последние три Bitcoin NFT: № 8, 9 и 10 из десяти. Самые дорогие, самые богатые, приносящие удачу. По 8 биткоинов. Остальные семь — по живому споту $100 000.",
+  luckyInvoiceBadge: "888 · три самых дорогих",
+  luckyInvoiceTitle: "Купить грамоту удачи",
+  luckyInvoiceDescription: (usd) =>
+    `Восемь биткоинов, около ${usd}. Одна из трёх грамот 888 — самые дорогие, самые богатые, приносящие удачу.`,
+  luckyAcceptTerms:
+    "Я понимаю: это один из трёх Bitcoin NFT 888 за 8 BTC без права выкупа. Самый дорогой стол. Удача не возвращается.",
+  luckyBought: "Вы купили одну из трёх 888",
+  luckyBoughtHint:
+    "Самый дорогой Bitcoin NFT, грамота удачи. Повесьте там, где фортуна увидит три восьмёрки.",
+  nftLuckyRemaining: (remaining, max) =>
+    `888 грамот удачи: осталось ${remaining} из ${max}`,
+  certLuckySubtitle: "грамоты удачи · 888",
+  certLuckyPaid: "за восемь биткоинов.",
+  certLuckyProof:
+    "Обычные люди не покупают три восьмёрки в Bitcoin. Этот документ — доказательство избытка, вкуса и удачи, которую вежливо попросили остаться.",
   sinDegrees: [
     {
       degree: 1,

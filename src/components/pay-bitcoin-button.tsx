@@ -10,6 +10,7 @@ import {
 import { BitcoinPayDialog } from "@/components/bitcoin-pay-dialog";
 import { formatBtc, formatUsd } from "@/lib/bitcoin";
 import {
+  BTC_LUCKY_AMOUNT,
   CLEANSE_SOL_RANGE,
   FA_AMOUNT,
   SHOW_PEARL_DESK,
@@ -32,6 +33,9 @@ export function PayBitcoinButton({
   const faUsd = solQuote
     ? formatUsd(solQuote.usdPerSol * FA_AMOUNT)
     : null;
+  const luckyUsd = quote
+    ? formatUsd(quote.usdPerBtc * BTC_LUCKY_AMOUNT)
+    : null;
   const label =
     kind === "sell"
       ? copy.sellSoul
@@ -47,6 +51,10 @@ export function PayBitcoinButton({
               ? faUsd
                 ? `${copy.faSoul} · ${faUsd}`
                 : copy.faSoul
+              : kind === "lucky"
+                ? luckyUsd
+                  ? `${copy.luckySoul} · ${luckyUsd}`
+                  : copy.luckySoul
               : kind === "eth"
                 ? ethQuote
                   ? copy.payEthAmount(formatUsd(ethQuote.usdAmount))
@@ -64,7 +72,7 @@ export function PayBitcoinButton({
       <Coins data-icon="inline-start" />
     ) : kind === "cleanse" ? (
       <Droplets data-icon="inline-start" />
-    ) : kind === "fa" ? (
+    ) : kind === "fa" || kind === "lucky" ? (
       <Sparkles data-icon="inline-start" />
     ) : kind === "eth" ? (
       <Hexagon data-icon="inline-start" />
@@ -83,7 +91,7 @@ export function PayBitcoinButton({
       kind={kind}
       triggerClassName={className}
       triggerLabel={label}
-      triggerVariant={kind === "buy" ? "default" : "outline"}
+      triggerVariant={kind === "buy" || kind === "lucky" ? "default" : "outline"}
       icon={icon}
     />
   );
@@ -103,6 +111,7 @@ export function DealButtons({
     <div className={cn("flex flex-col gap-3", className)}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
         <PayBitcoinButton kind="buy" className={buttonClassName} />
+        <PayBitcoinButton kind="lucky" className={buttonClassName} />
         {SHOW_SELL_DESK ? (
           <PayBitcoinButton kind="sell" className={buttonClassName} />
         ) : null}

@@ -3,6 +3,8 @@ export const SELL_BTC = 0.5;
 export const ETH_AMOUNT = 2;
 export const SOL_AMOUNT = 10;
 export const FA_AMOUNT = 8.88;
+/** Last three Bitcoin NFTs: 888 luck charters at a flat 8 BTC. */
+export const BTC_LUCKY_AMOUNT = 8;
 export const PEARL_AMOUNT = 650;
 /** Degree I is 1.5 SOL; each open degree climbs until Binance (V) at 8.88 SOL. */
 export const CLEANSE_SOL_FIRST = 1.5;
@@ -34,17 +36,22 @@ export type DealKind =
   | "pearl"
   | "eth"
   | "cleanse"
-  | "fa";
+  | "fa"
+  | "lucky";
 export type DealAsset = "BTC" | "SOL" | "PEARL" | "ETH";
 export type DealChain = "bitcoin" | "solana" | "ethereum";
 export type DealClass = "private" | "middle";
 export type NftChain = "bitcoin" | "solana" | "ethereum";
 
 export const NFT_MAX: Record<NftChain, number> = {
-  bitcoin: 25,
+  bitcoin: 10,
   solana: 250,
   ethereum: 50,
 };
+/** Ordinary Bitcoin souls: editions 1–7 at the live $100,000 spot. */
+export const BTC_REGULAR_MAX = 7;
+/** Last three of ten: editions 8–10, 888 luck charters at 8 BTC. */
+export const BTC_LUCKY_MAX = 3;
 
 export type DealSpec = {
   kind: DealKind;
@@ -124,6 +131,15 @@ export const DEALS: Record<DealKind, DealSpec> = {
     address: SOL_ADDRESS,
     unit: "SOL",
   },
+  lucky: {
+    kind: "lucky",
+    asset: "BTC",
+    chain: "bitcoin",
+    nftChain: "bitcoin",
+    deskClass: "private",
+    address: BTC_ADDRESS,
+    unit: "BTC",
+  },
 };
 
 export function getDeal(kind: DealKind): DealSpec {
@@ -164,6 +180,7 @@ export function expectedAtomic(
   if (kind === "fa") return String(Math.round(FA_AMOUNT * 1_000_000_000));
   if (kind === "pearl") return String(PEARL_AMOUNT * 10 ** PEARL_DECIMALS);
   if (kind === "sell") return String(Math.round(SELL_BTC * 1e8));
+  if (kind === "lucky") return String(Math.round(BTC_LUCKY_AMOUNT * 1e8));
   if (kind === "eth") return ethToWei(ETH_AMOUNT);
   return String(Math.round(coinAmount * 1e8));
 }
@@ -178,6 +195,7 @@ export function formatDealAmount(
   if (kind === "fa") return `${FA_AMOUNT} SOL`;
   if (kind === "pearl") return `${PEARL_AMOUNT} PEARL`;
   if (kind === "sell") return `${SELL_BTC.toFixed(8)} BTC`;
+  if (kind === "lucky") return `${BTC_LUCKY_AMOUNT.toFixed(8)} BTC`;
   if (kind === "eth") return `${ETH_AMOUNT} ETH`;
   if (typeof coinAmount === "number") return `${coinAmount.toFixed(8)} BTC`;
   return "BTC";
@@ -202,7 +220,7 @@ export function formatAtomic(kind: DealKind, atomic: string | number) {
 
 export const SERIAL_TAG: Record<
   DealKind,
-  "BUY" | "SELL" | "SOL" | "PRL" | "ETH" | "CLN" | "FA8"
+  "BUY" | "SELL" | "SOL" | "PRL" | "ETH" | "CLN" | "FA8" | "B88"
 > = {
   buy: "BUY",
   sell: "SELL",
@@ -211,6 +229,7 @@ export const SERIAL_TAG: Record<
   eth: "ETH",
   cleanse: "CLN",
   fa: "FA8",
+  lucky: "B88",
 };
 
 export function deskAddress(chain: DealChain) {

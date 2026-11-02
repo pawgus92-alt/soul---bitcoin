@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react";
 
-import { NFT_MAX, type NftChain } from "@/lib/deal";
+import {
+  BTC_LUCKY_MAX,
+  BTC_REGULAR_MAX,
+  NFT_MAX,
+  type NftChain,
+} from "@/lib/deal";
 
 const STORAGE_KEY = "maison-nft-editions";
 
-type Ledger = Record<NftChain, number>;
+export type NftPool = "regular" | "lucky";
+
+type Ledger = Record<NftChain, number> & { lucky: number };
 type Listener = () => void;
 
 const listeners = new Set<Listener>();
 
 function empty(): Ledger {
-  return { bitcoin: 0, solana: 0, ethereum: 0 };
+  return { bitcoin: 0, solana: 0, ethereum: 0, lucky: 0 };
 }
 
 function read(): Ledger {
@@ -20,9 +27,10 @@ function read(): Ledger {
     if (!raw) return empty();
     const parsed = JSON.parse(raw) as Partial<Ledger>;
     return {
-      bitcoin: Number(parsed.bitcoin) || 0,
+      bitcoin: Math.min(Number(parsed.bitcoin) || 0, BTC_REGULAR_MAX),
       solana: Number(parsed.solana) || 0,
       ethereum: Number(parsed.ethereum) || 0,
+      lucky: Math.min(Number(parsed.lucky) || 0, BTC_LUCKY_MAX),
     };
   } catch {
     return empty();
@@ -53,7 +61,20 @@ export type NftEdition = {
 };
 
 export function nftSupply(chain: NftChain): NftEdition {
-  const issued = Math.min(read()[chain], NFT_MAX[chain]);
+  const ledger = read();
+  if (chain === "bitcoin") {
+    const issued =
+      Math.min(ledger.bitcoin, BTC_REGULAR_MAX) +
+      Math.min(ledger.lucky, BTC_LUCKY_MAX);
+    const max = NFT_MAX.bitcoin;
+    return {
+      chain,
+      edition: issued,
+      max,
+      remaining: Math.max(0, max - issued),
+    };
+  }
+  const issued = Math.min(ledger[chain], NFT_MAX[chain]);
   const max = NFT_MAX[chain];
   return {
     chain,
@@ -63,16 +84,63 @@ export function nftSupply(chain: NftChain): NftEdition {
   };
 }
 
+export function regularBtcSupply(): NftEdition {
+  const issued = Math.min(read().bitcoin, BTC_REGULAR_MAX);
+  return {
+    chain: "bitcoin",
+    edition: issued,
+    max: BTC_REGULAR_MAX,
+    remaining: Math.max(0, BTC_REGULAR_MAX - issued),
+  };
+}
+
+export function luckyBtcSupply(): NftEdition {
+  const issued = Math.min(read().lucky, BTC_LUCKY_MAX);
+  return {
+    chain: "bitcoin",
+    edition: BTC_REGULAR_MAX + issued,
+    max: BTC_LUCKY_MAX,
+    remaining: Math.max(0, BTC_LUCKY_MAX - issued),
+  };
+}
+
 export function allNftSupply() {
   return {
     bitcoin: nftSupply("bitcoin"),
     solana: nftSupply("solana"),
     ethereum: nftSupply("ethereum"),
+    lucky: luckyBtcSupply(),
+    regular: regularBtcSupply(),
   };
 }
 
-export function claimNftEdition(chain: NftChain): NftEdition | null {
+export function claimNftEdition(
+  chain: NftChain,
+  pool: NftPool = "regular",
+): NftEdition | null {
   const ledger = read();
+  if (chain === "bitcoin" && pool === "lucky") {
+    if (ledger.lucky >= BTC_LUCKY_MAX) return null;
+    ledger.lucky += 1;
+    write(ledger);
+    return {
+      chain,
+      edition: BTC_REGULAR_MAX + ledger.lucky,
+      max: NFT_MAX.bitcoin,
+      remaining: Math.max(0, BTC_LUCKY_MAX - ledger.lucky),
+    };
+  }
+  if (chain === "bitcoin") {
+    if (ledger.bitcoin >= BTC_REGULAR_MAX) return null;
+    ledger.bitcoin += 1;
+    write(ledger);
+    return {
+      chain,
+      edition: ledger.bitcoin,
+      max: NFT_MAX.bitcoin,
+      remaining: Math.max(0, BTC_REGULAR_MAX - ledger.bitcoin),
+    };
+  }
   if (ledger[chain] >= NFT_MAX[chain]) return null;
   ledger[chain] += 1;
   write(ledger);
@@ -91,4 +159,16 @@ export function useNftSupply(chain?: NftChain) {
   const [, bump] = useState(0);
   useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
   return chain ? nftSupply(chain) : allNftSupply();
+}
+
+export function useLuckyBtcSupply() {
+  const [, bump] = useState(0);
+  useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
+  return luckyBtcSupply();
+}
+
+export function useRegularBtcSupply() {
+  const [, bump] = useState(0);
+  useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
+  return regularBtcSupply();
 }

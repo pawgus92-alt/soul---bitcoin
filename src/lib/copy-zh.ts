@@ -42,10 +42,12 @@ export const zh: Copy = {
   skuBulletSol: (usd) =>
     `Solana 柜台：10 SOL，Coinbase 即时现货，约 ${usd}。`,
   skuBulletNft:
-    "证书 NFT 铸于你付款之链。比特币铭文：25。Solana NFT：250。以太坊 NFT：50。各为一张独特的神秘文书。",
+    "证书 NFT 铸于你付款之链。比特币铭文：10，其中最后三枚为 888 招财文书。Solana NFT：250。以太坊 NFT：50。各为一张独特的神秘文书。",
+  skuBulletLucky:
+    "最后三枚比特币铭文——第 8、9、10 号，共十枚——为 888 招财文书：最贵、最富、招财。每枚 8 枚比特币。其余七枚仍按 Coinbase 十万美元现货。",
   skuBulletRefund: "恕不退款。悔恨是另一件定价过高的商品。",
   skuFoot: (usd) =>
-    `私人柜台为 Coinbase 比特币 ${usd}（25 枚铭文）或 Coinbase 的 2 ETH（50 枚以太坊 NFT）。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
+    `私人柜台为 Coinbase 比特币 ${usd}（10 枚铭文）或 Coinbase 的 2 ETH（50 枚以太坊 NFT）。最后三枚比特币 NFT 为 888 招财文书，各 8 BTC。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
   terms: [
     {
       step: "01",
@@ -55,12 +57,12 @@ export const zh: Copy = {
     {
       step: "02",
       title: "按现货支付比特币",
-      text: "账单是十万美元除以 Coinbase 即时 BTC，或固定的 2 ETH / 10 SOL。洗涤加密罪过自 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
+      text: "账单是十万美元除以 Coinbase 即时 BTC，或固定的 2 ETH / 10 SOL。最后三枚比特币 NFT 为 888 招财文书，各 8 BTC。洗涤加密罪过自 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
     },
     {
       step: "03",
       title: "领取链上 NFT",
-      text: "独一无二的证书编号。比特币柜台：铭文，二十五枚。Solana 柜台：Solana NFT，二百五十枚。以太坊柜台：以太坊 NFT，五十枚。",
+      text: "独一无二的证书编号。比特币柜台：铭文，十枚，末三枚 888，各 8 BTC。Solana 柜台：Solana NFT，二百五十枚。以太坊柜台：以太坊 NFT，五十枚。",
     },
   ],
   assetsRetained: "仍归你所有",
@@ -140,7 +142,7 @@ export const zh: Copy = {
   midClassLabel: "中产柜台",
   midClassHint:
     "给已有 Solana、尚未有家族办公室的人家。不体面的加密罪过在同一柜台洗涤：第一等 1.5 SOL，逐等加价，至 Binance 8.88 SOL。中文支线另开 发发发。",
-  nftCapsLine: "比特币 25 · Solana 250 · 以太坊 50",
+  nftCapsLine: "比特币 10 · 末三枚 888 · Solana 250 · 以太坊 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT 余 ${remaining} / ${max}`
@@ -148,6 +150,8 @@ export const zh: Copy = {
         ? `以太坊 NFT 余 ${remaining} / ${max}`
         : `比特币铭文余 ${remaining} / ${max}`,
   nftSoldOut: "此 NFT 版次已罄。灵魂须再等候。",
+  nftOrdinarySoldOut:
+    "七枚寻常比特币灵魂已罄。还剩三枚 888 招财文书，各 8 BTC。",
   invoiceBadge: "即时比特币账单",
   invoiceTitle: "以比特币购买",
   invoiceDescription: (usd) =>
@@ -197,6 +201,24 @@ export const zh: Copy = {
   faCleansed: "发发发 · 已洗洁净",
   faCleansedHint:
     "一切不体面的加密罪过，与其旁的不顺。把哥特文书挂在运气看得见三枚八的地方。",
+  luckySoul: "888 · 8 BTC",
+  luckyHint:
+    "最后三枚比特币 NFT：第 8、9、10 号，共十枚。最贵、最富、招财。每枚 8 枚比特币。其余七枚仍按十万美元即时现货。",
+  luckyInvoiceBadge: "888 · 最贵的三枚",
+  luckyInvoiceTitle: "购买招财文书",
+  luckyInvoiceDescription: (usd) =>
+    `八枚比特币，约 ${usd}。三枚 888 证书之一——最贵、最富、招财。`,
+  luckyAcceptTerms:
+    "我明白：此为三枚 888 比特币 NFT 之一，以 8 BTC 出售，不得赎回。最贵的柜台。运气不退款。",
+  luckyBought: "你买下了三枚 888 之一",
+  luckyBoughtHint:
+    "最贵的比特币 NFT，招财文书。挂在运气看得见三个八的地方。",
+  nftLuckyRemaining: (remaining, max) =>
+    `888 招财文书余 ${remaining} / ${max}`,
+  certLuckySubtitle: "招财文书 · 888",
+  certLuckyPaid: "以八枚比特币支付。",
+  certLuckyProof:
+    "寻常人不以比特币买三个八。此件为过剩、品味，以及被郑重请来留下的福分之证据。",
   sinDegrees: [
     {
       degree: 1,

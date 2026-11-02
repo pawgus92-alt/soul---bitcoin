@@ -31,6 +31,7 @@ import {
   type CertificateRecord,
 } from "@/lib/certificate";
 import {
+  BTC_LUCKY_AMOUNT,
   DEAL_USD,
   ETH_AMOUNT,
   FA_AMOUNT,
@@ -46,7 +47,12 @@ import {
   type DealKind,
 } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
-import { claimNftEdition, useNftSupply } from "@/lib/nft-supply";
+import {
+  claimNftEdition,
+  useLuckyBtcSupply,
+  useNftSupply,
+  useRegularBtcSupply,
+} from "@/lib/nft-supply";
 import {
   createCertificateNft,
   fetchCertificateNft,
@@ -97,6 +103,13 @@ function invoiceCopy(
       badge: copy.faInvoiceBadge,
       title: copy.faInvoiceTitle,
       description: copy.faInvoiceDescription(usd),
+    };
+  }
+  if (kind === "lucky") {
+    return {
+      badge: copy.luckyInvoiceBadge,
+      title: copy.luckyInvoiceTitle,
+      description: copy.luckyInvoiceDescription(usd),
     };
   }
   if (kind === "eth") {
@@ -154,20 +167,31 @@ export function BitcoinPayDialog({
   } = useBtcQuote();
   const deal = getDeal(kind);
   const supply = useNftSupply(deal.nftChain);
+  const regularBtc = useRegularBtcSupply();
+  const luckyBtc = useLuckyBtcSupply();
   const sell = kind === "sell";
   const btcBuy = kind === "buy";
+  const luckyDesk = kind === "lucky";
   const ethBuy = kind === "eth";
   const cleansing = kind === "cleanse";
   const faBlessing = kind === "fa";
   const solDesk = kind === "sol" || cleansing || faBlessing;
   const payLabel =
     triggerLabel ??
-    (cleansing ? copy.cleanseSoul : sell ? copy.sellSoul : copy.payInBitcoin);
+    (cleansing
+      ? copy.cleanseSoul
+      : luckyDesk
+        ? copy.luckySoul
+        : sell
+          ? copy.sellSoul
+          : copy.payInBitcoin);
   const dealCoin = sell
     ? SELL_BTC
-    : ethBuy
-      ? ETH_AMOUNT
-      : quote?.btcAmount;
+    : luckyDesk
+      ? BTC_LUCKY_AMOUNT
+      : ethBuy
+        ? ETH_AMOUNT
+        : quote?.btcAmount;
   const firstStep: Step = cleansing ? "sins" : "invoice";
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>(firstStep);
@@ -178,14 +202,20 @@ export function BitcoinPayDialog({
   const invoiceUsd =
     ethBuy && ethQuote
       ? formatUsd(ethQuote.usdAmount)
-      : faBlessing && solQuote
-        ? formatUsd(solQuote.usdPerSol * FA_AMOUNT)
-        : cleansing && solQuote
-          ? formatUsd(solQuote.usdPerSol * cleanseSol)
-          : kind === "sol" && solQuote
-            ? formatUsd(solQuote.usdAmount)
-            : formatUsd(DEAL_USD);
-  const soldOut = supply.remaining <= 0;
+      : luckyDesk && quote
+        ? formatUsd(quote.usdPerBtc * BTC_LUCKY_AMOUNT)
+        : faBlessing && solQuote
+          ? formatUsd(solQuote.usdPerSol * FA_AMOUNT)
+          : cleansing && solQuote
+            ? formatUsd(solQuote.usdPerSol * cleanseSol)
+            : kind === "sol" && solQuote
+              ? formatUsd(solQuote.usdAmount)
+              : formatUsd(DEAL_USD);
+  const soldOut = luckyDesk
+    ? luckyBtc.remaining <= 0
+    : btcBuy
+      ? regularBtc.remaining <= 0
+      : supply.remaining <= 0;
   const invoice = invoiceCopy(kind, copy, invoiceUsd, paidLabel);
   const payUri =
     deal.chain === "solana"
@@ -348,7 +378,10 @@ export function BitcoinPayDialog({
     closeLocked.current = true;
     setStep("minting");
     try {
-      const edition = claimNftEdition(deal.nftChain);
+      const edition = claimNftEdition(
+        deal.nftChain,
+        kind === "lucky" ? "lucky" : "regular",
+      );
       if (!edition) {
         setError(copy.nftSoldOut);
         setStep("invoice");
@@ -620,6 +653,11 @@ export function BitcoinPayDialog({
                         {`${formatUsd(DEAL_USD)} at ${formatUsd(quote.usdPerBtc)} / BTC`}
                       </p>
                     ) : null}
+                    {luckyDesk && quote ? (
+                      <p className="font-mono text-sm text-muted-foreground">
+                        {`${formatUsd(quote.usdPerBtc * BTC_LUCKY_AMOUNT)} at ${formatUsd(quote.usdPerBtc)} / BTC`}
+                      </p>
+                    ) : null}
                     {ethBuy && ethQuote ? (
                       <p className="font-mono text-sm text-muted-foreground">
                         {`${formatUsd(ethQuote.usdAmount)} at ${formatUsd(ethQuote.usdPerEth)} / ETH`}
@@ -641,7 +679,7 @@ export function BitcoinPayDialog({
                         {copy.sellPriceHint(formatUsd(SELL_BTC * quote.usdPerBtc))}
                       </p>
                     ) : null}
-                    {(kind === "buy" || sell) && quote ? (
+                    {(kind === "buy" || luckyDesk || sell) && quote ? (
                       <p className="mt-1 text-[11px] text-muted-foreground">
                         {copy.spotVia(quote.source)}
                       </p>
@@ -657,11 +695,13 @@ export function BitcoinPayDialog({
                       </p>
                     ) : null}
                     <p className="mt-2 text-xs text-primary">
-                      {copy.nftRemaining(
-                        supply.remaining,
-                        supply.max,
-                        deal.nftChain,
-                      )}
+                      {luckyDesk
+                        ? copy.nftLuckyRemaining(luckyBtc.remaining, luckyBtc.max)
+                        : copy.nftRemaining(
+                            supply.remaining,
+                            supply.max,
+                            deal.nftChain,
+                          )}
                     </p>
                   </div>
                   <div>
@@ -691,7 +731,9 @@ export function BitcoinPayDialog({
 
             {soldOut ? (
               <p className="border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                {copy.nftSoldOut}
+                {btcBuy && luckyBtc.remaining > 0
+                  ? copy.nftOrdinarySoldOut
+                  : copy.nftSoldOut}
               </p>
             ) : null}
 
@@ -740,11 +782,13 @@ export function BitcoinPayDialog({
               <span>
                 {faBlessing
                   ? copy.faAcceptTerms
-                  : cleansing
-                    ? copy.cleanseAcceptTerms(paidLabel)
-                    : sell
-                      ? copy.acceptSellTerms
-                      : copy.acceptTerms}
+                  : luckyDesk
+                    ? copy.luckyAcceptTerms
+                    : cleansing
+                      ? copy.cleanseAcceptTerms(paidLabel)
+                      : sell
+                        ? copy.acceptSellTerms
+                        : copy.acceptTerms}
               </span>
             </label>
 
@@ -875,20 +919,24 @@ export function BitcoinPayDialog({
               <DialogTitle className="font-heading text-2xl text-primary">
                 {faBlessing
                   ? copy.faCleansed
-                  : cleansing
-                    ? copy.cleansedSoul
-                    : sell
-                      ? copy.soldSoul
-                      : copy.boughtSoul}
+                  : luckyDesk
+                    ? copy.luckyBought
+                    : cleansing
+                      ? copy.cleansedSoul
+                      : sell
+                        ? copy.soldSoul
+                        : copy.boughtSoul}
               </DialogTitle>
               <DialogDescription>
                 {faBlessing
                   ? copy.faCleansedHint
-                  : cleansing
-                    ? copy.cleansedSoulHint
-                    : sell
-                      ? copy.soldSoulHint
-                      : copy.boughtSoulHint}
+                  : luckyDesk
+                    ? copy.luckyBoughtHint
+                    : cleansing
+                      ? copy.cleansedSoulHint
+                      : sell
+                        ? copy.soldSoulHint
+                        : copy.boughtSoulHint}
               </DialogDescription>
             </DialogHeader>
             <SoulCertificate

@@ -127,6 +127,13 @@ function kindCopy(kind, sinDegree) {
       prize: "发发发",
     };
   }
+  if (kind === "lucky") {
+    return {
+      desk: "888 · THE DEAREST THREE · LUCK",
+      act: "hath purchased",
+      prize: "888",
+    };
+  }
   return { desk: "SOUL ACQUISITION", act: "hath purchased", prize: "ONE SOUL" };
 }
 
@@ -141,7 +148,8 @@ export function nftChainOf(kind, nftChain) {
   return "bitcoin";
 }
 
-function chainLabel(chain) {
+function chainLabel(chain, kind) {
+  if (kind === "lucky") return "BITCOIN 888 NFT";
   if (chain === "ethereum") return "ETHEREUM NFT";
   if (chain === "solana") return "SOLANA NFT";
   return "BITCOIN ORDINALS NFT";
@@ -229,6 +237,10 @@ export function certificateSvg(payload, options = {}) {
   const copy = kindCopy(payload.kind, payload.sinDegree);
   const chain = nftChainOf(payload.kind, payload.nftChain);
   const traits = certificateTraits(payload);
+  if (payload.kind === "lucky") {
+    traits.motto = "888 · fortuna favet divitibus";
+    traits.palette = PALETTES[2];
+  }
   const { palette: c, seed } = traits;
   const rand = rng(seed ^ 0x9e3779b9);
   const assets = resolveCertificateAssets(traits, options.embedded);
@@ -305,7 +317,7 @@ export function certificateSvg(payload, options = {}) {
   <text x="${W / 2}" y="492" text-anchor="middle" fill="${c.gold}" font-size="54" class="goth">${escapeXml(copy.prize)}</text>
   <text x="${W / 2}" y="536" text-anchor="middle" fill="${c.moss}" font-size="20" class="gar">${paid} · ${issued}</text>
   <text x="${W / 2}" y="568" text-anchor="middle" fill="${c.ink}" font-size="15" font-style="italic" class="gar">${escapeXml(traits.motto)}</text>
-  <text x="${W / 2}" y="598" text-anchor="middle" fill="${chainGold}" font-size="13" letter-spacing="4" class="cinzel">${escapeXml(chainLabel(chain))}</text>
+  <text x="${W / 2}" y="598" text-anchor="middle" fill="${chainGold}" font-size="13" letter-spacing="4" class="cinzel">${escapeXml(chainLabel(chain, payload.kind))}</text>
   <rect x="150" y="648" width="500" height="76" fill="#120c0a" fill-opacity="0.45" stroke="${c.blood}" stroke-width="1"/>
   <text x="${W / 2}" y="676" text-anchor="middle" fill="${c.blood}" font-size="11" letter-spacing="5" class="cinzel">UNIQUE CODE</text>
   <text x="${W / 2}" y="706" text-anchor="middle" fill="${c.gold}" font-size="17" font-family="Courier New,monospace">${serial}</text>
