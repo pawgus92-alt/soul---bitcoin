@@ -3,6 +3,8 @@ export const SELL_BTC = 0.5;
 export const ETH_AMOUNT = 2;
 export const SOL_AMOUNT = 10;
 export const FA_AMOUNT = 8.88;
+/** Ordinary Bitcoin souls: editions 1–7 at a flat 1 BTC. */
+export const BTC_REGULAR_AMOUNT = 1;
 /** Last three Bitcoin NFTs: 888 luck charters at a flat 8 BTC. */
 export const BTC_LUCKY_AMOUNT = 8;
 export const PEARL_AMOUNT = 650;
@@ -48,7 +50,7 @@ export const NFT_MAX: Record<NftChain, number> = {
   solana: 250,
   ethereum: 50,
 };
-/** Ordinary Bitcoin souls: editions 1–7 at the live $100,000 spot. */
+/** Ordinary Bitcoin souls: editions 1–7 at a flat 1 BTC. */
 export const BTC_REGULAR_MAX = 7;
 /** Last three of ten: editions 8–10, 888 luck charters at 8 BTC. */
 export const BTC_LUCKY_MAX = 3;
@@ -181,6 +183,7 @@ export function expectedAtomic(
   if (kind === "pearl") return String(PEARL_AMOUNT * 10 ** PEARL_DECIMALS);
   if (kind === "sell") return String(Math.round(SELL_BTC * 1e8));
   if (kind === "lucky") return String(Math.round(BTC_LUCKY_AMOUNT * 1e8));
+  if (kind === "buy") return String(Math.round(BTC_REGULAR_AMOUNT * 1e8));
   if (kind === "eth") return ethToWei(ETH_AMOUNT);
   return String(Math.round(coinAmount * 1e8));
 }
@@ -196,6 +199,7 @@ export function formatDealAmount(
   if (kind === "pearl") return `${PEARL_AMOUNT} PEARL`;
   if (kind === "sell") return `${SELL_BTC.toFixed(8)} BTC`;
   if (kind === "lucky") return `${BTC_LUCKY_AMOUNT.toFixed(8)} BTC`;
+  if (kind === "buy") return `${BTC_REGULAR_AMOUNT.toFixed(8)} BTC`;
   if (kind === "eth") return `${ETH_AMOUNT} ETH`;
   if (typeof coinAmount === "number") return `${coinAmount.toFixed(8)} BTC`;
   return "BTC";

@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import {
   bitcoinPayUri,
   ethereumPayUri,
+  formatBtc,
   formatUsd,
   solanaPayUri,
 } from "@/lib/bitcoin";
@@ -32,7 +33,7 @@ import {
 } from "@/lib/certificate";
 import {
   BTC_LUCKY_AMOUNT,
-  DEAL_USD,
+  BTC_REGULAR_AMOUNT,
   ETH_AMOUNT,
   FA_AMOUNT,
   PEARL_AMOUNT,
@@ -161,7 +162,6 @@ export function BitcoinPayDialog({
     quote,
     ethQuote,
     solQuote,
-    loading,
     error: quoteError,
     refresh,
   } = useBtcQuote();
@@ -189,28 +189,32 @@ export function BitcoinPayDialog({
     ? SELL_BTC
     : luckyDesk
       ? BTC_LUCKY_AMOUNT
-      : ethBuy
-        ? ETH_AMOUNT
-        : quote?.btcAmount;
+      : btcBuy
+        ? BTC_REGULAR_AMOUNT
+        : ethBuy
+          ? ETH_AMOUNT
+          : quote?.btcAmount;
   const firstStep: Step = cleansing ? "sins" : "invoice";
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>(firstStep);
   const [sinDegree, setSinDegree] = useState<SinDegree | null>(null);
   const cleanseSol = cleanseSolAmount(sinDegree);
   const paidLabel = formatDealAmount(kind, dealCoin, sinDegree);
-  const ready = btcBuy ? Boolean(quote) : true;
+  const ready = true;
   const invoiceUsd =
     ethBuy && ethQuote
       ? formatUsd(ethQuote.usdAmount)
       : luckyDesk && quote
         ? formatUsd(quote.usdPerBtc * BTC_LUCKY_AMOUNT)
-        : faBlessing && solQuote
-          ? formatUsd(solQuote.usdPerSol * FA_AMOUNT)
-          : cleansing && solQuote
-            ? formatUsd(solQuote.usdPerSol * cleanseSol)
-            : kind === "sol" && solQuote
-              ? formatUsd(solQuote.usdAmount)
-              : formatUsd(DEAL_USD);
+        : btcBuy && quote
+          ? formatUsd(quote.usdPerBtc * BTC_REGULAR_AMOUNT)
+          : faBlessing && solQuote
+            ? formatUsd(solQuote.usdPerSol * FA_AMOUNT)
+            : cleansing && solQuote
+              ? formatUsd(solQuote.usdPerSol * cleanseSol)
+              : kind === "sol" && solQuote
+                ? formatUsd(solQuote.usdAmount)
+                : formatBtc(BTC_REGULAR_AMOUNT);
   const soldOut = luckyDesk
     ? luckyBtc.remaining <= 0
     : btcBuy
@@ -304,10 +308,6 @@ export function BitcoinPayDialog({
   }
 
   function startWatch() {
-    if (btcBuy && !quote) {
-      setError(copy.waitForRate);
-      return;
-    }
     if (cleansing && !isOpenSinDegree(sinDegree ?? 0)) {
       setError(copy.cleansePickTitle);
       setStep("sins");
@@ -485,8 +485,8 @@ export function BitcoinPayDialog({
     deal.nftChain,
     watch?.payer,
   );
-  const askingRate = btcBuy && loading && !quote;
-  const silentRate = btcBuy && Boolean(quoteError) && !quote;
+  const askingRate = false;
+  const silentRate = Boolean(quoteError) && !quote && ethBuy;
 
   return (
     <Dialog
@@ -650,7 +650,7 @@ export function BitcoinPayDialog({
                     </p>
                     {kind === "buy" && quote ? (
                       <p className="font-mono text-sm text-muted-foreground">
-                        {`${formatUsd(DEAL_USD)} at ${formatUsd(quote.usdPerBtc)} / BTC`}
+                        {`${formatUsd(quote.usdPerBtc * BTC_REGULAR_AMOUNT)} at ${formatUsd(quote.usdPerBtc)} / BTC`}
                       </p>
                     ) : null}
                     {luckyDesk && quote ? (

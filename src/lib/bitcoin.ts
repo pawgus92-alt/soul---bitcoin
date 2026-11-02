@@ -1,6 +1,6 @@
 import {
   BTC_ADDRESS,
-  DEAL_USD,
+  BTC_REGULAR_AMOUNT,
   ETH_ADDRESS,
   ETH_AMOUNT,
   SOL_AMOUNT,
@@ -63,8 +63,8 @@ export async function fetchBtcQuote(): Promise<BtcQuote> {
   const usdPerBtc = await fetchCoinbaseSpot("BTC-USD");
   return {
     usdPerBtc,
-    btcAmount: DEAL_USD / usdPerBtc,
-    usdAmount: DEAL_USD,
+    btcAmount: BTC_REGULAR_AMOUNT,
+    usdAmount: BTC_REGULAR_AMOUNT * usdPerBtc,
     source: "Coinbase",
     fetchedAt: Date.now(),
   };

@@ -1,9 +1,9 @@
 import type { Copy } from "@/lib/i18n";
 
 export const zh: Copy = {
-  documentTitle: "Maison Æternum — 以十万美元比特币卖掉灵魂",
+  documentTitle: "Maison Æternum — 以一枚比特币卖掉灵魂",
   documentDescription:
-    "私人灵魂柜台。一枚灵魂，十万美元，按即时现货以比特币结算。不征增值税：永恒没有法域。",
+    "私人灵魂柜台。一枚灵魂，一枚比特币。最后三枚 NFT 为 888 招财文书，各 8 BTC。不征增值税：永恒没有法域。",
   brand: "Maison Æternum",
   deskLine: "私人灵魂柜台 · Est. 1666",
   navTerms: "条款",
@@ -25,18 +25,18 @@ export const zh: Copy = {
   heroTitle: "把灵魂卖掉。",
   heroAccent: "游艇留下。",
   heroBody: (usd) =>
-    `${usd}，按比特币即时现货。我们不议价，不抽成，也不问董事会的空气为何忽然轻了。`,
+    `一枚比特币，约 ${usd}。我们不议价，不抽成，也不问董事会的空气为何忽然轻了。`,
   readTerms: "阅读条款",
   vatLine: "不征增值税：永恒没有法域。",
   heroAside:
-    "电汇仍属于相信国家的人。现金有道德的气味。在这间屋里，现货比特币是唯一体面的语言。",
+    "电汇仍属于相信国家的人。现金有道德的气味。在这间屋里，比特币是唯一体面的语言。",
   skuLabel: "私人货号",
   fetchingRate: "正在读取 Coinbase 现货…",
   rateDeskSilent: "牌价柜台沉默。",
   fetchRateAgain: "再取一次牌价",
   skuBulletOne: "一枚灵魂。不分期。没有家庭套餐。",
   skuBulletSettle: (usd) =>
-    `结算为 ${usd}，按 Coinbase 即时 BTC/USD 现货折算。`,
+    `结算为 1 BTC，Coinbase 约 ${usd}。`,
   skuBulletEth: (usd) =>
     `以太坊柜台：2 ETH，Coinbase 即时现货，约 ${usd}。以太坊 NFT 五十枚，不再多。`,
   skuBulletSol: (usd) =>
@@ -44,10 +44,10 @@ export const zh: Copy = {
   skuBulletNft:
     "证书 NFT 铸于你付款之链。比特币铭文：10，其中最后三枚为 888 招财文书。Solana NFT：250。以太坊 NFT：50。各为一张独特的神秘文书。",
   skuBulletLucky:
-    "最后三枚比特币铭文——第 8、9、10 号，共十枚——为 888 招财文书：最贵、最富、招财。每枚 8 枚比特币。其余七枚仍按 Coinbase 十万美元现货。",
+    "最后三枚比特币铭文——第 8、9、10 号，共十枚——为 888 招财文书：最贵、最富、招财。每枚 8 枚比特币。其余七枚各一枚比特币。",
   skuBulletRefund: "恕不退款。悔恨是另一件定价过高的商品。",
   skuFoot: (usd) =>
-    `私人柜台为 Coinbase 比特币 ${usd}（10 枚铭文）或 Coinbase 的 2 ETH（50 枚以太坊 NFT）。最后三枚比特币 NFT 为 888 招财文书，各 8 BTC。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
+    `私人柜台：七枚寻常灵魂各 1 BTC（约 ${usd}），888 招财文书各 8 BTC，或 Coinbase 的 2 ETH（50 枚以太坊 NFT）。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
   terms: [
     {
       step: "01",
@@ -56,13 +56,13 @@ export const zh: Copy = {
     },
     {
       step: "02",
-      title: "按现货支付比特币",
-      text: "账单是十万美元除以 Coinbase 即时 BTC，或固定的 2 ETH / 10 SOL。最后三枚比特币 NFT 为 888 招财文书，各 8 BTC。洗涤加密罪过自 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
+      title: "支付一枚比特币",
+      text: "账单是一枚比特币，或固定的 2 ETH / 10 SOL。最后三枚比特币 NFT 为 888 招财文书，各 8 BTC。洗涤加密罪过自 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
     },
     {
       step: "03",
       title: "领取链上 NFT",
-      text: "独一无二的证书编号。比特币柜台：铭文，十枚，末三枚 888，各 8 BTC。Solana 柜台：Solana NFT，二百五十枚。以太坊柜台：以太坊 NFT，五十枚。",
+      text: "独一无二的证书编号。比特币柜台：铭文，十枚——七枚各 1 BTC，末三枚 888 各 8 BTC。Solana 柜台：Solana NFT，二百五十枚。以太坊柜台：以太坊 NFT，五十枚。",
     },
   ],
   assetsRetained: "仍归你所有",
@@ -119,15 +119,15 @@ export const zh: Copy = {
   closing: "收官",
   contractHeading: "一份关于一次永恒的契约",
   contractBody: (usd) =>
-    `你买的不是救赎。你卖的是无法在船上向宾客展示的那一件。价格是 ${usd}，按即时现货以比特币支付。`,
+    `你买的不是救赎。你卖的是无法在船上向宾客展示的那一件。价格是一枚比特币，约 ${usd}。`,
   footerDesk: "Maison Æternum · 私人收购柜台 · Est. 1666",
   ledger: [
-    { city: "日内瓦", client: "家族办公室", amount: "现货 BTC" },
-    { city: "梅费尔", client: "匿名", amount: "现货 BTC" },
-    { city: "迪拜", client: "游艇柜台", amount: "现货 BTC" },
-    { city: "莫斯科", client: "私人", amount: "现货 BTC" },
-    { city: "库尔舍维尔", client: "14 号木屋", amount: "现货 BTC" },
-    { city: "拿骚", client: "信托", amount: "现货 BTC" },
+    { city: "日内瓦", client: "家族办公室", amount: "1 BTC" },
+    { city: "梅费尔", client: "匿名", amount: "1 BTC" },
+    { city: "迪拜", client: "游艇柜台", amount: "8 BTC" },
+    { city: "莫斯科", client: "私人", amount: "1 BTC" },
+    { city: "库尔舍维尔", client: "14 号木屋", amount: "1 BTC" },
+    { city: "拿骚", client: "信托", amount: "1 BTC" },
   ],
   payInBitcoin: "购买",
   fetchingBitcoinRate: "正在读取比特币牌价",
@@ -152,10 +152,10 @@ export const zh: Copy = {
   nftSoldOut: "此 NFT 版次已罄。灵魂须再等候。",
   nftOrdinarySoldOut:
     "七枚寻常比特币灵魂已罄。还剩三枚 888 招财文书，各 8 BTC。",
-  invoiceBadge: "即时比特币账单",
+  invoiceBadge: "比特币账单 · 1 BTC",
   invoiceTitle: "以比特币购买",
   invoiceDescription: (usd) =>
-    `一枚灵魂为 ${usd}。结算是 Coinbase 现货折算的 BTC，汇入柜台钱包。`,
+    `一枚灵魂为 1 BTC，Coinbase 约 ${usd}。汇入柜台钱包。`,
   sellInvoiceBadge: "半枚比特币窗口",
   sellInvoiceTitle: "出售灵魂",
   sellInvoiceDescription:
@@ -203,7 +203,7 @@ export const zh: Copy = {
     "一切不体面的加密罪过，与其旁的不顺。把哥特文书挂在运气看得见三枚八的地方。",
   luckySoul: "888 · 8 BTC",
   luckyHint:
-    "最后三枚比特币 NFT：第 8、9、10 号，共十枚。最贵、最富、招财。每枚 8 枚比特币。其余七枚仍按十万美元即时现货。",
+    "最后三枚比特币 NFT：第 8、9、10 号，共十枚。最贵、最富、招财。每枚 8 枚比特币。其余七枚各一枚比特币。",
   luckyInvoiceBadge: "888 · 最贵的三枚",
   luckyInvoiceTitle: "购买招财文书",
   luckyInvoiceDescription: (usd) =>

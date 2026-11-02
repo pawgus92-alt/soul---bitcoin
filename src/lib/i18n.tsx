@@ -239,9 +239,9 @@ export type Copy = {
 };
 
 const en: Copy = {
-  documentTitle: "Maison Æternum — Sell the soul for $100,000 in Bitcoin",
+  documentTitle: "Maison Æternum — Sell the soul for 1 Bitcoin",
   documentDescription:
-    "Private soul desk. One soul for $100,000, paid in Bitcoin at the live spot rate. VAT is not charged, because eternity has no jurisdiction.",
+    "Private soul desk. One soul for 1 Bitcoin. The last three NFT charters are 888 luck pieces at 8 BTC. VAT is not charged, because eternity has no jurisdiction.",
   brand: "Maison Æternum",
   deskLine: "Private Soul Desk · Est. 1666",
   navTerms: "Terms",
@@ -263,18 +263,18 @@ const en: Copy = {
   heroTitle: "Sell the soul.",
   heroAccent: "Keep the yacht.",
   heroBody: (usd) =>
-    `${usd} at the live Bitcoin spot rate. We do not negotiate, we take no percentage, and we do not ask why the boardroom air got lighter.`,
+    `One bitcoin, about ${usd}. We do not negotiate, we take no percentage, and we do not ask why the boardroom air got lighter.`,
   readTerms: "Read the terms",
   vatLine: "VAT is not charged, because eternity has no jurisdiction.",
   heroAside:
-    "Wire transfers remain for people who still believe in states. Cash smells of morals. Bitcoin at the spot rate is the only decent language in this room.",
+    "Wire transfers remain for people who still believe in states. Cash smells of morals. Bitcoin is the only decent language in this room.",
   skuLabel: "Private SKU",
   fetchingRate: "Fetching Coinbase spots…",
   rateDeskSilent: "The rate desk is silent.",
   fetchRateAgain: "Fetch the rate again",
   skuBulletOne: "One soul. No instalments. No family package.",
   skuBulletSettle: (usd) =>
-    `Settlement is ${usd} converted at the live Coinbase BTC/USD spot.`,
+    `Settlement is 1 BTC, about ${usd} at the live Coinbase BTC/USD.`,
   skuBulletEth: (usd) =>
     `Ethereum desk: 2 ETH at the live Coinbase spot, about ${usd}. Fifty Ethereum NFTs, no more.`,
   skuBulletSol: (usd) =>
@@ -282,10 +282,10 @@ const en: Copy = {
   skuBulletNft:
     "The certificate NFT is minted on the chain you paid. Bitcoin Ordinals: 10, the last three of them 888 luck charters. Solana NFTs: 250. Ethereum NFTs: 50. Each a unique mystical charter.",
   skuBulletLucky:
-    "The last three Bitcoin Ordinals — Nos. 8, 9 and 10 of ten — are 888 luck charters: the dearest, the richest, the ones that bring luck. Eight bitcoin each. The other seven keep the $100,000 Coinbase spot.",
+    "The last three Bitcoin Ordinals — Nos. 8, 9 and 10 of ten — are 888 luck charters: the dearest, the richest, the ones that bring luck. Eight bitcoin each. The other seven are one bitcoin each.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is ${usd} in Bitcoin at Coinbase (10 Ordinals) or 2 ETH at Coinbase (50 Ethereum NFTs). The last three Bitcoin NFTs are 888 luck charters at 8 BTC. The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
+    `The private desk is 1 BTC (about ${usd}) for seven ordinary souls, or 8 BTC for a 888 luck charter, or 2 ETH at Coinbase (50 Ethereum NFTs). The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
   terms: [
     {
       step: "01",
@@ -294,13 +294,13 @@ const en: Copy = {
     },
     {
       step: "02",
-      title: "Pay Bitcoin at the spot",
-      text: "The invoice is $100,000 divided by the live Coinbase BTC price — or a flat 2 ETH / 10 SOL at Coinbase. The last three Bitcoin NFTs are 888 luck charters at 8 BTC. Washing a crypto sin starts at 1.5 SOL and climbs to 8.88 SOL at Binance. One transfer, one hash, one eternity.",
+      title: "Pay one Bitcoin",
+      text: "The invoice is one bitcoin — or a flat 2 ETH / 10 SOL at Coinbase. The last three Bitcoin NFTs are 888 luck charters at 8 BTC. Washing a crypto sin starts at 1.5 SOL and climbs to 8.88 SOL at Binance. One transfer, one hash, one eternity.",
     },
     {
       step: "03",
       title: "Receive the chain NFT",
-      text: "A unique certificate code. Bitcoin desk: Ordinal, 10 pieces, last three 888 at 8 BTC. Solana desk: Solana NFT, 250 pieces. Ethereum desk: Ethereum NFT, 50 pieces.",
+      text: "A unique certificate code. Bitcoin desk: Ordinal, 10 pieces — seven at 1 BTC, last three 888 at 8 BTC. Solana desk: Solana NFT, 250 pieces. Ethereum desk: Ethereum NFT, 50 pieces.",
     },
   ],
   assetsRetained: "Assets retained",
@@ -360,15 +360,15 @@ const en: Copy = {
   closing: "Closing",
   contractHeading: "A contract for one eternity",
   contractBody: (usd) =>
-    `You are not buying salvation. You are selling the one thing that cannot be shown to guests on the boat. The price is ${usd}, paid in bitcoin at the live spot rate.`,
+    `You are not buying salvation. You are selling the one thing that cannot be shown to guests on the boat. The price is one bitcoin, about ${usd}.`,
   footerDesk: "Maison Æternum · Private Acquisition Desk · Est. 1666",
   ledger: [
-    { city: "Geneva", client: "Family office", amount: "Spot BTC" },
-    { city: "Mayfair", client: "Anonymous", amount: "Spot BTC" },
-    { city: "Dubai", client: "Yacht desk", amount: "Spot BTC" },
-    { city: "Moscow", client: "Private", amount: "Spot BTC" },
-    { city: "Courchevel", client: "Chalet 14", amount: "Spot BTC" },
-    { city: "Nassau", client: "Trust", amount: "Spot BTC" },
+    { city: "Geneva", client: "Family office", amount: "1 BTC" },
+    { city: "Mayfair", client: "Anonymous", amount: "1 BTC" },
+    { city: "Dubai", client: "Yacht desk", amount: "8 BTC" },
+    { city: "Moscow", client: "Private", amount: "1 BTC" },
+    { city: "Courchevel", client: "Chalet 14", amount: "1 BTC" },
+    { city: "Nassau", client: "Trust", amount: "1 BTC" },
   ],
   payInBitcoin: "Buy",
   fetchingBitcoinRate: "Fetching Bitcoin rate",
@@ -393,10 +393,10 @@ const en: Copy = {
   nftSoldOut: "This NFT edition is sold out. The soul will have to wait.",
   nftOrdinarySoldOut:
     "The seven ordinary Bitcoin souls are gone. The last three 888 luck charters remain, at 8 BTC.",
-  invoiceBadge: "Live Bitcoin invoice",
+  invoiceBadge: "Bitcoin invoice · 1 BTC",
   invoiceTitle: "Buy in Bitcoin",
   invoiceDescription: (usd) =>
-    `One soul is ${usd}. Settlement is the live BTC amount at the Coinbase spot, sent to the desk wallet.`,
+    `One soul is 1 BTC, about ${usd} at Coinbase. Sent to the desk wallet.`,
   sellInvoiceBadge: "Half-bitcoin window",
   sellInvoiceTitle: "Sell the soul",
   sellInvoiceDescription:
@@ -444,7 +444,7 @@ const en: Copy = {
     "All ignoble crypto sins, and the misfortune beside them. Hang the gothic charter where fortune can see the three eights.",
   luckySoul: "888 · 8 BTC",
   luckyHint:
-    "The last three Bitcoin NFTs: Nos. 8, 9 and 10 of ten. The dearest, the richest, the ones that bring luck. Eight bitcoin each. The other seven stay at the live $100,000 spot.",
+    "The last three Bitcoin NFTs: Nos. 8, 9 and 10 of ten. The dearest, the richest, the ones that bring luck. Eight bitcoin each. The other seven are one bitcoin each.",
   luckyInvoiceBadge: "888 · the dearest three",
   luckyInvoiceTitle: "Buy the luck charter",
   luckyInvoiceDescription: (usd) =>
@@ -651,9 +651,9 @@ const en: Copy = {
 };
 
 const ru: Copy = {
-  documentTitle: "Maison Æternum — Продать душу за $100 000 в Bitcoin",
+  documentTitle: "Maison Æternum — Продать душу за 1 Bitcoin",
   documentDescription:
-    "Частный стол душ. Одна душа за $100 000, оплата Bitcoin по живому спот-курсу. НДС не начисляется: у вечности нет юрисдикции.",
+    "Частный стол душ. Одна душа за 1 Bitcoin. Последние три NFT — грамоты 888 по 8 BTC. НДС не начисляется: у вечности нет юрисдикции.",
   brand: "Maison Æternum",
   deskLine: "Частный стол душ · Est. 1666",
   navTerms: "Условия",
@@ -675,18 +675,18 @@ const ru: Copy = {
   heroTitle: "Продайте душу.",
   heroAccent: "Оставьте яхту.",
   heroBody: (usd) =>
-    `${usd} по живому спот-курсу Bitcoin. Мы не торгуемся, процента не берём и не спрашиваем, почему в зале совета вдруг стало легче.`,
+    `Один биткоин, около ${usd}. Мы не торгуемся, процента не берём и не спрашиваем, почему в зале совета вдруг стало легче.`,
   readTerms: "Читать условия",
   vatLine: "НДС не начисляется: у вечности нет юрисдикции.",
   heroAside:
-    "Проводки остаются для тех, кто ещё верит в государства. Наличные пахнут моралью. Bitcoin по споту — единственный приличный язык в этой комнате.",
+    "Проводки остаются для тех, кто ещё верит в государства. Наличные пахнут моралью. Bitcoin — единственный приличный язык в этой комнате.",
   skuLabel: "Частный артикул",
   fetchingRate: "Запрашиваем споты Coinbase…",
   rateDeskSilent: "Стол котировок молчит.",
   fetchRateAgain: "Запросить курс снова",
   skuBulletOne: "Одна душа. Без рассрочки. Без семейного пакета.",
   skuBulletSettle: (usd) =>
-    `Расчёт — ${usd}, конвертированных по живому споту Coinbase BTC/USD.`,
+    `Расчёт — 1 BTC, около ${usd} по живому курсу Coinbase BTC/USD.`,
   skuBulletEth: (usd) =>
     `Стол Ethereum: 2 ETH по живому споту Coinbase, около ${usd}. Ethereum NFT — пятьдесят, не больше.`,
   skuBulletSol: (usd) =>
@@ -694,10 +694,10 @@ const ru: Copy = {
   skuBulletNft:
     "NFT-сертификат чеканится в сети оплаты. Bitcoin Ordinal: 10, последние три — грамоты 888 на удачу. Solana NFT: 250. Ethereum NFT: 50. Каждый — уникальная мистическая грамота.",
   skuBulletLucky:
-    "Последние три Bitcoin Ordinal — № 8, 9 и 10 из десяти — грамоты 888: самые дорогие, самые богатые, приносящие удачу. По 8 биткоинов. Остальные семь остаются по споту Coinbase $100 000.",
+    "Последние три Bitcoin Ordinal — № 8, 9 и 10 из десяти — грамоты 888: самые дорогие, самые богатые, приносящие удачу. По 8 биткоинов. Остальные семь — по одному биткоину.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол — ${usd} в Bitcoin по Coinbase (10 Ordinals) или 2 ETH по Coinbase (50 Ethereum NFT). Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
+    `Частный стол — 1 BTC (около ${usd}) за семь обычных душ, или 8 BTC за грамоту 888, или 2 ETH по Coinbase (50 Ethereum NFT). Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
   terms: [
     {
       step: "01",
@@ -706,13 +706,13 @@ const ru: Copy = {
     },
     {
       step: "02",
-      title: "Оплатите Bitcoin по споту",
-      text: "Счёт — $100 000, делённые на живую цену Coinbase BTC — или ровно 2 ETH / 10 SOL по Coinbase. Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Очищение криптогреха начинается с 1.5 SOL и поднимается до 8.88 SOL на Binance. Один перевод, один хеш, одна вечность.",
+      title: "Оплатите один Bitcoin",
+      text: "Счёт — один биткоин — или ровно 2 ETH / 10 SOL по Coinbase. Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Очищение криптогреха начинается с 1.5 SOL и поднимается до 8.88 SOL на Binance. Один перевод, один хеш, одна вечность.",
     },
     {
       step: "03",
       title: "Получите NFT в сети оплаты",
-      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 10 штук, последние три — 888 по 8 BTC. Стол Solana: Solana NFT, 250 штук. Стол Ethereum: Ethereum NFT, 50 штук.",
+      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 10 штук — семь по 1 BTC, последние три 888 по 8 BTC. Стол Solana: Solana NFT, 250 штук. Стол Ethereum: Ethereum NFT, 50 штук.",
     },
   ],
   assetsRetained: "Сохранённые активы",
@@ -772,15 +772,15 @@ const ru: Copy = {
   closing: "Закрытие",
   contractHeading: "Контракт на одну вечность",
   contractBody: (usd) =>
-    `Вы не покупаете спасение. Вы продаёте единственное, что нельзя показать гостям на палубе. Цена — ${usd}, оплата bitcoin по живому споту.`,
+    `Вы не покупаете спасение. Вы продаёте единственное, что нельзя показать гостям на палубе. Цена — один биткоин, около ${usd}.`,
   footerDesk: "Maison Æternum · Частный стол приобретений · Est. 1666",
   ledger: [
-    { city: "Женева", client: "Family office", amount: "Spot BTC" },
-    { city: "Мейфер", client: "Аноним", amount: "Spot BTC" },
-    { city: "Дубай", client: "Яхтенный стол", amount: "Spot BTC" },
-    { city: "Москва", client: "Частный", amount: "Spot BTC" },
-    { city: "Куршевель", client: "Шале 14", amount: "Spot BTC" },
-    { city: "Нассау", client: "Траст", amount: "Spot BTC" },
+    { city: "Женева", client: "Family office", amount: "1 BTC" },
+    { city: "Мейфер", client: "Аноним", amount: "1 BTC" },
+    { city: "Дубай", client: "Яхтенный стол", amount: "8 BTC" },
+    { city: "Москва", client: "Частный", amount: "1 BTC" },
+    { city: "Куршевель", client: "Шале 14", amount: "1 BTC" },
+    { city: "Нассау", client: "Траст", amount: "1 BTC" },
   ],
   payInBitcoin: "Купить",
   fetchingBitcoinRate: "Запрашиваем курс Bitcoin",
@@ -805,10 +805,10 @@ const ru: Copy = {
   nftSoldOut: "Этот тираж NFT распродан. Душе придётся подождать.",
   nftOrdinarySoldOut:
     "Семь обычных душ в Bitcoin проданы. Остались три грамоты 888 по 8 BTC.",
-  invoiceBadge: "Живой счёт в Bitcoin",
+  invoiceBadge: "Счёт в Bitcoin · 1 BTC",
   invoiceTitle: "Купить за Bitcoin",
   invoiceDescription: (usd) =>
-    `Одна душа стоит ${usd}. К оплате — живая сумма BTC по споту Coinbase, на кошелёк стола.`,
+    `Одна душа — 1 BTC, около ${usd} по Coinbase. На кошелёк стола.`,
   sellInvoiceBadge: "Окно полбиткоина",
   sellInvoiceTitle: "Продать душу",
   sellInvoiceDescription:
@@ -856,7 +856,7 @@ const ru: Copy = {
     "Все неблагородные криптогрехи и неудача рядом с ними. Повесьте готическую грамоту там, где фортуна увидит три восьмёрки.",
   luckySoul: "888 · 8 BTC",
   luckyHint:
-    "Последние три Bitcoin NFT: № 8, 9 и 10 из десяти. Самые дорогие, самые богатые, приносящие удачу. По 8 биткоинов. Остальные семь — по живому споту $100 000.",
+    "Последние три Bitcoin NFT: № 8, 9 и 10 из десяти. Самые дорогие, самые богатые, приносящие удачу. По 8 биткоинов. Остальные семь — по одному биткоину.",
   luckyInvoiceBadge: "888 · три самых дорогих",
   luckyInvoiceTitle: "Купить грамоту удачи",
   luckyInvoiceDescription: (usd) =>

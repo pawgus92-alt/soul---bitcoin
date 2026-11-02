@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { formatBtc, formatUsd } from "@/lib/bitcoin";
 import {
   BTC_ADDRESS,
-  DEAL_USD,
+  BTC_REGULAR_AMOUNT,
   ETH_ADDRESS,
   ETH_AMOUNT,
   SOL_ADDRESS,
@@ -63,7 +63,8 @@ function LivePrice() {
   return (
     <div className="space-y-1 font-mono text-sm text-muted-foreground">
       <p>
-        {formatUsd(DEAL_USD)} ÷ {formatUsd(quote.usdPerBtc)} / BTC · Coinbase
+        {BTC_REGULAR_AMOUNT} BTC · {formatUsd(quote.usdAmount)} ·{" "}
+        {formatUsd(quote.usdPerBtc)} / BTC · Coinbase
       </p>
       {ethQuote ? (
         <p>
@@ -158,7 +159,7 @@ export default function App() {
               <span className="block text-primary">{copy.heroAccent}</span>
             </h1>
             <p className="max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
-              {copy.heroBody(formatUsd(DEAL_USD))}
+              {copy.heroBody(quote ? formatUsd(quote.usdAmount) : "1 BTC")}
             </p>
             <div className="flex flex-col gap-3">
               <DealButtons buttonClassName="h-12 px-6 text-base" />
@@ -187,14 +188,18 @@ export default function App() {
             <CardHeader className="border-b border-primary/10">
               <p className={kicker}>{copy.skuLabel}</p>
               <CardTitle className="font-heading text-4xl font-semibold text-primary sm:text-5xl">
-                {quote ? formatBtc(quote.btcAmount) : formatUsd(DEAL_USD)}
+                {formatBtc(BTC_REGULAR_AMOUNT)}
               </CardTitle>
               <LivePrice />
             </CardHeader>
             <CardContent className="space-y-4 pt-1">
               <ul className="space-y-3 text-sm leading-6 text-muted-foreground">
                 <li>{copy.skuBulletOne}</li>
-                <li>{copy.skuBulletSettle(formatUsd(DEAL_USD))}</li>
+                <li>
+                  {copy.skuBulletSettle(
+                    quote ? formatUsd(quote.usdAmount) : "1 BTC",
+                  )}
+                </li>
                 <li>
                   {copy.skuBulletEth(
                     ethQuote ? formatUsd(ethQuote.usdAmount) : "2 ETH",
@@ -213,7 +218,7 @@ export default function App() {
               <NftCaps />
               <Separator className="bg-primary/15" />
               <p className="text-xs leading-5 text-muted-foreground">
-                {copy.skuFoot(formatUsd(DEAL_USD))}
+                {copy.skuFoot(quote ? formatUsd(quote.usdAmount) : "1 BTC")}
               </p>
             </CardContent>
           </Card>
@@ -433,7 +438,7 @@ export default function App() {
                 {copy.contractHeading}
               </h2>
               <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                {copy.contractBody(formatUsd(DEAL_USD))}
+                {copy.contractBody(quote ? formatUsd(quote.usdAmount) : "1 BTC")}
               </p>
               <p className="max-w-xl text-sm leading-6 text-primary">
                 {copy.vatLine}

@@ -3,7 +3,6 @@ import {
   Coins,
   Droplets,
   Hexagon,
-  LoaderCircle,
   Sparkles,
 } from "lucide-react";
 
@@ -11,6 +10,7 @@ import { BitcoinPayDialog } from "@/components/bitcoin-pay-dialog";
 import { formatBtc, formatUsd } from "@/lib/bitcoin";
 import {
   BTC_LUCKY_AMOUNT,
+  BTC_REGULAR_AMOUNT,
   CLEANSE_SOL_RANGE,
   FA_AMOUNT,
   SHOW_PEARL_DESK,
@@ -29,7 +29,7 @@ export function PayBitcoinButton({
   kind?: DealKind;
 }) {
   const { copy } = useI18n();
-  const { quote, ethQuote, solQuote, loading } = useBtcQuote();
+  const { quote, ethQuote, solQuote } = useBtcQuote();
   const faUsd = solQuote
     ? formatUsd(solQuote.usdPerSol * FA_AMOUNT)
     : null;
@@ -60,10 +60,8 @@ export function PayBitcoinButton({
                   ? copy.payEthAmount(formatUsd(ethQuote.usdAmount))
                   : copy.buyEth
                 : quote
-                  ? copy.payAmount(formatBtc(quote.btcAmount))
-                  : loading
-                    ? copy.fetchingBitcoinRate
-                    : copy.payInBitcoin;
+                  ? `${copy.payAmount(formatBtc(BTC_REGULAR_AMOUNT))} · ${formatUsd(quote.usdAmount)}`
+                  : copy.payAmount(formatBtc(BTC_REGULAR_AMOUNT));
 
   const icon =
     kind === "sol" ? (
@@ -76,12 +74,6 @@ export function PayBitcoinButton({
       <Sparkles data-icon="inline-start" />
     ) : kind === "eth" ? (
       <Hexagon data-icon="inline-start" />
-    ) : !kind || kind === "buy" ? (
-      loading && !quote ? (
-        <LoaderCircle data-icon="inline-start" className="animate-spin" />
-      ) : (
-        <Bitcoin data-icon="inline-start" />
-      )
     ) : (
       <Bitcoin data-icon="inline-start" />
     );
