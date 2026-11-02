@@ -15,7 +15,7 @@ export const zh: Copy = {
   folioKicker: "册页",
   folioHeading: "每一枚 NFT，都是独一无二的哥特文书。",
   folioBody:
-    "每份证书都按序列号绘成黑字母文凭：独有的羊皮纸纹理、玫瑰窗、火漆印与箴言。同一幅画铭刻上链，归于买主。",
+    "每份证书先是一幅秘仪绘画，再铸为你付款之链上的 NFT：比特币铭文、Solana 或以太坊。归于买主钱包，永不归于柜台。",
   langEn: "EN",
   langRu: "RU",
   langZh: "中文",
@@ -42,7 +42,7 @@ export const zh: Copy = {
   skuBulletSol: (usd) =>
     `Solana 柜台：10 SOL，Coinbase 即时现货，约 ${usd}。`,
   skuBulletNft:
-    "比特币铭文 NFT：25。Solana NFT：250。以太坊内部 NFT：50。各为一张独特的哥特文书。",
+    "证书 NFT 铸于你付款之链。比特币铭文：25。Solana NFT：250。以太坊 NFT：50。各为一张独特的秘仪文书。",
   skuBulletRefund: "恕不退款。悔恨是另一件定价过高的商品。",
   skuFoot: (usd) =>
     `私人柜台为 Coinbase 比特币 ${usd}（25 枚铭文）或 Coinbase 的 2 ETH（50 枚内部 NFT）。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
@@ -317,9 +317,24 @@ export const zh: Copy = {
         ? "ETH 内部 NFT"
         : "比特币 NFT",
   certEdition: (edition, max) => `第 ${edition} / ${max} 枚`,
-  certNftPending: "等候铭文邮资",
-  certNftInscribing: "正在铭入比特币",
-  certNftMinted: "已铭入比特币",
+  certNftPending: (chain) =>
+    chain === "solana"
+      ? "正在准备 Solana NFT"
+      : chain === "ethereum"
+        ? "正在准备以太坊 NFT"
+        : "等候铭文邮资",
+  certNftInscribing: (chain) =>
+    chain === "solana"
+      ? "正在 Solana 上铸造"
+      : chain === "ethereum"
+        ? "正在以太坊上铸造"
+        : "正在铭入比特币",
+  certNftMinted: (chain) =>
+    chain === "solana"
+      ? "已铸于 Solana"
+      : chain === "ethereum"
+        ? "已铸于以太坊"
+        : "已铭入比特币",
   certNftFailed: "独特编号已签发 · 铸造柜台沉默",
   certViewOrdinal: "查看铭文",
   certViewOrder: "查看铸造订单",

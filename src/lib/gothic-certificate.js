@@ -2,56 +2,56 @@ const PALETTES = [
   {
     parchment: "#f4e2c4",
     stain: "#e0b57a",
-    ink: "#1a100c",
-    blood: "#7a1018",
-    gold: "#d4a84a",
-    night: "#1a2238",
-    moss: "#2a4a3c",
+    ink: "#f6ead2",
+    blood: "#c45c4a",
+    gold: "#e4c36a",
+    night: "#1a120c",
+    moss: "#c9d4b0",
   },
   {
     parchment: "#dfe6ea",
     stain: "#b7c4d4",
-    ink: "#12141c",
-    blood: "#3a1a28",
-    gold: "#c5b48a",
-    night: "#0e1a2e",
-    moss: "#1e3d3a",
+    ink: "#e8eef6",
+    blood: "#8a4a5c",
+    gold: "#d7c48a",
+    night: "#0e1624",
+    moss: "#b7d4d0",
   },
   {
     parchment: "#f7ead0",
     stain: "#e4c48a",
-    ink: "#24160c",
-    blood: "#7a1f2b",
-    gold: "#e0b22a",
-    night: "#1e3a6e",
-    moss: "#1f6b4a",
+    ink: "#f7ead4",
+    blood: "#c45a3a",
+    gold: "#f0c23a",
+    night: "#1a1420",
+    moss: "#d4e0c4",
   },
   {
     parchment: "#efe4d2",
     stain: "#c9b496",
-    ink: "#1c1410",
-    blood: "#4a1518",
-    gold: "#b08a3a",
-    night: "#2a3040",
-    moss: "#3a4a38",
+    ink: "#f3e6d2",
+    blood: "#a84848",
+    gold: "#d4b05a",
+    night: "#16120e",
+    moss: "#d0d8c4",
   },
   {
     parchment: "#f3dceb",
     stain: "#d4a8c4",
-    ink: "#1a1020",
-    blood: "#6a1848",
-    gold: "#d4b05a",
-    night: "#2a1848",
-    moss: "#204040",
+    ink: "#f6e4ee",
+    blood: "#b84a78",
+    gold: "#e0c06a",
+    night: "#1a1020",
+    moss: "#d4e8e0",
   },
   {
     parchment: "#e4edd4",
     stain: "#b7c98a",
-    ink: "#14180c",
-    blood: "#5a2018",
-    gold: "#c2a050",
-    night: "#102820",
-    moss: "#1a4a30",
+    ink: "#eef4dc",
+    blood: "#8a4030",
+    gold: "#d4b45a",
+    night: "#10180c",
+    moss: "#c8e0c0",
   },
 ];
 
@@ -69,6 +69,8 @@ const MOTTOS = [
   "Solus emptor animam tenet",
   "Vae vacuis · vae beatis",
 ];
+
+const PLATE_FILES = ["plate-warm.jpg", "plate-moon.jpg", "plate-rose.jpg"];
 
 export function escapeXml(value) {
   return String(value)
@@ -128,39 +130,30 @@ function kindCopy(kind, sinDegree) {
   return { desk: "SOUL ACQUISITION", act: "hath purchased", prize: "ONE SOUL" };
 }
 
-function chainLabel(kind) {
-  if (kind === "eth") return "ETHEREUM INNER NFT";
-  if (kind === "sol" || kind === "pearl" || kind === "cleanse" || kind === "fa") {
-    return "SOLANA NFT";
+export function nftChainOf(kind, nftChain) {
+  if (nftChain === "solana" || nftChain === "ethereum" || nftChain === "bitcoin") {
+    return nftChain;
   }
+  if (kind === "eth") return "ethereum";
+  if (kind === "sol" || kind === "pearl" || kind === "cleanse" || kind === "fa") {
+    return "solana";
+  }
+  return "bitcoin";
+}
+
+function chainLabel(chain) {
+  if (chain === "ethereum") return "ETHEREUM NFT";
+  if (chain === "solana") return "SOLANA NFT";
   return "BITCOIN ORDINALS NFT";
 }
 
-function flourish(x, y, scale, rot, gold, blood) {
-  return `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${scale})">
-    <path d="M0 0 C 10 -26 36 -34 54 -14 C 40 -10 22 8 6 20 C 18 2 34 -12 50 -8" fill="none" stroke="${gold}" stroke-width="1.5"/>
-    <path d="M0 0 C 12 16 30 32 52 26" fill="none" stroke="${blood}" stroke-width="1.15"/>
-    <circle cx="54" cy="-14" r="2.3" fill="${gold}"/>
-    <path d="M18 -18 C 22 -28 30 -28 34 -20" fill="none" stroke="${gold}" stroke-width="1"/>
-  </g>`;
+function chainInk(chain) {
+  if (chain === "ethereum") return "#a8b4ff";
+  if (chain === "solana") return "#7dffc3";
+  return "#f0b429";
 }
 
-function roseWindow(cx, cy, r, petals, rot, gold, blood, night) {
-  const petalsXml = Array.from({ length: petals }, (_, i) => {
-    const a = rot + (i / petals) * Math.PI * 2;
-    const x = cx + Math.cos(a) * r * 0.62;
-    const y = cy + Math.sin(a) * r * 0.62;
-    return `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(r * 0.22).toFixed(1)}" ry="${(r * 0.34).toFixed(1)}" transform="rotate(${((a * 180) / Math.PI).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})" fill="${night}" fill-opacity="0.22" stroke="${gold}" stroke-width="0.9"/>`;
-  }).join("");
-  return `<g>
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="${night}" fill-opacity="0.18" stroke="${gold}" stroke-width="1.8"/>
-    <circle cx="${cx}" cy="${cy}" r="${r * 0.78}" fill="none" stroke="${blood}" stroke-width="0.9"/>
-    ${petalsXml}
-    <circle cx="${cx}" cy="${cy}" r="${r * 0.16}" fill="${blood}" stroke="${gold}" stroke-width="1.2"/>
-  </g>`;
-}
-
-function uniqueSigil(cx, cy, r, points, rand, gold, blood) {
+function uniqueSigil(cx, cy, r, points, rand, gold) {
   const coords = Array.from({ length: points }, (_, i) => {
     const a = (i / points) * Math.PI * 2 - Math.PI / 2;
     const jitter = 0.72 + rand() * 0.4;
@@ -169,7 +162,7 @@ function uniqueSigil(cx, cy, r, points, rand, gold, blood) {
   const d = coords
     .map((pt, i) => `${i === 0 ? "M" : "L"} ${pt[0].toFixed(1)} ${pt[1].toFixed(1)}`)
     .join(" ");
-  return `<path d="${d} Z" fill="${blood}" fill-opacity="0.92" stroke="${gold}" stroke-width="1.6"/>`;
+  return `<path d="${d} Z" fill="none" stroke="${gold}" stroke-width="1.7"/>`;
 }
 
 export function certificateTraits(payload) {
@@ -181,19 +174,39 @@ export function certificateTraits(payload) {
     seed,
     palette,
     motto: MOTTOS[seed % MOTTOS.length],
+    plate: seed % PLATE_FILES.length,
     petals: 6 + Math.floor(rand() * 7),
-    roseRot: rand() * Math.PI,
-    stars: 14 + Math.floor(rand() * 16),
-    vine: 5 + Math.floor(rand() * 6),
+    roseRot: rand() * 360,
+    stars: 10 + Math.floor(rand() * 12),
     sigilPoints: 5 + Math.floor(rand() * 4),
     sealTurn: Math.floor(rand() * 36) * 10,
+    hue: Math.floor(rand() * 18) - 9,
+    veil: 0.28 + rand() * 0.16,
     blotX: 80 + rand() * 640,
     blotY: 180 + rand() * 700,
     blotR: 40 + rand() * 70,
   };
 }
 
-export function certificateSvg(payload) {
+export function resolveCertificateAssets(traits, embedded) {
+  const plateFile = PLATE_FILES[traits.plate];
+  if (embedded) {
+    return {
+      plate: embedded[plateFile],
+      wax: embedded["wax-seal.jpg"],
+      rose: embedded["rose-window.jpg"],
+      filigree: embedded["filigree.jpg"],
+    };
+  }
+  return {
+    plate: `/certificates/${plateFile}`,
+    wax: "/certificates/wax-seal.jpg",
+    rose: "/certificates/rose-window.jpg",
+    filigree: "/certificates/filigree.jpg",
+  };
+}
+
+export function certificateSvg(payload, options = {}) {
   const W = 800;
   const H = 1120;
   const serial = escapeXml(payload.serial || "");
@@ -201,7 +214,7 @@ export function certificateSvg(payload) {
   const id = digest.replace(/[^0-9a-f]/gi, "").slice(0, 12) || "ae1666";
   const holderRaw = String(payload.holder || "Anonymous").slice(0, 42);
   const holder = escapeXml(holderRaw);
-  const holderSize = holderRaw.length > 24 ? 34 : holderRaw.length > 16 ? 42 : 52;
+  const holderSize = holderRaw.length > 24 ? 32 : holderRaw.length > 16 ? 40 : 50;
   const paid = escapeXml(
     payload.sinDegree
       ? `${payload.btcAmount} · DEGREE ${payload.sinDegree}`
@@ -214,33 +227,24 @@ export function certificateSvg(payload) {
       ? `No. ${payload.edition} / ${payload.max || payload.editionMax}`
       : "";
   const copy = kindCopy(payload.kind, payload.sinDegree);
+  const chain = nftChainOf(payload.kind, payload.nftChain);
   const traits = certificateTraits(payload);
   const { palette: c, seed } = traits;
   const rand = rng(seed ^ 0x9e3779b9);
+  const assets = resolveCertificateAssets(traits, options.embedded);
+  const chainGold = chainInk(chain);
 
   const stars = Array.from({ length: traits.stars }, () => {
-    const x = 36 + rand() * (W - 72);
-    const y = 36 + rand() * (H - 72);
-    const r = 0.5 + rand() * 1.35;
-    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="${c.gold}" opacity="${(0.25 + rand() * 0.55).toFixed(2)}"/>`;
+    const x = 48 + rand() * (W - 96);
+    const y = 48 + rand() * (H - 96);
+    const r = 0.45 + rand() * 1.2;
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="${c.gold}" opacity="${(0.2 + rand() * 0.5).toFixed(2)}"/>`;
   }).join("");
 
-  const vines = Array.from({ length: traits.vine }, (_, i) => {
-    const left = i % 2 === 0;
-    const x0 = left ? 28 : W - 28;
-    const y0 = 160 + i * 70 + rand() * 24;
-    const x1 = left ? 54 + rand() * 18 : W - 54 - rand() * 18;
-    const y1 = y0 + 36 + rand() * 28;
-    return `<path d="M ${x0} ${y0.toFixed(1)} Q ${x1.toFixed(1)} ${(y0 + 12).toFixed(1)} ${x0} ${y1.toFixed(1)}" fill="none" stroke="${c.gold}" stroke-width="1.05" opacity="0.85"/>`;
-  }).join("");
+  const filigree = (x, y, rot) =>
+    `<image href="${assets.filigree}" x="${x}" y="${y}" width="168" height="168" transform="rotate(${rot} ${x + 84} ${y + 84})" opacity="0.92" style="mix-blend-mode:screen"/>`;
 
-  const ticks = Array.from({ length: 18 }, (_, i) => {
-    const y = 250 + i * 36;
-    const len = 8 + (hashSeed(digest + i) % 10);
-    return `<path d="M 70 ${y} h ${len}" stroke="${c.blood}" stroke-width="0.7" opacity="0.45"/><path d="M ${W - 70} ${y} h -${len}" stroke="${c.blood}" stroke-width="0.7" opacity="0.45"/>`;
-  }).join("");
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <defs>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&amp;family=Cinzel+Decorative:wght@700&amp;family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&amp;family=Noto+Serif+SC:wght@600;700&amp;display=swap");
@@ -248,56 +252,77 @@ export function certificateSvg(payload) {
       .cinzel { font-family: "Cinzel Decorative", Cinzel, "Noto Serif SC", "Times New Roman", serif; }
       .gar { font-family: "Cormorant Garamond", "Noto Serif SC", "Times New Roman", serif; }
     </style>
-    <radialGradient id="page-${id}" cx="50%" cy="38%" r="72%">
-      <stop offset="0%" stop-color="${c.parchment}"/>
-      <stop offset="70%" stop-color="${c.stain}"/>
-      <stop offset="100%" stop-color="${c.stain}"/>
-    </radialGradient>
-    <filter id="grain-${id}">
-      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="${seed % 10000}" result="n"/>
-      <feColorMatrix type="matrix" values="0 0 0 0 0.18  0 0 0 0 0.12  0 0 0 0 0.06  0 0 0 0.16 0" in="n"/>
+    <filter id="mood-${id}">
+      <feColorMatrix type="hueRotate" values="${traits.hue}"/>
     </filter>
+    <filter id="grain-${id}">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="${seed % 10000}" result="n"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.16  0 0 0 0 0.1  0 0 0 0 0.04  0 0 0 0.14 0" in="n"/>
+    </filter>
+    <clipPath id="roseclip-${id}">
+      <circle cx="${W / 2}" cy="148" r="78"/>
+    </clipPath>
+    <clipPath id="waxclip-${id}">
+      <circle cx="0" cy="0" r="78"/>
+    </clipPath>
+    <path id="motto-${id}" d="M ${W / 2 - 92} 818 A 92 92 0 1 1 ${W / 2 + 92} 818 A 92 92 0 1 1 ${W / 2 - 92} 818"/>
+    <radialGradient id="veil-${id}" cx="50%" cy="42%" r="62%">
+      <stop offset="0%" stop-color="${c.night}" stop-opacity="${traits.veil.toFixed(2)}"/>
+      <stop offset="100%" stop-color="${c.night}" stop-opacity="0.62"/>
+    </radialGradient>
+    <linearGradient id="cartouche-${id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a100c" stop-opacity="0.22"/>
+      <stop offset="50%" stop-color="#120c0a" stop-opacity="0.48"/>
+      <stop offset="100%" stop-color="#1a100c" stop-opacity="0.28"/>
+    </linearGradient>
   </defs>
   <title>Maison Æternum · ${serial}</title>
-  <desc>${serial} · unique gothic soul certificate · ${digest.slice(0, 16)}</desc>
-  <rect width="${W}" height="${H}" fill="url(#page-${id})"/>
-  <rect width="${W}" height="${H}" filter="url(#grain-${id})" opacity="0.55"/>
-  <circle cx="${traits.blotX.toFixed(1)}" cy="${traits.blotY.toFixed(1)}" r="${traits.blotR.toFixed(1)}" fill="${c.blood}" opacity="0.06"/>
+  <desc>${serial} · mystical gothic soul NFT on ${chain} · ${digest.slice(0, 16)}</desc>
+  <image href="${assets.plate}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice" filter="url(#mood-${id})"/>
+  <rect width="${W}" height="${H}" fill="url(#veil-${id})"/>
+  <rect width="${W}" height="${H}" filter="url(#grain-${id})" opacity="0.28"/>
   ${stars}
-  <rect x="18" y="18" width="${W - 36}" height="${H - 36}" fill="none" stroke="${c.blood}" stroke-width="5"/>
-  <rect x="28" y="28" width="${W - 56}" height="${H - 56}" fill="none" stroke="${c.gold}" stroke-width="2.2"/>
-  <rect x="36" y="36" width="${W - 72}" height="${H - 72}" fill="none" stroke="${c.night}" stroke-width="1"/>
-  <path d="M 90 86 Q ${W / 2} 28 ${W - 90} 86" fill="none" stroke="${c.gold}" stroke-width="1.6"/>
-  <path d="M 90 ${H - 86} Q ${W / 2} ${H - 28} ${W - 90} ${H - 86}" fill="none" stroke="${c.gold}" stroke-width="1.6"/>
-  ${flourish(70, 78, 1.35, 0, c.gold, c.blood)}
-  ${flourish(W - 70, 78, 1.35, 90, c.gold, c.blood)}
-  ${flourish(70, H - 78, 1.35, -90, c.gold, c.blood)}
-  ${flourish(W - 70, H - 78, 1.35, 180, c.gold, c.blood)}
-  ${vines}
-  ${ticks}
-  ${roseWindow(W / 2, 148, 68, traits.petals, traits.roseRot, c.gold, c.blood, c.night)}
-  <text x="${W / 2}" y="230" text-anchor="middle" fill="${c.blood}" font-size="44" class="goth">Maison Æternum</text>
-  <text x="${W / 2}" y="262" text-anchor="middle" fill="${c.night}" font-size="13" letter-spacing="6" class="cinzel">${escapeXml(copy.desk)}</text>
-  <text x="${W / 2}" y="318" text-anchor="middle" fill="${c.ink}" font-size="15" letter-spacing="4" class="cinzel">This is to certify that</text>
-  <text x="${W / 2}" y="382" text-anchor="middle" fill="${c.blood}" font-size="${holderSize}" class="gar" font-style="italic">${holder}</text>
-  <text x="${W / 2}" y="424" text-anchor="middle" fill="${c.ink}" font-size="18" class="gar">${escapeXml(copy.act)}</text>
-  <text x="${W / 2}" y="498" text-anchor="middle" fill="${c.gold}" font-size="58" class="goth">${escapeXml(copy.prize)}</text>
-  <text x="${W / 2}" y="548" text-anchor="middle" fill="${c.moss}" font-size="22" class="gar">${paid} · ${issued}</text>
-  <text x="${W / 2}" y="596" text-anchor="middle" fill="${c.night}" font-size="16" font-style="italic" class="gar">${escapeXml(traits.motto)}</text>
-  <rect x="150" y="630" width="500" height="72" fill="${c.parchment}" fill-opacity="0.35" stroke="${c.blood}" stroke-width="1"/>
-  <text x="${W / 2}" y="658" text-anchor="middle" fill="${c.blood}" font-size="11" letter-spacing="5" class="cinzel">UNIQUE CODE</text>
-  <text x="${W / 2}" y="686" text-anchor="middle" fill="${c.ink}" font-size="18" font-family="Courier New,monospace">${serial}</text>
-  <g transform="translate(${W / 2} 820) rotate(${traits.sealTurn})">
-    <circle r="74" fill="${c.blood}"/>
-    <circle r="66" fill="none" stroke="${c.gold}" stroke-width="3"/>
-    <circle r="58" fill="none" stroke="${c.gold}" stroke-width="1"/>
-    ${uniqueSigil(0, 0, 26, traits.sigilPoints, rand, c.gold, c.gold)}
+  <rect x="16" y="16" width="${W - 32}" height="${H - 32}" fill="none" stroke="${c.blood}" stroke-width="4"/>
+  <rect x="26" y="26" width="${W - 52}" height="${H - 52}" fill="none" stroke="${c.gold}" stroke-width="1.6"/>
+  <rect x="34" y="34" width="${W - 68}" height="${H - 68}" fill="none" stroke="${chainGold}" stroke-width="0.7" opacity="0.85"/>
+  ${filigree(18, 18, 0)}
+  ${filigree(W - 186, 18, 90)}
+  ${filigree(18, H - 186, -90)}
+  ${filigree(W - 186, H - 186, 180)}
+  <g clip-path="url(#roseclip-${id})">
+    <image href="${assets.rose}" x="${W / 2 - 80}" y="68" width="160" height="160" transform="rotate(${traits.roseRot.toFixed(1)} ${W / 2} 148)"/>
   </g>
-  <text x="${W / 2}" y="826" text-anchor="middle" fill="${c.blood}" font-size="14" class="cinzel">${edition || "AE"}</text>
-  <text x="${W / 2}" y="930" text-anchor="middle" fill="${c.night}" font-size="13" letter-spacing="3" class="cinzel">${escapeXml(chainLabel(payload.kind))}</text>
-  <text x="${W / 2}" y="958" text-anchor="middle" fill="${c.ink}" font-size="12" class="gar">Minted to the buyer, never the desk</text>
-  <text x="${W / 2}" y="986" text-anchor="middle" fill="${c.ink}" font-size="11" font-family="Courier New,monospace">${mintedTo}</text>
-  <text x="${W / 2}" y="1034" text-anchor="middle" fill="${c.night}" font-size="12" class="gar">Geneva · Est. 1666 · VAT is not charged</text>
-  <text x="${W / 2}" y="1060" text-anchor="middle" fill="${c.blood}" font-size="10" font-family="Courier New,monospace">${escapeXml(digest.slice(0, 32))}</text>
+  <circle cx="${W / 2}" cy="148" r="80" fill="none" stroke="${c.gold}" stroke-width="2.2"/>
+  <circle cx="${W / 2}" cy="148" r="72" fill="none" stroke="${c.blood}" stroke-width="0.8" opacity="0.8"/>
+  <rect x="88" y="236" width="624" height="392" fill="url(#cartouche-${id})" stroke="${c.gold}" stroke-width="1" opacity="0.95"/>
+  <path d="M 110 248 H 690" stroke="${c.gold}" stroke-width="0.6" opacity="0.55"/>
+  <path d="M 110 616 H 690" stroke="${c.gold}" stroke-width="0.6" opacity="0.55"/>
+  <text x="${W / 2}" y="278" text-anchor="middle" fill="${c.gold}" font-size="42" class="goth">Maison Æternum</text>
+  <text x="${W / 2}" y="306" text-anchor="middle" fill="${chainGold}" font-size="12" letter-spacing="5" class="cinzel">${escapeXml(copy.desk)}</text>
+  <text x="${W / 2}" y="338" text-anchor="middle" fill="${c.ink}" font-size="14" letter-spacing="4" class="cinzel">This is to certify that</text>
+  <text x="${W / 2}" y="392" text-anchor="middle" fill="${c.gold}" font-size="${holderSize}" class="gar" font-style="italic">${holder}</text>
+  <text x="${W / 2}" y="430" text-anchor="middle" fill="${c.ink}" font-size="17" class="gar">${escapeXml(copy.act)}</text>
+  <text x="${W / 2}" y="492" text-anchor="middle" fill="${c.gold}" font-size="54" class="goth">${escapeXml(copy.prize)}</text>
+  <text x="${W / 2}" y="536" text-anchor="middle" fill="${c.moss}" font-size="20" class="gar">${paid} · ${issued}</text>
+  <text x="${W / 2}" y="568" text-anchor="middle" fill="${c.ink}" font-size="15" font-style="italic" class="gar">${escapeXml(traits.motto)}</text>
+  <text x="${W / 2}" y="598" text-anchor="middle" fill="${chainGold}" font-size="13" letter-spacing="4" class="cinzel">${escapeXml(chainLabel(chain))}</text>
+  <rect x="150" y="648" width="500" height="76" fill="#120c0a" fill-opacity="0.45" stroke="${c.blood}" stroke-width="1"/>
+  <text x="${W / 2}" y="676" text-anchor="middle" fill="${c.blood}" font-size="11" letter-spacing="5" class="cinzel">UNIQUE CODE</text>
+  <text x="${W / 2}" y="706" text-anchor="middle" fill="${c.gold}" font-size="17" font-family="Courier New,monospace">${serial}</text>
+  <g transform="translate(${W / 2} 820) rotate(${traits.sealTurn})">
+    <g clip-path="url(#waxclip-${id})">
+      <image href="${assets.wax}" x="-80" y="-80" width="160" height="160" style="mix-blend-mode:screen"/>
+    </g>
+    <circle r="78" fill="none" stroke="${c.gold}" stroke-width="2"/>
+    ${uniqueSigil(0, 0, 22, traits.sigilPoints, rand, c.gold)}
+  </g>
+  <text x="${W / 2}" y="826" text-anchor="middle" fill="${c.gold}" font-size="13" class="cinzel">${edition || "AE"}</text>
+  <text>
+    <textPath href="#motto-${id}" startOffset="50%" text-anchor="middle" fill="${c.gold}" font-size="11" letter-spacing="3" class="cinzel">${escapeXml(traits.motto)}</textPath>
+  </text>
+  <text x="${W / 2}" y="948" text-anchor="middle" fill="${chainGold}" font-size="14" letter-spacing="3" class="cinzel">NFT ON ${escapeXml(chain.toUpperCase())} · MINTED TO THE BUYER</text>
+  <text x="${W / 2}" y="976" text-anchor="middle" fill="${c.ink}" font-size="11" font-family="Courier New,monospace">${mintedTo}</text>
+  <text x="${W / 2}" y="1028" text-anchor="middle" fill="${c.gold}" font-size="12" class="gar">Geneva · Est. 1666 · VAT is not charged</text>
+  <text x="${W / 2}" y="1054" text-anchor="middle" fill="${c.blood}" font-size="10" font-family="Courier New,monospace">${escapeXml(digest.slice(0, 32))}</text>
 </svg>`;
 }

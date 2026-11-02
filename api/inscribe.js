@@ -1,3 +1,4 @@
+import { CERTIFICATE_PLATES } from "./certificate-plates-data.js";
 import { certificateSvg } from "../src/lib/gothic-certificate.js";
 
 const CHISEL = "https://api.chisel.xyz";
@@ -140,7 +141,10 @@ export default async function handler(request, response) {
       return;
     }
 
-    const svg = certificateSvg(payload);
+    const svg = certificateSvg(
+      { ...payload, nftChain: "bitcoin" },
+      { embedded: CERTIFICATE_PLATES },
+    );
     const metadata = JSON.stringify({
       p: "maison-aeternum",
       op: "soul-cert",

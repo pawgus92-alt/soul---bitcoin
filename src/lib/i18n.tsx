@@ -178,9 +178,9 @@ export type Copy = {
   certMintedTo: string;
   certNft: (chain: NftChain) => string;
   certEdition: (edition: number, max: number) => string;
-  certNftPending: string;
-  certNftInscribing: string;
-  certNftMinted: string;
+  certNftPending: (chain: NftChain) => string;
+  certNftInscribing: (chain: NftChain) => string;
+  certNftMinted: (chain: NftChain) => string;
   certNftFailed: string;
   certViewOrdinal: string;
   certViewOrder: string;
@@ -239,7 +239,7 @@ const en: Copy = {
   folioKicker: "The folio",
   folioHeading: "Each NFT is a unique gothic charter.",
   folioBody:
-    "Every certificate is drawn as a blackletter diploma: unique parchment grain, rose window, wax sigil and motto, taken from its serial. The same image is inscribed on-chain for the buyer.",
+    "Each certificate is a mystical painting, then minted as an NFT on the chain you paid: Bitcoin Ordinals, Solana, or Ethereum. The buyer’s wallet holds it. The desk never does.",
   langEn: "EN",
   langRu: "RU",
   langZh: "中文",
@@ -266,7 +266,7 @@ const en: Copy = {
   skuBulletSol: (usd) =>
     `Solana desk: 10 SOL at the live Coinbase spot, about ${usd}.`,
   skuBulletNft:
-    "Bitcoin Ordinal NFTs: 25. Solana NFTs: 250. Ethereum inner NFTs: 50. Each a unique gothic charter.",
+    "The certificate NFT is minted on the chain you paid. Bitcoin Ordinals: 25. Solana NFTs: 250. Ethereum NFTs: 50. Each a unique mystical charter.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
     `The private desk is ${usd} in Bitcoin at Coinbase (25 Ordinals) or 2 ETH at Coinbase (50 inner NFTs). The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
@@ -547,9 +547,24 @@ const en: Copy = {
         ? "ETH inner NFT"
         : "Bitcoin NFT",
   certEdition: (edition, max) => `Edition ${edition} / ${max}`,
-  certNftPending: "Awaiting inscription postage",
-  certNftInscribing: "Inscribing on Bitcoin",
-  certNftMinted: "Inscribed on Bitcoin",
+  certNftPending: (chain) =>
+    chain === "solana"
+      ? "Preparing the Solana NFT"
+      : chain === "ethereum"
+        ? "Preparing the Ethereum NFT"
+        : "Awaiting inscription postage",
+  certNftInscribing: (chain) =>
+    chain === "solana"
+      ? "Minting on Solana"
+      : chain === "ethereum"
+        ? "Minting on Ethereum"
+        : "Inscribing on Bitcoin",
+  certNftMinted: (chain) =>
+    chain === "solana"
+      ? "Minted on Solana"
+      : chain === "ethereum"
+        ? "Minted on Ethereum"
+        : "Inscribed on Bitcoin",
   certNftFailed: "Unique code issued · mint desk silent",
   certViewOrdinal: "View inscription",
   certViewOrder: "View mint order",
@@ -614,7 +629,7 @@ const ru: Copy = {
   folioKicker: "Фолио",
   folioHeading: "Каждый NFT — уникальная готическая грамота.",
   folioBody:
-    "Каждый сертификат рисуется как диплом чёрным шрифтом: своё зерно пергамента, своя роза, своя сургучная печать и девиз — из серийного номера. Та же картинка вписывается в сеть покупателю.",
+    "Каждый сертификат — мистическая картина, затем NFT в той сети, где его купили: Bitcoin Ordinals, Solana или Ethereum. Кошелёк покупателя держит его. Стол — никогда.",
   langEn: "EN",
   langRu: "RU",
   langZh: "中文",
@@ -641,7 +656,7 @@ const ru: Copy = {
   skuBulletSol: (usd) =>
     `Стол Solana: 10 SOL по живому споту Coinbase, около ${usd}.`,
   skuBulletNft:
-    "Bitcoin Ordinal NFT: 25. Solana NFT: 250. Ethereum inner NFT: 50. Каждый — уникальная готическая грамота.",
+    "NFT-сертификат чеканится в той сети, где его купили. Bitcoin Ordinal: 25. Solana NFT: 250. Ethereum NFT: 50. Каждый — уникальная мистическая грамота.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
     `Частный стол — ${usd} в Bitcoin по Coinbase (25 Ordinal) или 2 ETH по Coinbase (50 inner NFT). Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
@@ -923,9 +938,24 @@ const ru: Copy = {
         ? "ETH inner NFT"
         : "Bitcoin NFT",
   certEdition: (edition, max) => `Тираж ${edition} / ${max}`,
-  certNftPending: "Ждём комиссию за надпись",
-  certNftInscribing: "Вписывается в Bitcoin",
-  certNftMinted: "Вписан в Bitcoin",
+  certNftPending: (chain) =>
+    chain === "solana"
+      ? "Готовим Solana NFT"
+      : chain === "ethereum"
+        ? "Готовим Ethereum NFT"
+        : "Ждём комиссию за надпись",
+  certNftInscribing: (chain) =>
+    chain === "solana"
+      ? "Чеканка в Solana"
+      : chain === "ethereum"
+        ? "Чеканка в Ethereum"
+        : "Вписывается в Bitcoin",
+  certNftMinted: (chain) =>
+    chain === "solana"
+      ? "Отчеканен в Solana"
+      : chain === "ethereum"
+        ? "Отчеканен в Ethereum"
+        : "Вписан в Bitcoin",
   certNftFailed: "Уникальный код выдан · стол чеканки молчит",
   certViewOrdinal: "Открыть надпись",
   certViewOrder: "Открыть заказ чеканки",

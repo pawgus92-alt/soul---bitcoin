@@ -1,3 +1,6 @@
+import { CERTIFICATE_PLATES } from "./certificate-plates-data.js";
+import { certificateSvg } from "../src/lib/gothic-certificate.js";
+
 function json(response, status, body) {
   response.statusCode = status;
   response.setHeader("content-type", "application/json");
@@ -56,6 +59,17 @@ export default async function handler(request, response) {
       chain === "ethereum"
         ? `eth-inner-${edition}-${serial}`
         : `sol-nft-${edition}-${serial}`;
+    const svg = certificateSvg(
+      {
+        ...payload,
+        nftChain: chain,
+        receiveAddress,
+        serial,
+        edition,
+        max: max || payload.editionMax,
+      },
+      { embedded: CERTIFICATE_PLATES },
+    );
     json(response, 200, {
       orderId: tokenId,
       receiveAddress,
@@ -68,6 +82,19 @@ export default async function handler(request, response) {
       chain,
       edition,
       max,
+      metadata: {
+        name: `Maison Æternum · ${serial}`,
+        symbol: "AE1666",
+        description:
+          "Unique gothic soul certificate. The NFT lives on the chain of purchase and is minted to the buyer, never the desk.",
+        bytes: Buffer.byteLength(svg, "utf8"),
+        attributes: [
+          { trait_type: "chain", value: chain },
+          { trait_type: "desk", value: payload.kind || chain },
+          { trait_type: "serial", value: serial },
+          { trait_type: "edition", value: `${edition} / ${max || "?"}` },
+        ],
+      },
     });
   } catch (error) {
     json(response, 500, {

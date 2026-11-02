@@ -351,7 +351,7 @@ export default function App() {
             <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">
               {copy.folioBody}
             </p>
-            <div className="mt-10 grid gap-8 lg:grid-cols-2">
+            <div className="mt-10 grid gap-8 lg:grid-cols-3">
               <SoulCertificate
                 compact
                 kind="buy"
@@ -361,8 +361,22 @@ export default function App() {
                 btcAmount="1.28667035 BTC"
                 issuedAt={new Date("1666-06-06T16:06:00Z")}
                 receiveAddress="bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"
+                nftChain="bitcoin"
                 edition={1}
                 editionMax={25}
+              />
+              <SoulCertificate
+                compact
+                kind="sol"
+                holder="Signora Sol"
+                serial="AE-1666-SOL-C0FFEEBABE01"
+                digest="c0ffeebabe0112233445566778899aabbccddeeff00112233445566778899a06"
+                btcAmount="10 SOL"
+                issuedAt={new Date("1666-06-06T16:06:00Z")}
+                receiveAddress="7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
+                nftChain="solana"
+                edition={12}
+                editionMax={250}
               />
               <SoulCertificate
                 compact

@@ -37,9 +37,16 @@ export async function createCertificateNft(
       body: JSON.stringify({
         chain,
         serial: record.serial,
+        digest: record.digest,
+        kind: record.kind,
+        holder: record.holder,
+        btcAmount: record.btcAmount,
+        issuedAt: record.issuedAt,
         receiveAddress: record.receiveAddress,
         edition: record.edition,
         max: record.editionMax,
+        sinDegree: record.sinDegree,
+        nftChain: chain,
       }),
     });
     return readNft(response);
@@ -58,6 +65,7 @@ export async function createCertificateNft(
       edition: record.edition,
       max: record.editionMax,
       sinDegree: record.sinDegree,
+      nftChain: "bitcoin",
     }),
   });
   return readNft(response);

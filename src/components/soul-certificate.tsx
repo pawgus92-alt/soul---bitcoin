@@ -12,12 +12,12 @@ function nftLabel(
   nft?: CertificateNft,
   chain: NftChain = "bitcoin",
 ) {
-  if (!nft) return copy.certNftPending;
-  if (nft.inscriptionId) return copy.certNftMinted;
-  if (nft.status === "inscribing") return copy.certNftInscribing;
+  if (!nft) return copy.certNftPending(chain);
+  if (nft.inscriptionId) return copy.certNftMinted(chain);
+  if (nft.status === "inscribing") return copy.certNftInscribing(chain);
   if (nft.status === "error") return copy.certNftFailed;
-  if (chain !== "bitcoin" && nft.status === "minted") return copy.certNftMinted;
-  return copy.certNftPending;
+  if (chain !== "bitcoin" && nft.status === "minted") return copy.certNftMinted(chain);
+  return copy.certNftPending(chain);
 }
 
 function nftExplorerUrl(nft: CertificateNft, chain: NftChain) {
@@ -77,6 +77,7 @@ export function SoulCertificate({
     edition,
     editionMax,
     sinDegree,
+    nftChain,
   });
 
   return (
