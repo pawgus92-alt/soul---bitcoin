@@ -82,9 +82,9 @@ export default function App() {
   const { copy, locale } = useI18n();
   const { quote, ethQuote, solQuote } = useBtcQuote();
   const kicker =
-    locale === "ru"
-      ? "text-[11px] tracking-[0.16em] text-primary/80 uppercase"
-      : "text-[11px] tracking-[0.28em] text-primary/80 uppercase";
+    locale === "en"
+      ? "text-[11px] tracking-[0.28em] text-primary/80 uppercase"
+      : "text-[11px] tracking-[0.16em] text-primary/80 uppercase";
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
@@ -237,6 +237,25 @@ export default function App() {
             <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">
               {copy.cleanseBody}
             </p>
+            {locale === "zh" ? (
+              <Card className="mt-10 border-[#c9a227]/45 bg-card/80">
+                <CardHeader>
+                  <p className={kicker}>{copy.faKicker}</p>
+                  <CardTitle className="font-heading text-4xl text-primary sm:text-5xl">
+                    {copy.faHeading}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
+                    {copy.faBody}
+                  </p>
+                  <PayBitcoinButton
+                    kind="fa"
+                    className="h-12 px-6 text-base"
+                  />
+                </CardContent>
+              </Card>
+            ) : null}
             <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {copy.sinDegrees.map((item) => (
                 <Card

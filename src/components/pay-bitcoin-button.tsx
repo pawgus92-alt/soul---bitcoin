@@ -1,8 +1,16 @@
-import { Bitcoin, Coins, Droplets, Hexagon, LoaderCircle } from "lucide-react";
+import {
+  Bitcoin,
+  Coins,
+  Droplets,
+  Hexagon,
+  LoaderCircle,
+  Sparkles,
+} from "lucide-react";
 
 import { BitcoinPayDialog } from "@/components/bitcoin-pay-dialog";
 import { formatBtc, formatUsd } from "@/lib/bitcoin";
 import {
+  FA_AMOUNT,
   SHOW_PEARL_DESK,
   SHOW_SELL_DESK,
   type DealKind,
@@ -20,6 +28,9 @@ export function PayBitcoinButton({
 }) {
   const { copy } = useI18n();
   const { quote, ethQuote, solQuote, loading } = useBtcQuote();
+  const faUsd = solQuote
+    ? formatUsd(solQuote.usdPerSol * FA_AMOUNT)
+    : null;
   const label =
     kind === "sell"
       ? copy.sellSoul
@@ -31,15 +42,19 @@ export function PayBitcoinButton({
           ? copy.buyPearl
           : kind === "cleanse"
             ? copy.cleanseSoul
-            : kind === "eth"
-              ? ethQuote
-                ? copy.payEthAmount(formatUsd(ethQuote.usdAmount))
-                : copy.buyEth
-              : quote
-                ? copy.payAmount(formatBtc(quote.btcAmount))
-                : loading
-                  ? copy.fetchingBitcoinRate
-                  : copy.payInBitcoin;
+            : kind === "fa"
+              ? faUsd
+                ? `${copy.faSoul} · ${faUsd}`
+                : copy.faSoul
+              : kind === "eth"
+                ? ethQuote
+                  ? copy.payEthAmount(formatUsd(ethQuote.usdAmount))
+                  : copy.buyEth
+                : quote
+                  ? copy.payAmount(formatBtc(quote.btcAmount))
+                  : loading
+                    ? copy.fetchingBitcoinRate
+                    : copy.payInBitcoin;
 
   const icon =
     kind === "sol" ? (
@@ -48,6 +63,8 @@ export function PayBitcoinButton({
       <Coins data-icon="inline-start" />
     ) : kind === "cleanse" ? (
       <Droplets data-icon="inline-start" />
+    ) : kind === "fa" ? (
+      <Sparkles data-icon="inline-start" />
     ) : kind === "eth" ? (
       <Hexagon data-icon="inline-start" />
     ) : !kind || kind === "buy" ? (
@@ -80,6 +97,7 @@ export function DealButtons({
   buttonClassName?: string;
   showMiddle?: boolean;
 }) {
+  const { locale } = useI18n();
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
@@ -93,6 +111,9 @@ export function DealButtons({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
           <PayBitcoinButton kind="sol" className={buttonClassName} />
           <PayBitcoinButton kind="cleanse" className={buttonClassName} />
+          {locale === "zh" ? (
+            <PayBitcoinButton kind="fa" className={buttonClassName} />
+          ) : null}
           {SHOW_PEARL_DESK ? (
             <PayBitcoinButton kind="pearl" className={buttonClassName} />
           ) : null}

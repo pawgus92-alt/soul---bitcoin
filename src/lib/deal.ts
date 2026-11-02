@@ -2,6 +2,7 @@ export const DEAL_USD = 100_000;
 export const SELL_BTC = 0.5;
 export const ETH_AMOUNT = 2;
 export const SOL_AMOUNT = 10;
+export const FA_AMOUNT = 8.88;
 export const PEARL_AMOUNT = 650;
 
 export const BTC_ADDRESS = "bc1q5v3rtce5zrwuw4vvk7v705v5qdrgqj2xuxgsnj";
@@ -15,7 +16,14 @@ export const SHOW_SELL_DESK = false;
 /** Kept wired; Pearl stays in the deal table for a later desk. */
 export const SHOW_PEARL_DESK = false;
 
-export type DealKind = "buy" | "sell" | "sol" | "pearl" | "eth" | "cleanse";
+export type DealKind =
+  | "buy"
+  | "sell"
+  | "sol"
+  | "pearl"
+  | "eth"
+  | "cleanse"
+  | "fa";
 export type DealAsset = "BTC" | "SOL" | "PEARL" | "ETH";
 export type DealChain = "bitcoin" | "solana" | "ethereum";
 export type DealClass = "private" | "middle";
@@ -96,6 +104,15 @@ export const DEALS: Record<DealKind, DealSpec> = {
     address: SOL_ADDRESS,
     unit: "SOL",
   },
+  fa: {
+    kind: "fa",
+    asset: "SOL",
+    chain: "solana",
+    nftChain: "solana",
+    deskClass: "middle",
+    address: SOL_ADDRESS,
+    unit: "SOL",
+  },
 };
 
 export function getDeal(kind: DealKind): DealSpec {
@@ -111,6 +128,7 @@ export function expectedAtomic(kind: DealKind, coinAmount = 0) {
   if (kind === "sol" || kind === "cleanse") {
     return String(SOL_AMOUNT * 1_000_000_000);
   }
+  if (kind === "fa") return String(Math.round(FA_AMOUNT * 1_000_000_000));
   if (kind === "pearl") return String(PEARL_AMOUNT * 10 ** PEARL_DECIMALS);
   if (kind === "sell") return String(Math.round(SELL_BTC * 1e8));
   if (kind === "eth") return ethToWei(ETH_AMOUNT);
@@ -119,6 +137,7 @@ export function expectedAtomic(kind: DealKind, coinAmount = 0) {
 
 export function formatDealAmount(kind: DealKind, coinAmount?: number) {
   if (kind === "sol" || kind === "cleanse") return `${SOL_AMOUNT} SOL`;
+  if (kind === "fa") return `${FA_AMOUNT} SOL`;
   if (kind === "pearl") return `${PEARL_AMOUNT} PEARL`;
   if (kind === "sell") return `${SELL_BTC.toFixed(8)} BTC`;
   if (kind === "eth") return `${ETH_AMOUNT} ETH`;
@@ -134,7 +153,7 @@ export function formatAtomic(kind: DealKind, atomic: string | number) {
     return `${whole}.${frac} ETH`;
   }
   const value = Number(atomic);
-  if (kind === "sol" || kind === "cleanse") {
+  if (kind === "sol" || kind === "cleanse" || kind === "fa") {
     return `${(value / 1_000_000_000).toFixed(4)} SOL`;
   }
   if (kind === "pearl") {
@@ -145,7 +164,7 @@ export function formatAtomic(kind: DealKind, atomic: string | number) {
 
 export const SERIAL_TAG: Record<
   DealKind,
-  "BUY" | "SELL" | "SOL" | "PRL" | "ETH" | "CLN"
+  "BUY" | "SELL" | "SOL" | "PRL" | "ETH" | "CLN" | "FA8"
 > = {
   buy: "BUY",
   sell: "SELL",
@@ -153,6 +172,7 @@ export const SERIAL_TAG: Record<
   pearl: "PRL",
   eth: "ETH",
   cleanse: "CLN",
+  fa: "FA8",
 };
 
 export function deskAddress(chain: DealChain) {

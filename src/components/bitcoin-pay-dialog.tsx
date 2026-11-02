@@ -33,6 +33,7 @@ import {
 import {
   DEAL_USD,
   ETH_AMOUNT,
+  FA_AMOUNT,
   PEARL_AMOUNT,
   SELL_BTC,
   SOL_AMOUNT,
@@ -86,6 +87,13 @@ function invoiceCopy(
       badge: copy.cleanseInvoiceBadge,
       title: copy.cleanseInvoiceTitle,
       description: copy.cleanseInvoiceDescription(usd),
+    };
+  }
+  if (kind === "fa") {
+    return {
+      badge: copy.faInvoiceBadge,
+      title: copy.faInvoiceTitle,
+      description: copy.faInvoiceDescription(usd),
     };
   }
   if (kind === "eth") {
@@ -147,6 +155,8 @@ export function BitcoinPayDialog({
   const btcBuy = kind === "buy";
   const ethBuy = kind === "eth";
   const cleansing = kind === "cleanse";
+  const faBlessing = kind === "fa";
+  const solDesk = kind === "sol" || cleansing || faBlessing;
   const payLabel =
     triggerLabel ??
     (cleansing ? copy.cleanseSoul : sell ? copy.sellSoul : copy.payInBitcoin);
@@ -160,16 +170,22 @@ export function BitcoinPayDialog({
   const invoiceUsd =
     ethBuy && ethQuote
       ? formatUsd(ethQuote.usdAmount)
-      : (kind === "sol" || cleansing) && solQuote
-        ? formatUsd(solQuote.usdAmount)
-        : formatUsd(DEAL_USD);
+      : faBlessing && solQuote
+        ? formatUsd(solQuote.usdPerSol * FA_AMOUNT)
+        : (kind === "sol" || cleansing) && solQuote
+          ? formatUsd(solQuote.usdAmount)
+          : formatUsd(DEAL_USD);
   const soldOut = supply.remaining <= 0;
   const invoice = invoiceCopy(kind, copy, invoiceUsd);
   const payUri =
     deal.chain === "solana"
       ? solanaPayUri(
           deal.address,
-          kind === "pearl" ? PEARL_AMOUNT : SOL_AMOUNT,
+          kind === "pearl"
+            ? PEARL_AMOUNT
+            : faBlessing
+              ? FA_AMOUNT
+              : SOL_AMOUNT,
           deal.mint,
         )
       : deal.chain === "ethereum"
@@ -594,9 +610,13 @@ export function BitcoinPayDialog({
                         {`${formatUsd(ethQuote.usdAmount)} at ${formatUsd(ethQuote.usdPerEth)} / ETH`}
                       </p>
                     ) : null}
-                    {(kind === "sol" || cleansing) && solQuote ? (
+                    {solDesk && solQuote ? (
                       <p className="font-mono text-sm text-muted-foreground">
-                        {`${formatUsd(solQuote.usdAmount)} at ${formatUsd(solQuote.usdPerSol)} / SOL`}
+                        {`${formatUsd(
+                          faBlessing
+                            ? solQuote.usdPerSol * FA_AMOUNT
+                            : solQuote.usdAmount,
+                        )} at ${formatUsd(solQuote.usdPerSol)} / SOL`}
                       </p>
                     ) : null}
                     {sell && quote ? (
@@ -614,7 +634,7 @@ export function BitcoinPayDialog({
                         {copy.spotVia(ethQuote.source)}
                       </p>
                     ) : null}
-                    {(kind === "sol" || cleansing) && solQuote ? (
+                    {solDesk && solQuote ? (
                       <p className="mt-1 text-[11px] text-muted-foreground">
                         {copy.spotVia(solQuote.source)}
                       </p>
@@ -701,11 +721,13 @@ export function BitcoinPayDialog({
                 className="mt-0.5"
               />
               <span>
-                {cleansing
-                  ? copy.cleanseAcceptTerms
-                  : sell
-                    ? copy.acceptSellTerms
-                    : copy.acceptTerms}
+                {faBlessing
+                  ? copy.faAcceptTerms
+                  : cleansing
+                    ? copy.cleanseAcceptTerms
+                    : sell
+                      ? copy.acceptSellTerms
+                      : copy.acceptTerms}
               </span>
             </label>
 
@@ -834,18 +856,22 @@ export function BitcoinPayDialog({
           <div className="space-y-4 py-2">
             <DialogHeader className="items-center text-center">
               <DialogTitle className="font-heading text-2xl text-primary">
-                {cleansing
-                  ? copy.cleansedSoul
-                  : sell
-                    ? copy.soldSoul
-                    : copy.boughtSoul}
+                {faBlessing
+                  ? copy.faCleansed
+                  : cleansing
+                    ? copy.cleansedSoul
+                    : sell
+                      ? copy.soldSoul
+                      : copy.boughtSoul}
               </DialogTitle>
               <DialogDescription>
-                {cleansing
-                  ? copy.cleansedSoulHint
-                  : sell
-                    ? copy.soldSoulHint
-                    : copy.boughtSoulHint}
+                {faBlessing
+                  ? copy.faCleansedHint
+                  : cleansing
+                    ? copy.cleansedSoulHint
+                    : sell
+                      ? copy.soldSoulHint
+                      : copy.boughtSoulHint}
               </DialogDescription>
             </DialogHeader>
             <SoulCertificate

@@ -118,12 +118,21 @@ function kindCopy(kind, sinDegree) {
       prize: "ONE IGNOBLE SIN",
     };
   }
+  if (kind === "fa") {
+    return {
+      desk: "发发发 · 888 · COMPLETE CLEANSING",
+      act: "hath washed",
+      prize: "发发发",
+    };
+  }
   return { desk: "SOUL ACQUISITION", act: "hath purchased", prize: "ONE SOUL" };
 }
 
 function chainLabel(kind) {
   if (kind === "eth") return "ETHEREUM INNER NFT";
-  if (kind === "sol" || kind === "pearl" || kind === "cleanse") return "SOLANA NFT";
+  if (kind === "sol" || kind === "pearl" || kind === "cleanse" || kind === "fa") {
+    return "SOLANA NFT";
+  }
   return "BITCOIN ORDINALS NFT";
 }
 
@@ -234,10 +243,10 @@ export function certificateSvg(payload) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <defs>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&amp;family=Cinzel+Decorative:wght@700&amp;family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&amp;display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&amp;family=Cinzel+Decorative:wght@700&amp;family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&amp;family=Noto+Serif+SC:wght@600;700&amp;display=swap");
       .goth { font-family: UnifrakturCook, "Old English Text MT", "Cinzel Decorative", serif; }
-      .cinzel { font-family: "Cinzel Decorative", Cinzel, "Times New Roman", serif; }
-      .gar { font-family: "Cormorant Garamond", "Times New Roman", serif; }
+      .cinzel { font-family: "Cinzel Decorative", Cinzel, "Noto Serif SC", "Times New Roman", serif; }
+      .gar { font-family: "Cormorant Garamond", "Noto Serif SC", "Times New Roman", serif; }
     </style>
     <radialGradient id="page-${id}" cx="50%" cy="38%" r="72%">
       <stop offset="0%" stop-color="${c.parchment}"/>

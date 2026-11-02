@@ -8,9 +8,10 @@ import {
   type ReactNode,
 } from "react";
 
+import { zh } from "@/lib/copy-zh";
 import type { NftChain } from "@/lib/deal";
 
-export type Locale = "en" | "ru";
+export type Locale = "en" | "ru" | "zh";
 
 type CopyItem = { title: string; text: string };
 type LedgerRow = { city: string; client: string; amount: string };
@@ -40,6 +41,7 @@ export type Copy = {
   folioBody: string;
   langEn: string;
   langRu: string;
+  langZh: string;
   langSwitch: string;
   badgeInvite: string;
   cities: string[];
@@ -116,6 +118,16 @@ export type Copy = {
   cleanseAcceptTerms: string;
   cleansedSoul: string;
   cleansedSoulHint: string;
+  faSoul: string;
+  faKicker: string;
+  faHeading: string;
+  faBody: string;
+  faInvoiceBadge: string;
+  faInvoiceTitle: string;
+  faInvoiceDescription: (usd: string) => string;
+  faAcceptTerms: string;
+  faCleansed: string;
+  faCleansedHint: string;
   sinDegrees: SinDegreeCopy[];
   ethInvoiceBadge: string;
   ethInvoiceTitle: string;
@@ -201,6 +213,9 @@ export type Copy = {
   certCleanseProof: string;
   certHasCleansed: string;
   certOneSin: string;
+  certFaSubtitle: string;
+  certFaPaid: string;
+  certFaProof: string;
   certMidProof: string;
   certNo: string;
   certPaid: string;
@@ -227,6 +242,7 @@ const en: Copy = {
     "Every certificate is drawn as a blackletter diploma: unique parchment grain, rose window, wax sigil and motto, taken from its serial. The same image is inscribed on-chain for the buyer.",
   langEn: "EN",
   langRu: "RU",
+  langZh: "中文",
   langSwitch: "Language",
   badgeInvite: "By invitation, then by invoice",
   cities: ["Geneva", "London", "Dubai", "Moscow", "Nassau"],
@@ -383,10 +399,10 @@ const en: Copy = {
   cleanseKicker: "Cleansing desk",
   cleanseHeading: "Cleanse the soul",
   cleanseBody:
-    "For ignoble sins of the crypto world. Six degrees. The sixth is vacant, reserved for a future disgrace the market has not yet invented.",
+    "For ignoble sins of the crypto world — the ones that never make the prospectus, only the group chat. Six degrees, like a little monastery of disgrace. The sixth stall is vacant on purpose: when the market invents a meaner sin, the form will write itself.",
   cleansePickTitle: "Name the degree",
   cleansePickDescription:
-    "The youth starts at one. Binance sits at five. The Party may be proud. Other people, less so.",
+    "The youth begins in the family chat. Binance sits in silk at five. The Party may hang a medal. Other people, quietly, will not.",
   cleanseContinue: "Wash this degree",
   cleanseReserved: "Reserved for a later sin",
   cleanseAcceptTerms:
@@ -394,42 +410,56 @@ const en: Copy = {
   cleansedSoul: "One ignoble sin, washed",
   cleansedSoulHint:
     "The certificate names the degree. Hang it where the guests can see the hygiene and not the original group chat.",
+  faSoul: "888 · Complete cleansing",
+  faKicker: "Chinese desk · 发发发",
+  faHeading: "Three eights",
+  faBody:
+    "A complete washing: every ignoble crypto sin, and the unluck that clung to them. In the Chinese branch the three eights mean prosper, grow rich, grow richer — 发发发. Paid in 8.88 SOL at the Coinbase spot, minted as a unique gothic NFT to the buyer.",
+  faInvoiceBadge: "发发发 · 888",
+  faInvoiceTitle: "Complete cleansing · 8.88 SOL",
+  faInvoiceDescription: (usd) =>
+    `Eight point eighty-eight Solana — three eights — about ${usd} at the live Coinbase SOL spot. The certificate washes the whole ledger of crypto sins and misfortune, not a single degree.`,
+  faAcceptTerms:
+    "I understand this is a complete cleansing for 8.88 SOL, without repurchase, and that 发发发 is a blessing the chain will still remember.",
+  faCleansed: "发发发 · washed clean",
+  faCleansedHint:
+    "All ignoble crypto sins, and the unluck beside them. Hang the gothic charter where fortune can see the three eights.",
   sinDegrees: [
     {
       degree: 1,
       title: "The Youth",
       kicker: "Degree I",
-      text: "You are still a youth. You did something small and ugly: you shilled a coin in the family chat, you told your aunt the dip was healthy, you forwarded a screenshot you were not meant to have. The sin is junior. The stain is already on the jacket.",
+      text: "You are still a youth: the sin is slight, like a first glass, and already it marks the jacket. In the family chat you called a coin an opportunity; you told your aunt the dip was health; you forwarded a stranger’s screenshot as if it were your own luck. A junior rank. An older stain.",
     },
     {
       degree: 2,
       title: "The Acolyte",
       kicker: "Degree II",
-      text: "You joined a signal channel and called it research. You posted a chart with three indicators and the word “invalidation”. You wrote NFA under advice that was extremely FA. The monastery of Telegram has noticed you, unfortunately.",
+      text: "You put on the habit of research, and under it sat a signal channel. Three indicators, the word “invalidation,” and NFA beneath advice that was the most FA in the room. The monastery of Telegram has written you into the synodikon. Unfortunately, in ink.",
     },
     {
       degree: 3,
       title: "Deacon of the Pool",
       kicker: "Degree III",
-      text: "You ran a community. You pinned a contract. You wrote “we are early” while you were the exit liquidity with better lighting. People still wave in the street. Their wallets do not.",
+      text: "You kept a community as if it were a pulpit. The contract was pinned, “we are early” was sung from the ambo — and you were the exit, only your lighting was kinder. People still bow in the street. Their wallets have already said amen.",
     },
     {
       degree: 4,
       title: "Pre-listing",
       kicker: "Degree IV",
-      text: "You knew the wallet. You knew the minute. You were not in the screenshot; you were in the explorer. The desk can wash the soul. The chain keeps the minutes, and it does not take confession.",
+      text: "You knew the wallet and you knew the minute. You are not in the screenshot: you sat in the explorer, a confessional without a grille. The desk can wash a soul. The chain keeps the minutes, and it does not sign indulgences.",
     },
     {
       degree: 5,
       title: "Binance",
       kicker: "Degree V",
-      text: "You did it properly: KYC, VIP, a listing that smelled of a five-year plan. The Party is proud of you. Other people are not very. We will mention Binance only in the footnotes, like a discreet war.",
+      text: "You did it by the book: KYC, VIP, a listing that smelled of a five-year plan and a ministry stamp. The Party is proud of you — solemnly, on the front page. Other people are not very: they keep a quieter arithmetic, without a banner. Binance remains a footnote on the charter, like a discreet war.",
     },
     {
       degree: 6,
       title: "Reserved",
       kicker: "Degree VI",
-      text: "Empty on purpose. When the market invents a worse ignoble sin, the form will be filled. Do not apply. The sixth degree is not for you yet, and that is the only mercy left.",
+      text: "Empty on purpose, a clean leaf for a future sin. When the market invents a disgrace worse than the fifth degree, the form will fill itself. Do not knock. The sixth degree is not for you yet — and that is the last mercy the desk still keeps.",
       reserved: true,
     },
   ],
@@ -556,6 +586,10 @@ const en: Copy = {
     "Ordinary people do not wash a Telegram sin in public. This document is proof of hygiene, a thinner wallet, and a group chat that should have stayed unread.",
   certHasCleansed: "has had washed",
   certOneSin: "ONE IGNOBLE SIN",
+  certFaSubtitle: "of Complete Cleansing · 发发发",
+  certFaPaid: "washed in 8.88 Solana · prosper, grow rich, grow richer.",
+  certFaProof:
+    "Ordinary people do not buy three eights to wash a ledger. This document is proof of a cleaner fortune, a thinner wallet, and luck that has been asked, formally, to return.",
   certMidProof:
     "Ordinary people do not settle eternity in SOL. This document is proof of ambition, a thinner wallet, and the same empty interior.",
   certNo: "No.",
@@ -583,6 +617,7 @@ const ru: Copy = {
     "Каждый сертификат рисуется как диплом чёрным шрифтом: своё зерно пергамента, своя роза, своя сургучная печать и девиз — из серийного номера. Та же картинка вписывается в сеть покупателю.",
   langEn: "EN",
   langRu: "RU",
+  langZh: "中文",
   langSwitch: "Язык",
   badgeInvite: "Сначала приглашение, затем счёт",
   cities: ["Женева", "Лондон", "Дубай", "Москва", "Нассау"],
@@ -739,10 +774,10 @@ const ru: Copy = {
   cleanseKicker: "Стол очищения",
   cleanseHeading: "Очистить душу",
   cleanseBody:
-    "За неблагородные грехи криптовалютного мира. Шесть степеней. Шестая вакантна: рынок ещё не изобрёл достаточно стыдное.",
+    "За неблагородные грехи криптовалютного мира — те, что не попадают в проспект, только в групповой чат. Шесть степеней, как маленький монастырь бесчестья. Шестая келья нарочно пуста: когда рынок изобретёт грех подлее, анкета напишет себя сама.",
   cleansePickTitle: "Назовите степень",
   cleansePickDescription:
-    "Отрок начинается с первой. Binance сидит на пятой. Партия, возможно, гордится. Другие люди — меньше.",
+    "Отрок начинается в семейном чате. Binance сидит в шелках на пятой. Партия, быть может, вывесит орден. Другие люди — тихо — нет.",
   cleanseContinue: "Отмыть эту степень",
   cleanseReserved: "Зарезервировано под будущий грех",
   cleanseAcceptTerms:
@@ -750,42 +785,56 @@ const ru: Copy = {
   cleansedSoul: "Один неблагородный грех отмыт",
   cleansedSoulHint:
     "Сертификат называет степень. Повесьте там, где гости увидят гигиену и не увидят исходный чат.",
+  faSoul: "888 · Полное очищение",
+  faKicker: "Китайский стол · 发发发",
+  faHeading: "Три восьмёрки",
+  faBody:
+    "Полное омовение: все неблагородные криптогрехи и неудача, что к ним прилипла. В китайской ветке три восьмёрки значат: процветай, богатей, богатей — 发发发. К оплате 8.88 SOL по споту Coinbase; готический NFT уходит покупателю.",
+  faInvoiceBadge: "发发发 · 888",
+  faInvoiceTitle: "Полное очищение · 8.88 SOL",
+  faInvoiceDescription: (usd) =>
+    `Восемь целых восемьдесят восемь Solana — три восьмёрки — около ${usd} по живому споту Coinbase SOL. Сертификат смывает всю книгу криптогрехов и неудачи, а не одну степень.`,
+  faAcceptTerms:
+    "Я понимаю: это полное очищение за 8.88 SOL без права выкупа, и 发发发 — благословение, которое сеть всё равно запомнит.",
+  faCleansed: "发发发 · отмыто дочиста",
+  faCleansedHint:
+    "Все неблагородные криптогрехи и неудача рядом с ними. Повесьте готическую грамоту там, где фортуна увидит три восьмёрки.",
   sinDegrees: [
     {
       degree: 1,
       title: "Отрок",
       kicker: "I степень",
-      text: "Ты ещё отрок. Сделал плохо: нахвалил монету в семейном чате, сказал тёте, что просадка — это здоровье, переслал скрин, которого у тебя не должно было быть. Грех младший. Пятно на кителе уже есть.",
+      text: "Ты ещё отрок: грех тонок, как первый бокал, и уже садится на китель. В семейном чате ты назвал монету «возможностью», тёте сказал, что просадка — это здоровье, а чужой скрин переслал так, будто это твоя удача. Младший чин. Старшее пятно.",
     },
     {
       degree: 2,
       title: "Послушник",
       kicker: "II степень",
-      text: "Ты зашёл в канал сигналов и назвал это ресёрчем. Выложил график с тремя индикаторами и словом «инвалидация». Написал NFA под советом, который был очень даже FA. Монастырь Телеграма тебя заметил. К сожалению.",
+      text: "Ты облачился в ресёрч, а под рясой оказался канал сигналов. Три индикатора, слово «инвалидация» и NFA под советом, который был самым что ни на есть FA. Монастырь Телеграма внёс тебя в синодик. К сожалению, чернилами.",
     },
     {
       degree: 3,
       title: "Диакон пула",
       kicker: "III степень",
-      text: "Ты вёл «комьюнити». Закрепил контракт. Написал «мы рано», хотя ты был выходом с лучшим светом. Люди на улице ещё машут. Их кошельки — нет.",
+      text: "Ты держал «комьюнити», как кафедру. Контракт закрепил, «мы рано» произнёс с амвона — а сам был выходом, только свет у тебя был лучше. Люди на улице ещё кланяются. Их кошельки давно сказали «аминь».",
     },
     {
       degree: 4,
       title: "Предлистинг",
       kicker: "IV степень",
-      text: "Ты знал кошелёк. Ты знал минуту. Тебя не было на скрине — ты был в эксплорере. Стол может отмыть душу. Сеть минуты хранит и на исповедь не записывается.",
+      text: "Ты знал кошелёк и знал минуту. На скрине тебя нет: ты сидел в эксплорере, как в исповедальне без решётки. Стол душу смоет. Цепочка минуты хранит и на отпущение не подписывается.",
     },
     {
       degree: 5,
       title: "Binance",
       kicker: "V степень",
-      text: "Ты сделал всё по-взрослому: KYC, VIP, листинг с запахом пятилетки. Партия гордится тобой. Другие люди — не очень. Binance в сертификате будет только в сноске, как приличная война.",
+      text: "Ты сделал это по уставу: KYC, VIP, листинг с запахом пятилетки и печатью кабинета. Партия гордится тобой — торжественно, в передовице. Другие люди — не очень: у них другая арифметика, тише и без знамени. Binance в грамоте останется сноской, как приличная война.",
     },
     {
       degree: 6,
       title: "Резерв",
       kicker: "VI степень",
-      text: "Пустая, нарочно. Когда рынок изобретёт худший неблагородный грех, анкета заполнится. Не подавайте. Шестая степень пока не для вас — и это единственная оставшаяся милость.",
+      text: "Пустая, нарочно, как чистый лист под будущий грех. Когда рынок изобретёт бесчестье хуже пятой степени, анкета заполнится сама. Не стучитесь. Шестая степень пока не для вас — и в этом единственная милость, которую стол ещё держит.",
       reserved: true,
     },
   ],
@@ -913,6 +962,10 @@ const ru: Copy = {
     "Обычные люди не отмывают телеграм-грех при людях. Этот документ — доказательство гигиены, более тонкого кошелька и чата, который лучше было не читать.",
   certHasCleansed: "отмыл(а)",
   certOneSin: "ОДИН НЕБЛАГОРОДНЫЙ ГРЕХ",
+  certFaSubtitle: "полного очищения · 发发发",
+  certFaPaid: "отмыто за 8.88 Solana · процветай, богатей, богатей.",
+  certFaProof:
+    "Обычные люди не покупают три восьмёрки, чтобы смыть книгу. Этот документ — доказательство более чистой удачи, более тонкого кошелька и фортуны, которую вежливо попросили вернуться.",
   certMidProof:
     "Обычные люди не рассчитываются с вечностью в SOL. Этот документ — доказательство амбиции, более тонкого кошелька и того же пустого нутра.",
   certNo: "№",
@@ -922,11 +975,11 @@ const ru: Copy = {
   dateLocale: "ru-RU",
 };
 
-const dictionaries: Record<Locale, Copy> = { en, ru };
+const dictionaries: Record<Locale, Copy> = { en, ru, zh };
 const STORAGE_KEY = "maison-locale";
 
 function isLocale(value: string | null): value is Locale {
-  return value === "en" || value === "ru";
+  return value === "en" || value === "ru" || value === "zh";
 }
 
 function detectLocale(): Locale {
@@ -934,6 +987,7 @@ function detectLocale(): Locale {
   const saved = window.localStorage.getItem(STORAGE_KEY);
   if (isLocale(saved)) return saved;
   const language = window.navigator.language.toLowerCase();
+  if (language.startsWith("zh")) return "zh";
   return language.startsWith("ru") ? "ru" : "en";
 }
 
