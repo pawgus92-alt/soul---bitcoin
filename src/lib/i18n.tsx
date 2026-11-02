@@ -402,7 +402,7 @@ const en: Copy = {
     "For ignoble sins of the crypto world — the ones that never make the prospectus, only the group chat. Six degrees, like a little monastery of disgrace. The sixth stall is vacant on purpose: when the market invents a meaner sin, the form will write itself.",
   cleansePickTitle: "Name the degree",
   cleansePickDescription:
-    "The youth begins in the family chat. Binance sits in silk at five. The Party may hang a medal. Other people, quietly, will not.",
+    "The youth begins in the family chat. Binance sits in silk at five: six point three billion walked north as a joke, and love still strikes harder than a knife. The Party may hang a medal. Other people, quietly, will not.",
   cleanseContinue: "Wash this degree",
   cleanseReserved: "Reserved for a later sin",
   cleanseAcceptTerms:
@@ -453,7 +453,7 @@ const en: Copy = {
       degree: 5,
       title: "Binance",
       kicker: "Degree V",
-      text: "You did it by the book: KYC, VIP, a listing that smelled of a five-year plan and a ministry stamp. The Party is proud of you — solemnly, on the front page. Other people are not very: they keep a quieter arithmetic, without a banner. Binance remains a footnote on the charter, like a discreet war.",
+      text: "You did it by the book: KYC, VIP, a listing that smelled of a five-year plan and a ministry stamp. The Party is proud of you — solemnly, on the front page. Other people are not very: they keep a quieter arithmetic, without a banner. Then the north arrived as a joke: six point three billion walked out of Binance at night, as from a stranger's coat, in the hands of North Korean hackers who still post love-letters from Pyongyang. Love, they say, sometimes strikes harder than a knife — and a knife, at least, leaves a receipt. Binance remains a footnote on the charter, like a discreet war that paid the wrong army.",
     },
     {
       degree: 6,
@@ -777,7 +777,7 @@ const ru: Copy = {
     "За неблагородные грехи криптовалютного мира — те, что не попадают в проспект, только в групповой чат. Шесть степеней, как маленький монастырь бесчестья. Шестая келья нарочно пуста: когда рынок изобретёт грех подлее, анкета напишет себя сама.",
   cleansePickTitle: "Назовите степень",
   cleansePickDescription:
-    "Отрок начинается в семейном чате. Binance сидит в шелках на пятой. Партия, быть может, вывесит орден. Другие люди — тихо — нет.",
+    "Отрок начинается в семейном чате. Binance сидит в шелках на пятой: 6,3 миллиарда ушли на север шуткой, а любовь иногда бьёт сильнее ножа. Партия, быть может, вывесит орден. Другие люди — тихо — нет.",
   cleanseContinue: "Отмыть эту степень",
   cleanseReserved: "Зарезервировано под будущий грех",
   cleanseAcceptTerms:
@@ -828,7 +828,7 @@ const ru: Copy = {
       degree: 5,
       title: "Binance",
       kicker: "V степень",
-      text: "Ты сделал это по уставу: KYC, VIP, листинг с запахом пятилетки и печатью кабинета. Партия гордится тобой — торжественно, в передовице. Другие люди — не очень: у них другая арифметика, тише и без знамени. Binance в грамоте останется сноской, как приличная война.",
+      text: "Ты сделал это по уставу: KYC, VIP, листинг с запахом пятилетки и печатью кабинета. Партия гордится тобой — торжественно, в передовице. Другие люди — не очень: у них другая арифметика, тише и без знамени. А потом север пришёл шуткой: 6,3 миллиарда долларов ночью вышли из Binance, как из чужого пальто, на руках северокорейских хакеров, которые до сих пор шлют любовные письма из Пхеньяна. Любовь иногда бьёт сильнее ножа — а нож хотя бы оставляет квитанцию. Binance в грамоте останется сноской, как приличная война, заплатившая не той армии.",
     },
     {
       degree: 6,
