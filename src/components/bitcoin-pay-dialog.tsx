@@ -37,9 +37,11 @@ import {
   PEARL_AMOUNT,
   SELL_BTC,
   SOL_AMOUNT,
+  cleanseSolAmount,
   expectedAtomic,
   formatAtomic,
   formatDealAmount,
+  formatSolLabel,
   getDeal,
   type DealKind,
 } from "@/lib/deal";
@@ -60,6 +62,7 @@ function invoiceCopy(
   kind: DealKind,
   copy: ReturnType<typeof useI18n>["copy"],
   usd: string,
+  amountLabel = "",
 ) {
   if (kind === "sell") {
     return {
@@ -86,7 +89,7 @@ function invoiceCopy(
     return {
       badge: copy.cleanseInvoiceBadge,
       title: copy.cleanseInvoiceTitle,
-      description: copy.cleanseInvoiceDescription(usd),
+      description: copy.cleanseInvoiceDescription(amountLabel, usd),
     };
   }
   if (kind === "fa") {
@@ -165,18 +168,25 @@ export function BitcoinPayDialog({
     : ethBuy
       ? ETH_AMOUNT
       : quote?.btcAmount;
-  const paidLabel = formatDealAmount(kind, dealCoin);
+  const firstStep: Step = cleansing ? "sins" : "invoice";
+  const [open, setOpen] = useState(false);
+  const [step, setStep] = useState<Step>(firstStep);
+  const [sinDegree, setSinDegree] = useState<SinDegree | null>(null);
+  const cleanseSol = cleanseSolAmount(sinDegree);
+  const paidLabel = formatDealAmount(kind, dealCoin, sinDegree);
   const ready = btcBuy ? Boolean(quote) : true;
   const invoiceUsd =
     ethBuy && ethQuote
       ? formatUsd(ethQuote.usdAmount)
       : faBlessing && solQuote
         ? formatUsd(solQuote.usdPerSol * FA_AMOUNT)
-        : (kind === "sol" || cleansing) && solQuote
-          ? formatUsd(solQuote.usdAmount)
-          : formatUsd(DEAL_USD);
+        : cleansing && solQuote
+          ? formatUsd(solQuote.usdPerSol * cleanseSol)
+          : kind === "sol" && solQuote
+            ? formatUsd(solQuote.usdAmount)
+            : formatUsd(DEAL_USD);
   const soldOut = supply.remaining <= 0;
-  const invoice = invoiceCopy(kind, copy, invoiceUsd);
+  const invoice = invoiceCopy(kind, copy, invoiceUsd, paidLabel);
   const payUri =
     deal.chain === "solana"
       ? solanaPayUri(
@@ -185,16 +195,14 @@ export function BitcoinPayDialog({
             ? PEARL_AMOUNT
             : faBlessing
               ? FA_AMOUNT
-              : SOL_AMOUNT,
+              : cleansing
+                ? cleanseSol
+                : SOL_AMOUNT,
           deal.mint,
         )
       : deal.chain === "ethereum"
         ? ethereumPayUri(deal.address, ETH_AMOUNT)
         : bitcoinPayUri(deal.address, dealCoin ?? SELL_BTC);
-  const firstStep: Step = cleansing ? "sins" : "invoice";
-  const [open, setOpen] = useState(false);
-  const [step, setStep] = useState<Step>(firstStep);
-  const [sinDegree, setSinDegree] = useState<SinDegree | null>(null);
   const [name, setName] = useState("");
   const [nftAddress, setNftAddress] = useState("");
   const [accepted, setAccepted] = useState(false);
@@ -209,7 +217,7 @@ export function BitcoinPayDialog({
   const closeLocked = useRef(false);
   const finishing = useRef(false);
   const openedAt = useRef(Math.floor(Date.now() / 1000));
-  const expected = expectedAtomic(kind, dealCoin ?? 0);
+  const expected = expectedAtomic(kind, dealCoin ?? 0, sinDegree);
 
   function reset() {
     closeLocked.current = false;
@@ -526,6 +534,11 @@ export function BitcoinPayDialog({
                     <p className="font-heading mt-1 text-xl text-primary">
                       {item.title}
                     </p>
+                    {openDegree ? (
+                      <p className="mt-1 font-mono text-xs tracking-[0.14em] text-primary">
+                        {formatSolLabel(cleanseSolAmount(item.degree))}
+                      </p>
+                    ) : null}
                     <p className="mt-2 text-sm leading-6 text-muted-foreground">
                       {item.text}
                     </p>
@@ -563,6 +576,8 @@ export function BitcoinPayDialog({
                 {copy.sinDegrees.find((item) => item.degree === sinDegree)?.kicker}
                 {" · "}
                 {copy.sinDegrees.find((item) => item.degree === sinDegree)?.title}
+                {" · "}
+                {paidLabel}
               </p>
             ) : null}
 
@@ -615,7 +630,9 @@ export function BitcoinPayDialog({
                         {`${formatUsd(
                           faBlessing
                             ? solQuote.usdPerSol * FA_AMOUNT
-                            : solQuote.usdAmount,
+                            : cleansing
+                              ? solQuote.usdPerSol * cleanseSol
+                              : solQuote.usdAmount,
                         )} at ${formatUsd(solQuote.usdPerSol)} / SOL`}
                       </p>
                     ) : null}
@@ -724,7 +741,7 @@ export function BitcoinPayDialog({
                 {faBlessing
                   ? copy.faAcceptTerms
                   : cleansing
-                    ? copy.cleanseAcceptTerms
+                    ? copy.cleanseAcceptTerms(paidLabel)
                     : sell
                       ? copy.acceptSellTerms
                       : copy.acceptTerms}

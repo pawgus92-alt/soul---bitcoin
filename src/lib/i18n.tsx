@@ -107,7 +107,7 @@ export type Copy = {
   pearlInvoiceDescription: string;
   cleanseInvoiceBadge: string;
   cleanseInvoiceTitle: string;
-  cleanseInvoiceDescription: (usd: string) => string;
+  cleanseInvoiceDescription: (amount: string, usd: string) => string;
   cleanseKicker: string;
   cleanseHeading: string;
   cleanseBody: string;
@@ -115,7 +115,7 @@ export type Copy = {
   cleansePickDescription: string;
   cleanseContinue: string;
   cleanseReserved: string;
-  cleanseAcceptTerms: string;
+  cleanseAcceptTerms: (amount: string) => string;
   cleansedSoul: string;
   cleansedSoulHint: string;
   faSoul: string;
@@ -269,7 +269,7 @@ const en: Copy = {
     "Bitcoin Ordinal NFTs: 25. Solana NFTs: 250. Ethereum inner NFTs: 50. Each a unique gothic charter.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is ${usd} in Bitcoin at Coinbase (25 Ordinals) or 2 ETH at Coinbase (50 inner NFTs). The middle desk takes 10 SOL at Coinbase (250 NFTs), including the washing of ignoble crypto sins.`,
+    `The private desk is ${usd} in Bitcoin at Coinbase (25 Ordinals) or 2 ETH at Coinbase (50 inner NFTs). The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
   terms: [
     {
       step: "01",
@@ -279,7 +279,7 @@ const en: Copy = {
     {
       step: "02",
       title: "Pay the spot Bitcoin",
-      text: "The invoice is $100,000 divided by the live Coinbase BTC price — or a flat 2 ETH / 10 SOL at Coinbase. One transfer, one hash, one eternity.",
+      text: "The invoice is $100,000 divided by the live Coinbase BTC price — or a flat 2 ETH / 10 SOL at Coinbase. Washing a crypto sin starts at 1.5 SOL and climbs to 8.88 SOL at Binance. One transfer, one hash, one eternity.",
     },
     {
       step: "03",
@@ -366,7 +366,7 @@ const en: Copy = {
   payEthAmount: (usd) => `Buy 2 ETH · ${usd}`,
   midClassLabel: "Middle desk",
   midClassHint:
-    "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk, in six degrees.",
+    "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk: 1.5 SOL at the first degree, then dearer until Binance at 8.88 SOL.",
   nftCapsLine: "Bitcoin 25 · Solana 250 · ETH inner 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
@@ -394,19 +394,19 @@ const en: Copy = {
     "The middle desk takes one soul for 650 PEARL on Solana. Same vacancy, quieter lighting, Solana NFT certificate, limited to 250.",
   cleanseInvoiceBadge: "Cleansing desk · Solana",
   cleanseInvoiceTitle: "Wash an ignoble crypto sin",
-  cleanseInvoiceDescription: (usd) =>
-    `Ten Solana to the desk wallet, about ${usd} at the live Coinbase SOL spot. A Solana NFT certificate names the degree of the sin. Degree six is empty on purpose.`,
+  cleanseInvoiceDescription: (amount, usd) =>
+    `${amount} to the desk wallet, about ${usd} at the live Coinbase SOL spot. A Solana NFT certificate names the degree of the sin. Degree six is empty on purpose.`,
   cleanseKicker: "Cleansing desk",
   cleanseHeading: "Cleanse the soul",
   cleanseBody:
-    "For ignoble sins of the crypto world — the ones that never make the prospectus, only the group chat. Six degrees, like a little monastery of disgrace. The sixth stall is vacant on purpose: when the market invents a meaner sin, the form will write itself.",
+    "For ignoble sins of the crypto world — the ones that never make the prospectus, only the group chat. Six degrees, like a little monastery of disgrace. The Youth, degree I, is 1.5 SOL. Each stall after that costs more, until Binance at five: 8.88 SOL. The sixth stall is vacant on purpose: when the market invents a meaner sin, the form will write itself.",
   cleansePickTitle: "Name the degree",
   cleansePickDescription:
-    "The youth begins in the family chat. Binance sits in silk at five: six point three billion walked north as a joke, and love still strikes harder than a knife. The Party may hang a medal. Other people, quietly, will not.",
+    "The youth begins in the family chat at 1.5 SOL. Binance sits in silk at five for 8.88 SOL: six point three billion walked north as a joke, and love still strikes harder than a knife. The Party may hang a medal. Other people, quietly, will not.",
   cleanseContinue: "Wash this degree",
   cleanseReserved: "Reserved for a later sin",
-  cleanseAcceptTerms:
-    "I understand the stain is washed for 10 SOL without a right of repurchase, and that the chain will remember anyway.",
+  cleanseAcceptTerms: (amount) =>
+    `I understand the stain is washed for ${amount} without a right of repurchase, and that the chain will remember anyway.`,
   cleansedSoul: "One ignoble sin, washed",
   cleansedSoulHint:
     "The certificate names the degree. Hang it where the guests can see the hygiene and not the original group chat.",
@@ -581,7 +581,7 @@ const en: Copy = {
   certEthPaid: "paid in two ether.",
   certEthSubtitle: "of a Private Ethereum Soul",
   certCleanseSubtitle: "of an Ignoble Crypto Sin",
-  certCleansePaid: "washed in ten Solana.",
+  certCleansePaid: "washed in Solana, priced by the degree.",
   certCleanseProof:
     "Ordinary people do not wash a Telegram sin in public. This document is proof of hygiene, a thinner wallet, and a group chat that should have stayed unread.",
   certHasCleansed: "has had washed",
@@ -644,7 +644,7 @@ const ru: Copy = {
     "Bitcoin Ordinal NFT: 25. Solana NFT: 250. Ethereum inner NFT: 50. Каждый — уникальная готическая грамота.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол — ${usd} в Bitcoin по Coinbase (25 Ordinal) или 2 ETH по Coinbase (50 inner NFT). Средний стол берёт 10 SOL по Coinbase (250 NFT), включая отмывание неблагородных криптогрехов.`,
+    `Частный стол — ${usd} в Bitcoin по Coinbase (25 Ordinal) или 2 ETH по Coinbase (50 inner NFT). Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
   terms: [
     {
       step: "01",
@@ -654,7 +654,7 @@ const ru: Copy = {
     {
       step: "02",
       title: "Оплатите Bitcoin по споту",
-      text: "Счёт — $100 000, делённые на живую цену Coinbase BTC — или ровно 2 ETH / 10 SOL по Coinbase. Один перевод, один хеш, одна вечность.",
+      text: "Счёт — $100 000, делённые на живую цену Coinbase BTC — или ровно 2 ETH / 10 SOL по Coinbase. Очищение криптогреха начинается с 1.5 SOL и поднимается до 8.88 SOL на Binance. Один перевод, один хеш, одна вечность.",
     },
     {
       step: "03",
@@ -741,7 +741,7 @@ const ru: Copy = {
   payEthAmount: (usd) => `Купить 2 ETH · ${usd}`,
   midClassLabel: "Средний стол",
   midClassHint:
-    "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом, в шести степенях.",
+    "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом: 1.5 SOL на первой степени, дальше дороже, до Binance за 8.88 SOL.",
   nftCapsLine: "Bitcoin 25 · Solana 250 · ETH inner 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
@@ -769,19 +769,19 @@ const ru: Copy = {
     "Средний стол берёт одну душу за 650 PEARL в сети Solana. Та же вакансия, тише свет, сертификат — Solana NFT, тираж 250.",
   cleanseInvoiceBadge: "Стол очищения · Solana",
   cleanseInvoiceTitle: "Отмыть неблагородный криптогрех",
-  cleanseInvoiceDescription: (usd) =>
-    `Десять Solana на кошелёк стола, около ${usd} по живому споту Coinbase SOL. Solana NFT-сертификат назовёт степень греха. Шестая степень нарочно пустая.`,
+  cleanseInvoiceDescription: (amount, usd) =>
+    `${amount} на кошелёк стола, около ${usd} по живому споту Coinbase SOL. Solana NFT-сертификат назовёт степень греха. Шестая степень нарочно пустая.`,
   cleanseKicker: "Стол очищения",
   cleanseHeading: "Очистить душу",
   cleanseBody:
-    "За неблагородные грехи криптовалютного мира — те, что не попадают в проспект, только в групповой чат. Шесть степеней, как маленький монастырь бесчестья. Шестая келья нарочно пуста: когда рынок изобретёт грех подлее, анкета напишет себя сама.",
+    "За неблагородные грехи криптовалютного мира — те, что не попадают в проспект, только в групповой чат. Шесть степеней, как маленький монастырь бесчестья. Отрок, I степень, стоит 1.5 SOL. Каждая следующая дороже, до Binance на пятой — 8.88 SOL. Шестая келья нарочно пуста: когда рынок изобретёт грех подлее, анкета напишет себя сама.",
   cleansePickTitle: "Назовите степень",
   cleansePickDescription:
-    "Отрок начинается в семейном чате. Binance сидит в шелках на пятой: 6,3 миллиарда ушли на север шуткой, а любовь иногда бьёт сильнее ножа. Партия, быть может, вывесит орден. Другие люди — тихо — нет.",
+    "Отрок начинается в семейном чате за 1.5 SOL. Binance сидит в шелках на пятой за 8.88 SOL: 6,3 миллиарда ушли на север шуткой, а любовь иногда бьёт сильнее ножа. Партия, быть может, вывесит орден. Другие люди — тихо — нет.",
   cleanseContinue: "Отмыть эту степень",
   cleanseReserved: "Зарезервировано под будущий грех",
-  cleanseAcceptTerms:
-    "Я понимаю: пятно отмывается за 10 SOL без права выкупа, и сеть всё равно всё помнит.",
+  cleanseAcceptTerms: (amount) =>
+    `Я понимаю: пятно отмывается за ${amount} без права выкупа, и сеть всё равно всё помнит.`,
   cleansedSoul: "Один неблагородный грех отмыт",
   cleansedSoulHint:
     "Сертификат называет степень. Повесьте там, где гости увидят гигиену и не увидят исходный чат.",
@@ -957,7 +957,7 @@ const ru: Copy = {
   certEthPaid: "за два ether.",
   certEthSubtitle: "души частного Ethereum",
   certCleanseSubtitle: "неблагородного криптогреха",
-  certCleansePaid: "отмыто за десять Solana.",
+  certCleansePaid: "отмыто за Solana по степени.",
   certCleanseProof:
     "Обычные люди не отмывают телеграм-грех при людях. Этот документ — доказательство гигиены, более тонкого кошелька и чата, который лучше было не читать.",
   certHasCleansed: "отмыл(а)",

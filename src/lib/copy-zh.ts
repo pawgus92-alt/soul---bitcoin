@@ -45,7 +45,7 @@ export const zh: Copy = {
     "比特币铭文 NFT：25。Solana NFT：250。以太坊内部 NFT：50。各为一张独特的哥特文书。",
   skuBulletRefund: "恕不退款。悔恨是另一件定价过高的商品。",
   skuFoot: (usd) =>
-    `私人柜台为 Coinbase 比特币 ${usd}（25 枚铭文）或 Coinbase 的 2 ETH（50 枚内部 NFT）。中产柜台按 Coinbase 收取 10 SOL（250 枚 NFT），含洗涤不体面的加密罪过。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
+    `私人柜台为 Coinbase 比特币 ${usd}（25 枚铭文）或 Coinbase 的 2 ETH（50 枚内部 NFT）。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
   terms: [
     {
       step: "01",
@@ -55,7 +55,7 @@ export const zh: Copy = {
     {
       step: "02",
       title: "按现货支付",
-      text: "账单是十万美元除以 Coinbase 即时 BTC，或固定的 2 ETH / 10 SOL。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
+      text: "账单是十万美元除以 Coinbase 即时 BTC，或固定的 2 ETH / 10 SOL。洗涤加密罪过自 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
     },
     {
       step: "03",
@@ -139,7 +139,7 @@ export const zh: Copy = {
   payEthAmount: (usd) => `购买 2 ETH · ${usd}`,
   midClassLabel: "中产柜台",
   midClassHint:
-    "给已有 Solana、尚未有家族办公室的人家。不体面的加密罪过在同一柜台洗涤，共六等。中文支线另开 发发发。",
+    "给已有 Solana、尚未有家族办公室的人家。不体面的加密罪过在同一柜台洗涤：第一等 1.5 SOL，逐等加价，至 Binance 8.88 SOL。中文支线另开 发发发。",
   nftCapsLine: "比特币 25 · Solana 250 · ETH 内部 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
@@ -167,19 +167,19 @@ export const zh: Copy = {
     "中产柜台以 650 PEARL 在 Solana 上收取一枚灵魂。同样的空缺，更安静的灯光，Solana NFT，限 250 枚。",
   cleanseInvoiceBadge: "洗涤柜台 · Solana",
   cleanseInvoiceTitle: "洗去一桩不体面的加密罪过",
-  cleanseInvoiceDescription: (usd) =>
-    `十枚 Solana 汇入柜台钱包，Coinbase SOL 现货约 ${usd}。Solana NFT 证书将写明罪过的等第。第六等有意为空。`,
+  cleanseInvoiceDescription: (amount, usd) =>
+    `${amount} 汇入柜台钱包，Coinbase SOL 现货约 ${usd}。Solana NFT 证书将写明罪过的等第。第六等有意为空。`,
   cleanseKicker: "洗涤柜台",
   cleanseHeading: "洗涤灵魂",
   cleanseBody:
-    "为加密世界不体面的罪过而设——那些写不进招股书、只活在群聊里的事。六等，如一座小小的耻辱修道院。第六间寮房有意为空：待市场发明更卑下的罪，表格会自己写完。",
+    "为加密世界不体面的罪过而设——那些写不进招股书、只活在群聊里的事。六等，如一座小小的耻辱修道院。幼童，第一等，1.5 SOL。此后每一等更贵，直至第五等 Binance：8.88 SOL。第六间寮房有意为空：待市场发明更卑下的罪，表格会自己写完。",
   cleansePickTitle: "点明等第",
   cleansePickDescription:
-    "幼童起于家庭群。Binance 锦衣坐在第五等：六十三亿美元作为玩笑向北走了，而爱情有时比刀更狠。党或许会授勋。其余的人，悄悄地，不会。",
+    "幼童起于家庭群，1.5 SOL。Binance 锦衣坐在第五等，8.88 SOL：六十三亿美元作为玩笑向北走了，而爱情有时比刀更狠。党或许会授勋。其余的人，悄悄地，不会。",
   cleanseContinue: "洗涤此等",
   cleanseReserved: "留给日后的罪过",
-  cleanseAcceptTerms:
-    "我明白：污迹以 10 SOL 洗净，不得赎回，而链仍将记得。",
+  cleanseAcceptTerms: (amount) =>
+    `我明白：污迹以 ${amount} 洗净，不得赎回，而链仍将记得。`,
   cleansedSoul: "一桩不体面的罪过，已洗",
   cleansedSoulHint:
     "证书写明等第。挂在宾客看得见洁净、看不见原群聊的地方。",
@@ -351,7 +351,7 @@ export const zh: Copy = {
   certEthPaid: "以两枚以太支付。",
   certEthSubtitle: "私人以太坊之灵魂",
   certCleanseSubtitle: "不体面的加密罪过",
-  certCleansePaid: "以十枚 Solana 洗净。",
+  certCleansePaid: "以 Solana 按等第洗净。",
   certCleanseProof:
     "寻常人不在人前洗涤电报罪过。此件为洁净、更薄的钱包，以及本不该被读的群聊之证据。",
   certHasCleansed: "已洗涤",

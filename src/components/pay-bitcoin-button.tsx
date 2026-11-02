@@ -10,6 +10,7 @@ import {
 import { BitcoinPayDialog } from "@/components/bitcoin-pay-dialog";
 import { formatBtc, formatUsd } from "@/lib/bitcoin";
 import {
+  CLEANSE_SOL_RANGE,
   FA_AMOUNT,
   SHOW_PEARL_DESK,
   SHOW_SELL_DESK,
@@ -41,7 +42,7 @@ export function PayBitcoinButton({
         : kind === "pearl"
           ? copy.buyPearl
           : kind === "cleanse"
-            ? copy.cleanseSoul
+            ? `${copy.cleanseSoul} · ${CLEANSE_SOL_RANGE}`
             : kind === "fa"
               ? faUsd
                 ? `${copy.faSoul} · ${faUsd}`

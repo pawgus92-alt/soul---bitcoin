@@ -4,6 +4,17 @@ export const ETH_AMOUNT = 2;
 export const SOL_AMOUNT = 10;
 export const FA_AMOUNT = 8.88;
 export const PEARL_AMOUNT = 650;
+/** Degree I is 1.5 SOL; each open degree climbs until Binance (V) at 8.88 SOL. */
+export const CLEANSE_SOL_FIRST = 1.5;
+export const CLEANSE_SOL_BINANCE = 8.88;
+export const CLEANSE_SOL_BY_DEGREE: Record<1 | 2 | 3 | 4 | 5, number> = {
+  1: CLEANSE_SOL_FIRST,
+  2: 3.345,
+  3: 5.19,
+  4: 7.035,
+  5: CLEANSE_SOL_BINANCE,
+};
+export const CLEANSE_SOL_RANGE = `${CLEANSE_SOL_FIRST}–${CLEANSE_SOL_BINANCE} SOL`;
 
 export const BTC_ADDRESS = "bc1q5v3rtce5zrwuw4vvk7v705v5qdrgqj2xuxgsnj";
 export const SOL_ADDRESS = "Ddvf1hnVW8Er8udrmgnQTu691acmyiJuxQgvhiAKu5jX";
@@ -119,13 +130,35 @@ export function getDeal(kind: DealKind): DealSpec {
   return DEALS[kind];
 }
 
+export function cleanseSolAmount(degree?: number | null) {
+  if (degree === 1 || degree === 2 || degree === 3 || degree === 4 || degree === 5) {
+    return CLEANSE_SOL_BY_DEGREE[degree];
+  }
+  return 0;
+}
+
+export function formatSolQuantity(amount: number) {
+  return String(Number(amount.toFixed(3)));
+}
+
+export function formatSolLabel(amount: number) {
+  return `${formatSolQuantity(amount)} SOL`;
+}
+
 function ethToWei(eth: number) {
   const [whole, frac = ""] = eth.toFixed(18).split(".");
   return BigInt(whole + frac.padEnd(18, "0")).toString();
 }
 
-export function expectedAtomic(kind: DealKind, coinAmount = 0) {
-  if (kind === "sol" || kind === "cleanse") {
+export function expectedAtomic(
+  kind: DealKind,
+  coinAmount = 0,
+  sinDegree?: number | null,
+) {
+  if (kind === "cleanse") {
+    return String(Math.round(cleanseSolAmount(sinDegree) * 1_000_000_000));
+  }
+  if (kind === "sol") {
     return String(SOL_AMOUNT * 1_000_000_000);
   }
   if (kind === "fa") return String(Math.round(FA_AMOUNT * 1_000_000_000));
@@ -135,8 +168,13 @@ export function expectedAtomic(kind: DealKind, coinAmount = 0) {
   return String(Math.round(coinAmount * 1e8));
 }
 
-export function formatDealAmount(kind: DealKind, coinAmount?: number) {
-  if (kind === "sol" || kind === "cleanse") return `${SOL_AMOUNT} SOL`;
+export function formatDealAmount(
+  kind: DealKind,
+  coinAmount?: number,
+  sinDegree?: number | null,
+) {
+  if (kind === "cleanse") return formatSolLabel(cleanseSolAmount(sinDegree));
+  if (kind === "sol") return `${SOL_AMOUNT} SOL`;
   if (kind === "fa") return `${FA_AMOUNT} SOL`;
   if (kind === "pearl") return `${PEARL_AMOUNT} PEARL`;
   if (kind === "sell") return `${SELL_BTC.toFixed(8)} BTC`;

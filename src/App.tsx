@@ -13,6 +13,8 @@ import {
   ETH_AMOUNT,
   SOL_ADDRESS,
   SOL_AMOUNT,
+  cleanseSolAmount,
+  formatSolLabel,
 } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 import { useNftSupply } from "@/lib/nft-supply";
@@ -280,7 +282,11 @@ export default function App() {
                       <p className="mt-4 text-[11px] tracking-[0.16em] text-primary/80 uppercase">
                         {copy.cleanseReserved}
                       </p>
-                    ) : null}
+                    ) : (
+                      <p className="mt-4 font-mono text-xs tracking-[0.16em] text-primary">
+                        {formatSolLabel(cleanseSolAmount(item.degree))}
+                      </p>
+                    )}
                   </CardContent>
                 </Card>
               ))}
