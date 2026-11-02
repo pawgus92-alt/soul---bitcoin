@@ -71,6 +71,17 @@ function bitcoinIncoming(tx, address) {
   return sats;
 }
 
+function bitcoinPayer(tx, deskAddress) {
+  for (const inn of tx.vin || []) {
+    const from =
+      inn.prevout?.scriptpubkey_address ||
+      inn.prevout?.address ||
+      inn.address;
+    if (from && from !== deskAddress) return String(from);
+  }
+  return null;
+}
+
 async function watchBitcoin(address, expected, since) {
   let txs = [];
   try {
@@ -91,6 +102,7 @@ async function watchBitcoin(address, expected, since) {
   let txid = null;
   let confirmed = false;
   let received = 0;
+  let payer = null;
   for (const tx of txs) {
     const incoming = bitcoinIncoming(tx, address);
     const time = txTime(tx.status?.block_time);
@@ -100,6 +112,7 @@ async function watchBitcoin(address, expected, since) {
     received = incoming;
     txid = tx.txid;
     confirmed = Boolean(tx.status?.confirmed);
+    payer = bitcoinPayer(tx, address);
     break;
   }
   return {
@@ -109,11 +122,25 @@ async function watchBitcoin(address, expected, since) {
     received: String(received),
     paid: expected > 0 && received >= expected,
     txid,
+    payer,
     confirmed,
     explorer: txid
       ? `https://mempool.space/tx/${txid}`
       : `https://mempool.space/address/${address}`,
   };
+}
+
+function solanaPayer(tx, deskAddress) {
+  const keys = (tx.transaction?.message?.accountKeys || []).map((key) =>
+    typeof key === "string" ? key : key.pubkey,
+  );
+  for (let index = 0; index < keys.length; index += 1) {
+    if (keys[index] === deskAddress) continue;
+    const pre = Number(tx.meta?.preBalances?.[index] || 0);
+    const post = Number(tx.meta?.postBalances?.[index] || 0);
+    if (pre > post) return keys[index];
+  }
+  return keys[0] && keys[0] !== deskAddress ? keys[0] : null;
 }
 
 function solDelta(tx, address) {
@@ -148,6 +175,7 @@ async function watchSolana(address, expected, mint, since) {
   let received = 0;
   let txid = null;
   let confirmed = false;
+  let payer = null;
   for (const item of signatures || []) {
     if (!isRecent(txTime(item.blockTime), since)) continue;
     const tx = await solanaRpc("getTransaction", [
@@ -160,6 +188,7 @@ async function watchSolana(address, expected, mint, since) {
       received = incoming;
       txid = item.signature;
       confirmed = item.confirmationStatus === "finalized";
+      payer = solanaPayer(tx, address);
       break;
     }
   }
@@ -170,6 +199,7 @@ async function watchSolana(address, expected, mint, since) {
     received: String(received),
     paid: expected > 0 && received >= expected,
     txid,
+    payer,
     confirmed,
     explorer: txid
       ? `https://solscan.io/tx/${txid}`
@@ -205,6 +235,7 @@ async function watchEthereum(address, expectedRaw, since) {
   let received = 0n;
   let txid = null;
   let confirmed = false;
+  let payer = null;
   try {
     const txs = await fetchJson(
       `${BLOCKSCOUT}/addresses/${encodeURIComponent(address)}/transactions?filter=to`,
@@ -218,6 +249,7 @@ async function watchEthereum(address, expectedRaw, since) {
       received = value;
       txid = tx.hash || null;
       confirmed = tx.status === "ok" && Boolean(tx.block_number);
+      payer = tx.from?.hash || tx.from || null;
       break;
     }
   } catch {
@@ -231,6 +263,7 @@ async function watchEthereum(address, expectedRaw, since) {
     received: received.toString(),
     paid: expected > 0n && received >= expected,
     txid,
+    payer,
     confirmed,
     explorer: txid
       ? `https://etherscan.io/tx/${txid}`

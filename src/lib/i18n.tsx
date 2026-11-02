@@ -153,6 +153,13 @@ export type Copy = {
   nftReceivePlaceholder: (chain: NftChain) => string;
   nftReceiveHint: (chain: NftChain) => string;
   invalidReceiveAddress: (chain: NftChain) => string;
+  nftNotDesk: string;
+  nftNeedsBuyerAddress: string;
+  nftMintingTo: (address: string) => string;
+  nftConfirmBuyer: string;
+  needBuyerTitle: string;
+  needBuyerHint: string;
+  certMintedTo: string;
   certNft: (chain: NftChain) => string;
   certEdition: (edition: number, max: number) => string;
   certNftPending: string;
@@ -474,16 +481,26 @@ const en: Copy = {
         : "bc1p… taproot preferred",
   nftReceiveHint: (chain) =>
     chain === "solana"
-      ? "The certificate is minted as a Solana NFT and sent here. Leave empty and the desk holds it against the unique code."
+      ? "The NFT is minted to the buyer. Leave empty and it goes to the Solana wallet that pays. The desk address is refused."
       : chain === "ethereum"
-        ? "The certificate is minted as an Ethereum inner NFT and sent here. Leave empty and the desk holds it against the unique code."
-        : "The certificate is inscribed as a Bitcoin Ordinal and sent here. Leave empty and the desk holds the NFT against the unique code.",
+        ? "The NFT is minted to the buyer. Leave empty and it goes to the Ethereum wallet that pays. The desk address is refused."
+        : "The NFT is inscribed to the buyer. Leave empty and it goes to the Bitcoin wallet that pays. The desk address is refused.",
   invalidReceiveAddress: (chain) =>
     chain === "solana"
-      ? "That is not a Solana address. Use a Solana wallet or leave the field empty."
+      ? "That is not a Solana address."
       : chain === "ethereum"
-        ? "That is not an Ethereum address. Use 0x… or leave the field empty."
-        : "That is not a Bitcoin address. Use bc1… or leave the field empty.",
+        ? "That is not an Ethereum address. Use 0x…"
+        : "That is not a Bitcoin address. Use bc1… or a legacy 1/3 address.",
+  nftNotDesk:
+    "The NFT is minted to the buyer, not the desk. Use the wallet that pays, or another wallet you control.",
+  nftNeedsBuyerAddress:
+    "Payment is in, but the paying wallet could not be read. Enter the wallet that should receive the NFT — never the desk.",
+  nftMintingTo: (address) => `The certificate NFT is minted to ${address}.`,
+  nftConfirmBuyer: "Mint NFT to this wallet",
+  needBuyerTitle: "Where should the NFT go?",
+  needBuyerHint:
+    "The soul is paid for. Enter the wallet that bought it so the certificate NFT can be minted there.",
+  certMintedTo: "Minted to",
   certNft: (chain) =>
     chain === "solana"
       ? "Solana NFT"
@@ -499,11 +516,11 @@ const en: Copy = {
   certViewOrder: "View mint order",
   nftPostageTitle: "NFT inscription postage",
   nftPostageHint:
-    "This small Bitcoin payment inscribes the unique certificate as an Ordinal NFT and sends it to the receive address.",
+    "This small Bitcoin payment inscribes the unique certificate as an Ordinal NFT and sends it to the buyer’s wallet.",
   nftRetry: "Open the mint again",
   copySerial: "Copy unique code",
   copiedSerial: "Unique code copied.",
-  mintingNft: "Minting the Bitcoin NFT…",
+  mintingNft: "Minting the certificate NFT…",
   certKicker: "Maison Æternum · Geneva",
   certTitle: "Certificate",
   certSubtitle: "of Soul Acquisition",
@@ -816,16 +833,26 @@ const ru: Copy = {
         : "bc1p… лучше taproot",
   nftReceiveHint: (chain) =>
     chain === "solana"
-      ? "Сертификат чеканится как Solana NFT и уходит сюда. Оставьте пустым — стол будет держать его против уникального кода."
+      ? "NFT чеканится покупателю. Оставьте пустым — уйдёт на кошелёк Solana, с которого пришла оплата. Адрес стола не принимается."
       : chain === "ethereum"
-        ? "Сертификат чеканится как Ethereum inner NFT и уходит сюда. Оставьте пустым — стол будет держать его против уникального кода."
-        : "Сертификат вписывается как Bitcoin Ordinal и уходит сюда. Оставьте пустым — стол будет держать NFT против уникального кода.",
+        ? "NFT чеканится покупателю. Оставьте пустым — уйдёт на кошелёк Ethereum, с которого пришла оплата. Адрес стола не принимается."
+        : "NFT вписывается покупателю. Оставьте пустым — уйдёт на кошелёк Bitcoin, с которого пришла оплата. Адрес стола не принимается.",
   invalidReceiveAddress: (chain) =>
     chain === "solana"
-      ? "Это не адрес Solana. Укажите кошелёк Solana или оставьте поле пустым."
+      ? "Это не адрес Solana."
       : chain === "ethereum"
-        ? "Это не адрес Ethereum. Укажите 0x… или оставьте поле пустым."
-        : "Это не адрес Bitcoin. Укажите bc1… или оставьте поле пустым.",
+        ? "Это не адрес Ethereum. Укажите 0x…"
+        : "Это не адрес Bitcoin. Укажите bc1… или классический адрес 1/3.",
+  nftNotDesk:
+    "NFT чеканится покупателю, не столу. Укажите кошелёк, с которого идёт оплата, или другой свой.",
+  nftNeedsBuyerAddress:
+    "Оплата прошла, но кошелёк плательщика не прочитался. Укажите адрес, куда чеканить NFT — не адрес стола.",
+  nftMintingTo: (address) => `NFT-сертификат чеканится на ${address}.`,
+  nftConfirmBuyer: "Чеканить NFT на этот кошелёк",
+  needBuyerTitle: "Куда чеканить NFT?",
+  needBuyerHint:
+    "Душа уже оплачена. Укажите кошелёк покупателя — туда уйдёт NFT-сертификат.",
+  certMintedTo: "Чеканка на",
   certNft: (chain) =>
     chain === "solana"
       ? "Solana NFT"
@@ -841,11 +868,11 @@ const ru: Copy = {
   certViewOrder: "Открыть заказ чеканки",
   nftPostageTitle: "Комиссия за NFT-надпись",
   nftPostageHint:
-    "Этот небольшой платёж в Bitcoin вписывает уникальный сертификат как Ordinal NFT и отправляет его на адрес получения.",
+    "Этот небольшой платёж в Bitcoin вписывает уникальный сертификат как Ordinal NFT и отправляет его на кошелёк покупателя.",
   nftRetry: "Открыть чеканку снова",
   copySerial: "Скопировать уникальный код",
   copiedSerial: "Уникальный код скопирован.",
-  mintingNft: "Чеканим Bitcoin NFT…",
+  mintingNft: "Чеканим NFT-сертификат…",
   certKicker: "Maison Æternum · Женева",
   certTitle: "Сертификат",
   certSubtitle: "приобретения души",

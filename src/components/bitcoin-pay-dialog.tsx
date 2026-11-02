@@ -24,6 +24,7 @@ import {
 } from "@/lib/bitcoin";
 import {
   issueCertificate,
+  isDeskAddress,
   isReceiveAddress,
   resolveReceiveAddress,
   satsToBtc,
@@ -52,7 +53,7 @@ import { useBtcQuote } from "@/lib/quote-context";
 import { isOpenSinDegree, type SinDegree } from "@/lib/sins";
 import { watchDeskPayment, type PaymentWatch } from "@/lib/watch";
 
-type Step = "sins" | "invoice" | "watching" | "minting" | "done";
+type Step = "sins" | "invoice" | "watching" | "need-buyer" | "minting" | "done";
 
 function invoiceCopy(
   kind: DealKind,
@@ -266,8 +267,9 @@ export function BitcoinPayDialog({
       setError(copy.tickTheBox);
       return;
     }
-    if (nftAddress.trim() && !isReceiveAddress(deal.nftChain, nftAddress)) {
-      setError(copy.invalidReceiveAddress(deal.nftChain));
+    const addressError = buyerAddressError(nftAddress);
+    if (addressError) {
+      setError(addressError);
       return;
     }
     setError(null);
@@ -275,7 +277,50 @@ export function BitcoinPayDialog({
     setStep("watching");
   }
 
+  function confirmBuyerAddress() {
+    const addressError = buyerAddressError(nftAddress);
+    if (addressError) {
+      setError(addressError);
+      return;
+    }
+    if (!nftAddress.trim()) {
+      setError(copy.nftNeedsBuyerAddress);
+      return;
+    }
+    if (!watch?.paid) {
+      setError(copy.watchingChain);
+      return;
+    }
+    setError(null);
+    finishing.current = true;
+    void finishAfterPayment(watch);
+  }
+
+  function buyerAddressError(value: string) {
+    const typed = value.trim();
+    if (!typed) return null;
+    if (!isReceiveAddress(deal.nftChain, typed)) {
+      return copy.invalidReceiveAddress(deal.nftChain);
+    }
+    if (isDeskAddress(deal.nftChain, typed)) {
+      return copy.nftNotDesk;
+    }
+    return null;
+  }
+
   async function finishAfterPayment(payment: PaymentWatch) {
+    const dest = resolveReceiveAddress(
+      nftAddress,
+      deal.nftChain,
+      payment.payer,
+    );
+    if (!dest) {
+      setWatch(payment);
+      setError(copy.nftNeedsBuyerAddress);
+      setStep("need-buyer");
+      finishing.current = false;
+      return;
+    }
     closeLocked.current = true;
     setStep("minting");
     try {
@@ -290,7 +335,7 @@ export function BitcoinPayDialog({
         kind,
         holder: name.trim() || copy.anonymousHolder,
         btcAmount: paidLabel,
-        receiveAddress: resolveReceiveAddress(nftAddress, deal.nftChain),
+        receiveAddress: dest,
         nftChain: deal.nftChain,
         edition: edition.edition,
         editionMax: edition.max,
@@ -378,18 +423,24 @@ export function BitcoinPayDialog({
           "Maison Aeternum NFT",
         )
       : "";
+  const mintDest = resolveReceiveAddress(
+    nftAddress,
+    deal.nftChain,
+    watch?.payer,
+  );
   const askingRate = btcBuy && loading && !quote;
   const silentRate = btcBuy && Boolean(quoteError) && !quote;
 
   return (
     <Dialog
       open={open}
-      disablePointerDismissal={step === "minting"}
+      disablePointerDismissal={step === "minting" || step === "need-buyer"}
       onOpenChange={(next, details) => {
         if (
           !next &&
           (closeLocked.current ||
             step === "minting" ||
+            step === "need-buyer" ||
             details.reason === "focus-out")
         ) {
           details.cancel();
@@ -697,7 +748,7 @@ export function BitcoinPayDialog({
           <div className="flex min-h-64 flex-col items-center justify-center gap-4 py-10 text-center">
             <LoaderCircle className="size-8 animate-spin text-primary" />
             <DialogTitle className="font-heading text-2xl">
-              {copy.watchingMempool}
+              {step === "minting" ? copy.mintingNft : copy.watchingMempool}
             </DialogTitle>
             <DialogDescription>
               {step === "minting"
@@ -707,6 +758,15 @@ export function BitcoinPayDialog({
             <p className="text-sm text-primary">
               {watch?.paid ? copy.paymentSeen : copy.paymentWaiting}
             </p>
+            {mintDest ? (
+              <p className="max-w-sm break-all font-mono text-xs text-muted-foreground">
+                {copy.nftMintingTo(mintDest)}
+              </p>
+            ) : (
+              <p className="max-w-sm text-xs text-muted-foreground">
+                {copy.nftReceiveHint(deal.nftChain)}
+              </p>
+            )}
             <p className="font-mono text-xs text-muted-foreground">
               {copy.receivedOf(
                 formatAtomic(kind, watch?.received ?? "0"),
@@ -726,6 +786,47 @@ export function BitcoinPayDialog({
             {error ? (
               <p className="text-sm text-destructive">{error}</p>
             ) : null}
+          </div>
+        ) : null}
+
+        {step === "need-buyer" ? (
+          <div className="space-y-4 py-2">
+            <DialogHeader>
+              <DialogTitle className="font-heading text-2xl">
+                {copy.needBuyerTitle}
+              </DialogTitle>
+              <DialogDescription>{copy.needBuyerHint}</DialogDescription>
+            </DialogHeader>
+            <p className="text-sm text-primary">{copy.paymentSeen}</p>
+            <label className="grid gap-1.5">
+              <span className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">
+                {copy.nftReceiveLabel(deal.nftChain)}
+              </span>
+              <Input
+                value={nftAddress}
+                onChange={(event) => {
+                  setNftAddress(event.target.value);
+                  setError(null);
+                }}
+                placeholder={copy.nftReceivePlaceholder(deal.nftChain)}
+                className="h-10 bg-black/30 font-mono text-sm"
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <span className="text-xs leading-5 text-muted-foreground">
+                {copy.nftReceiveHint(deal.nftChain)}
+              </span>
+            </label>
+            {error ? (
+              <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                {error}
+              </p>
+            ) : null}
+            <DialogFooter className="border-primary/10 bg-transparent">
+              <Button type="button" onClick={confirmBuyerAddress}>
+                {copy.nftConfirmBuyer}
+              </Button>
+            </DialogFooter>
           </div>
         ) : null}
 
@@ -755,6 +856,7 @@ export function BitcoinPayDialog({
               issuedAt={issuedAt ?? new Date(certificate.issuedAt)}
               nft={nft}
               nftChain={deal.nftChain}
+              receiveAddress={certificate.receiveAddress}
               edition={certificate.edition}
               editionMax={certificate.editionMax}
               sinDegree={certificate.sinDegree}

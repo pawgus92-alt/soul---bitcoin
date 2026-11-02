@@ -69,6 +69,7 @@ export function SoulCertificate({
   kind = "buy",
   nft,
   nftChain = "bitcoin",
+  receiveAddress,
   edition,
   editionMax,
   sinDegree,
@@ -82,6 +83,7 @@ export function SoulCertificate({
   kind?: DealKind;
   nft?: CertificateNft | null;
   nftChain?: NftChain;
+  receiveAddress?: string;
   edition?: number;
   editionMax?: number;
   sinDegree?: number;
@@ -168,6 +170,14 @@ export function SoulCertificate({
                 {nftLabel(copy, nft ?? undefined, nftChain)}
               </dd>
             </div>
+            {receiveAddress ? (
+              <div className="flex gap-2">
+                <dt className="text-[#7a1f2b]">{copy.certMintedTo}</dt>
+                <dd className="break-all font-mono normal-case">
+                  {receiveAddress}
+                </dd>
+              </div>
+            ) : null}
             {edition && editionMax ? (
               <div className="flex gap-2">
                 <dt className="text-[#7a1f2b]">No.</dt>

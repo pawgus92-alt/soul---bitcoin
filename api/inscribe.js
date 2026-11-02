@@ -48,6 +48,7 @@ function certificateSvg(payload) {
       : payload.btcAmount,
   );
   const issued = escapeXml(String(payload.issuedAt || "").slice(0, 10));
+  const mintedTo = escapeXml(String(payload.receiveAddress || "").slice(0, 48));
   const desk =
     payload.kind === "sol"
       ? "MIDDLE DESK · 10 SOL"
@@ -70,7 +71,8 @@ function certificateSvg(payload) {
   <text x="360" y="232" text-anchor="middle" fill="#1f6b4a" font-size="20" font-family="Times New Roman,serif">${payload.kind === "cleanse" ? "WASHED ONE SIN" : sell ? "SOLD ONE SOUL" : "BOUGHT ONE SOUL"}</text>
   <text x="360" y="268" text-anchor="middle" fill="#5c3d24" font-size="14" font-family="Times New Roman,serif">${paid} · ${issued}</text>
   <text x="360" y="336" text-anchor="middle" fill="#2a1a12" font-size="18" font-family="Courier New,monospace">${serial}</text>
-  <text x="360" y="400" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="Times New Roman,serif">${payload.kind === "eth" ? "ETHEREUM INNER NFT" : payload.kind === "sol" || payload.kind === "pearl" || payload.kind === "cleanse" ? "SOLANA NFT" : "BITCOIN ORDINAL NFT"}</text>
+  <text x="360" y="392" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="Times New Roman,serif">${payload.kind === "eth" ? "ETHEREUM INNER NFT" : payload.kind === "sol" || payload.kind === "pearl" || payload.kind === "cleanse" ? "SOLANA NFT" : "BITCOIN ORDINAL NFT"}</text>
+  <text x="360" y="428" text-anchor="middle" fill="#5c3d24" font-size="11" font-family="Courier New,monospace">${mintedTo}</text>
 </svg>`;
 }
 
@@ -166,9 +168,17 @@ export default async function handler(request, response) {
     const payload = await readBody(request);
     const receiveAddress = String(payload.receiveAddress || "").trim();
     const serial = String(payload.serial || "").trim();
+    const desk = "bc1q5v3rtce5zrwuw4vvk7v705v5qdrgqj2xuxgsnj";
     if (!receiveAddress || !serial) {
       json(response, 400, {
         error: "receiveAddress and serial are required",
+        status: "error",
+      });
+      return;
+    }
+    if (receiveAddress.toLowerCase() === desk.toLowerCase()) {
+      json(response, 400, {
+        error: "NFT is minted to the buyer, not the desk",
         status: "error",
       });
       return;
@@ -183,6 +193,7 @@ export default async function handler(request, response) {
       digest: payload.digest,
       holder: payload.holder,
       btc: payload.btcAmount,
+      dest: receiveAddress,
       ts: payload.issuedAt,
     });
 

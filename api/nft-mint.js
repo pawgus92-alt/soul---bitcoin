@@ -30,9 +30,24 @@ export default async function handler(request, response) {
     const receiveAddress = String(payload.receiveAddress || "").trim();
     const edition = Number(payload.edition) || 0;
     const max = Number(payload.max) || 0;
+    const desk =
+      chain === "ethereum"
+        ? "0xfe2e3f7cab6a90e9e5b83209ece0bc12a65ff4d3"
+        : "Ddvf1hnVW8Er8udrmgnQTu691acmyiJuxQgvhiAKu5jX";
+    const toDesk =
+      chain === "solana"
+        ? receiveAddress === desk
+        : receiveAddress.toLowerCase() === desk.toLowerCase();
     if (!serial || !receiveAddress || edition < 1) {
       json(response, 400, {
         error: "serial, receiveAddress and edition are required",
+        status: "error",
+      });
+      return;
+    }
+    if (toDesk) {
+      json(response, 400, {
+        error: "NFT is minted to the buyer, not the desk",
         status: "error",
       });
       return;

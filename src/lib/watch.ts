@@ -5,6 +5,7 @@ export type PaymentWatch = {
   received: string;
   paid: boolean;
   txid: string | null;
+  payer?: string | null;
   confirmed: boolean;
   explorer: string;
   error?: string;

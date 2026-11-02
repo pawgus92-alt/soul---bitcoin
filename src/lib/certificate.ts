@@ -51,15 +51,40 @@ export function isReceiveAddress(chain: NftChain, value: string): boolean {
   return isBitcoinAddress(value);
 }
 
-export function resolveReceiveAddress(
-  value: string,
-  chain: NftChain = "bitcoin",
-): string {
-  const address = value.trim();
-  if (address) return address;
+export function deskNftAddress(chain: NftChain) {
   if (chain === "solana") return SOL_ADDRESS;
   if (chain === "ethereum") return ETH_ADDRESS;
   return BTC_ADDRESS;
+}
+
+export function isDeskAddress(chain: NftChain, value: string) {
+  const address = value.trim();
+  const desk = deskNftAddress(chain);
+  if (chain === "solana") return address === desk;
+  return address.toLowerCase() === desk.toLowerCase();
+}
+
+export function resolveReceiveAddress(
+  value: string,
+  chain: NftChain = "bitcoin",
+  payer?: string | null,
+): string | null {
+  const typed = value.trim();
+  if (typed) {
+    if (!isReceiveAddress(chain, typed) || isDeskAddress(chain, typed)) {
+      return null;
+    }
+    return typed;
+  }
+  const fromPayer = String(payer || "").trim();
+  if (
+    fromPayer &&
+    isReceiveAddress(chain, fromPayer) &&
+    !isDeskAddress(chain, fromPayer)
+  ) {
+    return fromPayer;
+  }
+  return null;
 }
 
 function bytesToHex(bytes: Uint8Array) {
@@ -80,6 +105,12 @@ export async function issueCertificate(input: {
   txid?: string;
   explorerUrl?: string;
 }): Promise<CertificateRecord> {
+  if (
+    !isReceiveAddress(input.nftChain, input.receiveAddress) ||
+    isDeskAddress(input.nftChain, input.receiveAddress)
+  ) {
+    throw new Error("NFT is minted to the buyer, not the desk");
+  }
   const entropy = crypto.getRandomValues(new Uint8Array(16));
   const issuedAt = new Date().toISOString();
   const holder = input.holder.trim();
