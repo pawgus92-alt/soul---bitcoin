@@ -256,7 +256,7 @@ const en: Copy = {
     "Each certificate is a mystical painting, then minted as an NFT on the chain you paid: Bitcoin Ordinals, Solana, or Ethereum. The buyer’s wallet holds it. The desk never does.",
   langEn: "EN",
   langRu: "RU",
-  langZh: "中文",
+  langZh: "简体",
   langSwitch: "Language",
   badgeInvite: "By invitation, then by invoice",
   cities: ["Geneva", "London", "Dubai", "Moscow", "Nassau"],
@@ -668,7 +668,7 @@ const ru: Copy = {
     "Каждый сертификат — мистическая картина, затем NFT в сети оплаты: Bitcoin Ordinals, Solana или Ethereum. Кошелёк покупателя его держит. Стол — никогда.",
   langEn: "EN",
   langRu: "RU",
-  langZh: "中文",
+  langZh: "简体",
   langSwitch: "Язык",
   badgeInvite: "Сначала приглашение, затем счёт",
   cities: ["Женева", "Лондон", "Дубай", "Москва", "Нассау"],
@@ -1091,7 +1091,8 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(() => detectLocale());
 
   useEffect(() => {
-    document.documentElement.lang = locale;
+    // zh-CN marks Simplified Chinese (简体). Do not use zh-TW / zh-Hant.
+    document.documentElement.lang = locale === "zh" ? "zh-CN" : locale;
     const copy = dictionaries[locale];
     document.title = copy.documentTitle;
     const meta = document.querySelector('meta[name="description"]');

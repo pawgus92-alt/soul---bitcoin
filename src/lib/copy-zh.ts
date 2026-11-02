@@ -1,5 +1,6 @@
 import type { Copy } from "@/lib/i18n";
 
+/** Mainland Simplified Chinese (简体字, zh-CN). Characters are 简体, not 繁體. */
 export const zh: Copy = {
   documentTitle: "Maison Æternum — 以一枚比特币卖掉灵魂",
   documentDescription:
@@ -18,7 +19,7 @@ export const zh: Copy = {
     "每份证书先是一幅神秘绘画，再在你付款的链上铸成 NFT：比特币铭文、Solana 或以太坊。归于买主钱包，永不归于柜台。",
   langEn: "EN",
   langRu: "RU",
-  langZh: "中文",
+  langZh: "简体",
   langSwitch: "语言",
   badgeInvite: "先有请柬，后有账单",
   cities: ["日内瓦", "伦敦", "迪拜", "莫斯科", "拿骚"],

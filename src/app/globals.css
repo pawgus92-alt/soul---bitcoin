@@ -117,15 +117,15 @@
     font-family: var(--font-heading);
   }
 
-  html[lang="zh"] body,
-  html[lang="zh"] #root {
+  html[lang^="zh"] body,
+  html[lang^="zh"] #root {
     font-family: "Noto Serif SC", var(--font-sans);
   }
 
-  html[lang="zh"] h1,
-  html[lang="zh"] h2,
-  html[lang="zh"] h3,
-  html[lang="zh"] .font-heading {
+  html[lang^="zh"] h1,
+  html[lang^="zh"] h2,
+  html[lang^="zh"] h3,
+  html[lang^="zh"] .font-heading {
     font-family: "Noto Serif SC", var(--font-heading);
   }
 }
