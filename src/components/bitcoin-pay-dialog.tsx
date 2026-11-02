@@ -48,9 +48,10 @@ import {
   type CertificateNft,
 } from "@/lib/ordinals";
 import { useBtcQuote } from "@/lib/quote-context";
+import { isOpenSinDegree, type SinDegree } from "@/lib/sins";
 import { watchDeskPayment, type PaymentWatch } from "@/lib/watch";
 
-type Step = "invoice" | "watching" | "minting" | "done";
+type Step = "sins" | "invoice" | "watching" | "minting" | "done";
 
 function invoiceCopy(
   kind: DealKind,
@@ -76,6 +77,13 @@ function invoiceCopy(
       badge: copy.pearlInvoiceBadge,
       title: copy.pearlInvoiceTitle,
       description: copy.pearlInvoiceDescription,
+    };
+  }
+  if (kind === "cleanse") {
+    return {
+      badge: copy.cleanseInvoiceBadge,
+      title: copy.cleanseInvoiceTitle,
+      description: copy.cleanseInvoiceDescription,
     };
   }
   if (kind === "eth") {
@@ -136,7 +144,10 @@ export function BitcoinPayDialog({
   const sell = kind === "sell";
   const btcBuy = kind === "buy";
   const ethBuy = kind === "eth";
-  const payLabel = triggerLabel ?? (sell ? copy.sellSoul : copy.payInBitcoin);
+  const cleansing = kind === "cleanse";
+  const payLabel =
+    triggerLabel ??
+    (cleansing ? copy.cleanseSoul : sell ? copy.sellSoul : copy.payInBitcoin);
   const dealCoin = sell
     ? SELL_BTC
     : ethBuy
@@ -154,14 +165,16 @@ export function BitcoinPayDialog({
     deal.chain === "solana"
       ? solanaPayUri(
           deal.address,
-          kind === "sol" ? SOL_AMOUNT : PEARL_AMOUNT,
+          kind === "pearl" ? PEARL_AMOUNT : SOL_AMOUNT,
           deal.mint,
         )
       : deal.chain === "ethereum"
         ? ethereumPayUri(deal.address, dealCoin ?? 0)
         : bitcoinPayUri(deal.address, dealCoin ?? SELL_BTC);
+  const firstStep: Step = cleansing ? "sins" : "invoice";
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState<Step>("invoice");
+  const [step, setStep] = useState<Step>(firstStep);
+  const [sinDegree, setSinDegree] = useState<SinDegree | null>(null);
   const [name, setName] = useState("");
   const [nftAddress, setNftAddress] = useState("");
   const [accepted, setAccepted] = useState(false);
@@ -180,7 +193,8 @@ export function BitcoinPayDialog({
 
   function reset() {
     closeLocked.current = false;
-    setStep("invoice");
+    setStep(firstStep);
+    setSinDegree(null);
     setName("");
     setNftAddress("");
     setAccepted(false);
@@ -236,6 +250,11 @@ export function BitcoinPayDialog({
       setError(copy.waitForRate);
       return;
     }
+    if (cleansing && !isOpenSinDegree(sinDegree ?? 0)) {
+      setError(copy.cleansePickTitle);
+      setStep("sins");
+      return;
+    }
     if (soldOut) {
       setError(copy.nftSoldOut);
       return;
@@ -272,6 +291,7 @@ export function BitcoinPayDialog({
         nftChain: deal.nftChain,
         edition: edition.edition,
         editionMax: edition.max,
+        sinDegree: sinDegree ?? undefined,
         txid: payment.txid || undefined,
         explorerUrl: payment.explorer,
       });
@@ -396,12 +416,69 @@ export function BitcoinPayDialog({
       </DialogTrigger>
       <DialogContent
         className={
-          step === "done"
+          step === "done" || step === "sins"
             ? "max-h-[92vh] overflow-y-auto border border-primary/25 bg-[#14110d] sm:max-w-2xl"
             : "max-h-[90vh] overflow-y-auto border border-primary/25 bg-[#14110d] sm:max-w-lg"
         }
         showCloseButton
       >
+        {step === "sins" ? (
+          <>
+            <DialogHeader>
+              <Badge variant="outline" className="w-fit border-primary/40 text-primary">
+                {copy.cleanseKicker}
+              </Badge>
+              <DialogTitle className="font-heading text-2xl font-semibold tracking-wide">
+                {copy.cleansePickTitle}
+              </DialogTitle>
+              <DialogDescription>{copy.cleansePickDescription}</DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {copy.sinDegrees.map((item) => {
+                const openDegree = isOpenSinDegree(item.degree);
+                return (
+                  <button
+                    key={item.degree}
+                    type="button"
+                    disabled={!openDegree}
+                    onClick={() => {
+                      if (!isOpenSinDegree(item.degree)) return;
+                      setSinDegree(item.degree);
+                      setError(null);
+                      setStep("invoice");
+                    }}
+                    className={
+                      openDegree
+                        ? "rounded-md border border-primary/20 bg-black/30 p-4 text-left hover:border-primary/50 hover:bg-black/50"
+                        : "cursor-not-allowed rounded-md border border-dashed border-primary/15 bg-black/10 p-4 text-left opacity-70"
+                    }
+                  >
+                    <p className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">
+                      {item.kicker}
+                    </p>
+                    <p className="font-heading mt-1 text-xl text-primary">
+                      {item.title}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {item.text}
+                    </p>
+                    {!openDegree ? (
+                      <p className="mt-3 text-[11px] tracking-[0.16em] text-primary uppercase">
+                        {copy.cleanseReserved}
+                      </p>
+                    ) : null}
+                  </button>
+                );
+              })}
+            </div>
+            <DialogFooter className="border-primary/10 bg-transparent">
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                {copy.remainLiving}
+              </Button>
+            </DialogFooter>
+          </>
+        ) : null}
+
         {step === "invoice" ? (
           <>
             <DialogHeader>
@@ -413,6 +490,14 @@ export function BitcoinPayDialog({
               </DialogTitle>
               <DialogDescription>{invoice.description}</DialogDescription>
             </DialogHeader>
+
+            {cleansing && sinDegree ? (
+              <p className="border border-primary/20 bg-black/30 px-3 py-2 text-sm text-primary">
+                {copy.sinDegrees.find((item) => item.degree === sinDegree)?.kicker}
+                {" · "}
+                {copy.sinDegrees.find((item) => item.degree === sinDegree)?.title}
+              </p>
+            ) : null}
 
             {askingRate ? (
               <div className="flex min-h-40 flex-col items-center justify-center gap-3 py-8 text-center">
@@ -554,7 +639,13 @@ export function BitcoinPayDialog({
                 }}
                 className="mt-0.5"
               />
-              <span>{sell ? copy.acceptSellTerms : copy.acceptTerms}</span>
+              <span>
+                {cleansing
+                  ? copy.cleanseAcceptTerms
+                  : sell
+                    ? copy.acceptSellTerms
+                    : copy.acceptTerms}
+              </span>
             </label>
 
             {error ? (
@@ -564,9 +655,19 @@ export function BitcoinPayDialog({
             ) : null}
 
             <DialogFooter className="border-primary/10 bg-transparent">
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                {copy.remainLiving}
-              </Button>
+              {cleansing ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setStep("sins")}
+                >
+                  {copy.cleansePickTitle}
+                </Button>
+              ) : (
+                <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                  {copy.remainLiving}
+                </Button>
+              )}
               <Button
                 type="button"
                 onClick={startWatch}
@@ -622,10 +723,18 @@ export function BitcoinPayDialog({
           <div className="space-y-4 py-2">
             <DialogHeader className="items-center text-center">
               <DialogTitle className="font-heading text-2xl text-primary">
-                {sell ? copy.soldSoul : copy.boughtSoul}
+                {cleansing
+                  ? copy.cleansedSoul
+                  : sell
+                    ? copy.soldSoul
+                    : copy.boughtSoul}
               </DialogTitle>
               <DialogDescription>
-                {sell ? copy.soldSoulHint : copy.boughtSoulHint}
+                {cleansing
+                  ? copy.cleansedSoulHint
+                  : sell
+                    ? copy.soldSoulHint
+                    : copy.boughtSoulHint}
               </DialogDescription>
             </DialogHeader>
             <SoulCertificate
@@ -638,6 +747,7 @@ export function BitcoinPayDialog({
               nftChain={deal.nftChain}
               edition={certificate.edition}
               editionMax={certificate.editionMax}
+              sinDegree={certificate.sinDegree}
               txid={certificate.txid}
               explorerUrl={certificate.explorerUrl}
             />

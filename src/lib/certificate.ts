@@ -8,7 +8,7 @@ import {
 } from "@/lib/deal";
 
 export const CERTIFICATE_SERIAL_RE =
-  /^AE-1666-(BUY|SELL|SOL|PRL|ETH)-[0-9A-F]{12}$/;
+  /^AE-1666-(BUY|SELL|SOL|PRL|ETH|CLN)-[0-9A-F]{12}$/;
 
 export type CertificateRecord = {
   serial: string;
@@ -21,6 +21,7 @@ export type CertificateRecord = {
   nftChain: NftChain;
   edition?: number;
   editionMax?: number;
+  sinDegree?: number;
   txid?: string;
   explorerUrl?: string;
 };
@@ -75,6 +76,7 @@ export async function issueCertificate(input: {
   nftChain: NftChain;
   edition?: number;
   editionMax?: number;
+  sinDegree?: number;
   txid?: string;
   explorerUrl?: string;
 }): Promise<CertificateRecord> {
@@ -87,6 +89,7 @@ export async function issueCertificate(input: {
       input.kind,
       holder.toLowerCase(),
       input.btcAmount,
+      input.sinDegree ? `degree-${input.sinDegree}` : "",
       issuedAt,
       bytesToHex(entropy),
     ].join("|"),
@@ -110,6 +113,7 @@ export async function issueCertificate(input: {
     nftChain: input.nftChain,
     edition: input.edition,
     editionMax: input.editionMax,
+    sinDegree: input.sinDegree,
     txid: input.txid,
     explorerUrl: input.explorerUrl,
   };

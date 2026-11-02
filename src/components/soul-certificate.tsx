@@ -24,19 +24,31 @@ function subtitleFor(kind: DealKind, copy: ReturnType<typeof useI18n>["copy"]) {
   if (kind === "sol") return copy.certSolSubtitle;
   if (kind === "pearl") return copy.certPearlSubtitle;
   if (kind === "eth") return copy.certEthSubtitle;
+  if (kind === "cleanse") return copy.certCleanseSubtitle;
   return copy.certSubtitle;
 }
 
-function taglineFor(kind: DealKind, copy: ReturnType<typeof useI18n>["copy"]) {
+function taglineFor(
+  kind: DealKind,
+  copy: ReturnType<typeof useI18n>["copy"],
+  sinDegree?: number,
+) {
   if (kind === "sell") return copy.certHalfBitcoin;
   if (kind === "sol") return copy.certTenSol;
   if (kind === "pearl") return copy.certPearlPaid;
   if (kind === "eth") return copy.certEthPaid;
+  if (kind === "cleanse") {
+    const sin = copy.sinDegrees.find((item) => item.degree === sinDegree);
+    return sin
+      ? `${sin.kicker} · ${sin.title}. ${copy.certCleansePaid}`
+      : copy.certCleansePaid;
+  }
   return copy.certVeryRich;
 }
 
 function proofFor(kind: DealKind, copy: ReturnType<typeof useI18n>["copy"]) {
   if (kind === "sell") return copy.certSellProof;
+  if (kind === "cleanse") return copy.certCleanseProof;
   if (kind === "sol" || kind === "pearl") return copy.certMidProof;
   return copy.certProof;
 }
@@ -59,6 +71,7 @@ export function SoulCertificate({
   nftChain = "bitcoin",
   edition,
   editionMax,
+  sinDegree,
   txid,
   explorerUrl,
 }: {
@@ -71,6 +84,7 @@ export function SoulCertificate({
   nftChain?: NftChain;
   edition?: number;
   editionMax?: number;
+  sinDegree?: number;
   txid?: string;
   explorerUrl?: string;
 }) {
@@ -110,13 +124,17 @@ export function SoulCertificate({
           {holder}
         </p>
         <p className="mt-3 text-sm text-[#2a1a12]">
-          {kind === "sell" ? copy.certHasSold : copy.certHasPurchased}
+          {kind === "sell"
+            ? copy.certHasSold
+            : kind === "cleanse"
+              ? copy.certHasCleansed
+              : copy.certHasPurchased}
         </p>
         <p className="font-heading mt-1 text-4xl font-bold tracking-wide text-[#c9a227] sm:text-5xl">
-          {copy.certOneSoul}
+          {kind === "cleanse" ? copy.certOneSin : copy.certOneSoul}
         </p>
         <p className="font-heading mt-4 text-2xl font-semibold text-[#1f6b4a] sm:text-3xl">
-          {taglineFor(kind, copy)}
+          {taglineFor(kind, copy, sinDegree)}
         </p>
         <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[#5c3d24]">
           {proofFor(kind, copy)}

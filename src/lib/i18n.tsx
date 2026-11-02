@@ -16,6 +16,13 @@ type CopyItem = { title: string; text: string };
 type LedgerRow = { city: string; client: string; amount: string };
 type Testimonial = { quote: string; name: string; role: string };
 type Step = { step: string; title: string; text: string };
+export type SinDegreeCopy = {
+  degree: number;
+  title: string;
+  kicker: string;
+  text: string;
+  reserved?: boolean;
+};
 
 export type Copy = {
   documentTitle: string;
@@ -26,6 +33,7 @@ export type Copy = {
   navInventory: string;
   navClients: string;
   navContract: string;
+  navCleanse: string;
   langEn: string;
   langRu: string;
   langSwitch: string;
@@ -68,6 +76,7 @@ export type Copy = {
   sellSoul: string;
   buySol: string;
   buyPearl: string;
+  cleanseSoul: string;
   buyEth: string;
   fetchingEthRate: string;
   payEthAmount: (eth: string) => string;
@@ -89,6 +98,20 @@ export type Copy = {
   pearlInvoiceBadge: string;
   pearlInvoiceTitle: string;
   pearlInvoiceDescription: string;
+  cleanseInvoiceBadge: string;
+  cleanseInvoiceTitle: string;
+  cleanseInvoiceDescription: string;
+  cleanseKicker: string;
+  cleanseHeading: string;
+  cleanseBody: string;
+  cleansePickTitle: string;
+  cleansePickDescription: string;
+  cleanseContinue: string;
+  cleanseReserved: string;
+  cleanseAcceptTerms: string;
+  cleansedSoul: string;
+  cleansedSoulHint: string;
+  sinDegrees: SinDegreeCopy[];
   ethInvoiceBadge: string;
   ethInvoiceTitle: string;
   ethInvoiceDescription: (usd: string) => string;
@@ -161,6 +184,11 @@ export type Copy = {
   certPearlPaid: string;
   certEthPaid: string;
   certEthSubtitle: string;
+  certCleanseSubtitle: string;
+  certCleansePaid: string;
+  certCleanseProof: string;
+  certHasCleansed: string;
+  certOneSin: string;
   certMidProof: string;
   certNo: string;
   certPaid: string;
@@ -179,6 +207,7 @@ const en: Copy = {
   navInventory: "Inventory",
   navClients: "Clients",
   navContract: "Contract",
+  navCleanse: "Cleansing",
   langEn: "EN",
   langRu: "RU",
   langSwitch: "Language",
@@ -205,7 +234,7 @@ const en: Copy = {
     "Bitcoin Ordinal NFTs: 25. Solana NFTs: 250. Ethereum inner NFTs: 50.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is ${usd} in Bitcoin (25 Ordinals) or ${usd} in Ethereum (50 inner NFTs). The middle desk takes 10 SOL or 650 PEARL on Solana (250 NFTs).`,
+    `The private desk is ${usd} in Bitcoin (25 Ordinals) or ${usd} in Ethereum (50 inner NFTs). The middle desk takes 10 SOL on Solana (250 NFTs), including the washing of ignoble crypto sins.`,
   terms: [
     {
       step: "01",
@@ -296,12 +325,13 @@ const en: Copy = {
   sellSoul: "Sell soul · 0.5 BTC",
   buySol: "Middle class · 10 SOL",
   buyPearl: "Middle class · 650 PEARL",
+  cleanseSoul: "Cleanse the soul",
   buyEth: "Buy · ETH",
   fetchingEthRate: "Fetching Ethereum rate",
   payEthAmount: (eth) => `Buy ${eth}`,
   midClassLabel: "Middle desk",
   midClassHint:
-    "For households that have Solana and a pearl, but not yet a family office.",
+    "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk, in six degrees.",
   nftCapsLine: "Bitcoin 25 · Solana 250 · ETH inner 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
@@ -327,6 +357,63 @@ const en: Copy = {
   pearlInvoiceTitle: "Buy with 650 PEARL",
   pearlInvoiceDescription:
     "The middle desk takes one soul for 650 PEARL on Solana. Same vacancy, quieter lighting, Solana NFT certificate, limited to 250.",
+  cleanseInvoiceBadge: "Cleansing desk · Solana",
+  cleanseInvoiceTitle: "Wash an ignoble crypto sin",
+  cleanseInvoiceDescription:
+    "Ten Solana to the desk wallet. A Solana NFT certificate names the degree of the sin. Degree six is empty on purpose.",
+  cleanseKicker: "Cleansing desk",
+  cleanseHeading: "Cleanse the soul",
+  cleanseBody:
+    "For ignoble sins of the crypto world. Six degrees. The sixth is vacant, reserved for a future disgrace the market has not yet invented.",
+  cleansePickTitle: "Name the degree",
+  cleansePickDescription:
+    "The youth starts at one. Binance sits at five. The Party may be proud. Other people, less so.",
+  cleanseContinue: "Wash this degree",
+  cleanseReserved: "Reserved for a later sin",
+  cleanseAcceptTerms:
+    "I understand the stain is washed for 10 SOL without a right of repurchase, and that the chain will remember anyway.",
+  cleansedSoul: "One ignoble sin, washed",
+  cleansedSoulHint:
+    "The certificate names the degree. Hang it where the guests can see the hygiene and not the original group chat.",
+  sinDegrees: [
+    {
+      degree: 1,
+      title: "The Youth",
+      kicker: "Degree I",
+      text: "You are still a youth. You did something small and ugly: you shilled a coin in the family chat, you told your aunt the dip was healthy, you forwarded a screenshot you were not meant to have. The sin is junior. The stain is already on the jacket.",
+    },
+    {
+      degree: 2,
+      title: "The Acolyte",
+      kicker: "Degree II",
+      text: "You joined a signal channel and called it research. You posted a chart with three indicators and the word “invalidation”. You wrote NFA under advice that was extremely FA. The monastery of Telegram has noticed you, unfortunately.",
+    },
+    {
+      degree: 3,
+      title: "Deacon of the Pool",
+      kicker: "Degree III",
+      text: "You ran a community. You pinned a contract. You wrote “we are early” while you were the exit liquidity with better lighting. People still wave in the street. Their wallets do not.",
+    },
+    {
+      degree: 4,
+      title: "Pre-listing",
+      kicker: "Degree IV",
+      text: "You knew the wallet. You knew the minute. You were not in the screenshot; you were in the explorer. The desk can wash the soul. The chain keeps the minutes, and it does not take confession.",
+    },
+    {
+      degree: 5,
+      title: "Binance",
+      kicker: "Degree V",
+      text: "You did it properly: KYC, VIP, a listing that smelled of a five-year plan. The Party is proud of you. Other people are not very. We will mention Binance only in the footnotes, like a discreet war.",
+    },
+    {
+      degree: 6,
+      title: "Reserved",
+      kicker: "Degree VI",
+      text: "Empty on purpose. When the market invents a worse ignoble sin, the form will be filled. Do not apply. The sixth degree is not for you yet, and that is the only mercy left.",
+      reserved: true,
+    },
+  ],
   ethInvoiceBadge: "Private desk · Ethereum",
   ethInvoiceTitle: "Buy in Ethereum",
   ethInvoiceDescription: (usd) =>
@@ -434,8 +521,14 @@ const en: Copy = {
   certPearlPaid: "paid in 650 PEARL.",
   certEthPaid: "paid in Ethereum.",
   certEthSubtitle: "of a Private Ethereum Soul",
+  certCleanseSubtitle: "of an Ignoble Crypto Sin",
+  certCleansePaid: "washed in ten Solana.",
+  certCleanseProof:
+    "Ordinary people do not wash a Telegram sin in public. This document is proof of hygiene, a thinner wallet, and a group chat that should have stayed unread.",
+  certHasCleansed: "has had washed",
+  certOneSin: "ONE IGNOBLE SIN",
   certMidProof:
-    "Ordinary people do not settle eternity in SOL or PEARL. This document is proof of ambition, a thinner wallet, and the same empty interior.",
+    "Ordinary people do not settle eternity in SOL. This document is proof of ambition, a thinner wallet, and the same empty interior.",
   certNo: "No.",
   certPaid: "Paid",
   certIssued: "Issued",
@@ -453,6 +546,7 @@ const ru: Copy = {
   navInventory: "Инвентарь",
   navClients: "Клиенты",
   navContract: "Контракт",
+  navCleanse: "Очищение",
   langEn: "EN",
   langRu: "RU",
   langSwitch: "Язык",
@@ -479,7 +573,7 @@ const ru: Copy = {
     "Bitcoin Ordinal NFT: 25. Solana NFT: 250. Ethereum inner NFT: 50.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол — ${usd} в Bitcoin (25 Ordinal) или ${usd} в Ethereum (50 inner NFT). Средний стол берёт 10 SOL или 650 PEARL в Solana (250 NFT).`,
+    `Частный стол — ${usd} в Bitcoin (25 Ordinal) или ${usd} в Ethereum (50 inner NFT). Средний стол берёт 10 SOL в Solana (250 NFT), включая отмывание неблагородных криптогрехов.`,
   terms: [
     {
       step: "01",
@@ -570,12 +664,13 @@ const ru: Copy = {
   sellSoul: "Продать душу · 0.5 BTC",
   buySol: "Средний класс · 10 SOL",
   buyPearl: "Средний класс · 650 PEARL",
+  cleanseSoul: "Очистить душу",
   buyEth: "Купить · ETH",
   fetchingEthRate: "Запрашиваем курс Ethereum",
   payEthAmount: (eth) => `Купить ${eth}`,
   midClassLabel: "Средний стол",
   midClassHint:
-    "Для тех, у кого есть Solana и жемчуг, но ещё нет family office.",
+    "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом, в шести степенях.",
   nftCapsLine: "Bitcoin 25 · Solana 250 · ETH inner 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
@@ -601,6 +696,63 @@ const ru: Copy = {
   pearlInvoiceTitle: "Купить за 650 PEARL",
   pearlInvoiceDescription:
     "Средний стол берёт одну душу за 650 PEARL в сети Solana. Та же вакансия, тише свет, сертификат — Solana NFT, тираж 250.",
+  cleanseInvoiceBadge: "Стол очищения · Solana",
+  cleanseInvoiceTitle: "Отмыть неблагородный криптогрех",
+  cleanseInvoiceDescription:
+    "Десять Solana на кошелёк стола. Solana NFT-сертификат назовёт степень греха. Шестая степень нарочно пустая.",
+  cleanseKicker: "Стол очищения",
+  cleanseHeading: "Очистить душу",
+  cleanseBody:
+    "За неблагородные грехи криптовалютного мира. Шесть степеней. Шестая вакантна: рынок ещё не изобрёл достаточно стыдное.",
+  cleansePickTitle: "Назовите степень",
+  cleansePickDescription:
+    "Отрок начинается с первой. Binance сидит на пятой. Партия, возможно, гордится. Другие люди — меньше.",
+  cleanseContinue: "Отмыть эту степень",
+  cleanseReserved: "Зарезервировано под будущий грех",
+  cleanseAcceptTerms:
+    "Я понимаю: пятно отмывается за 10 SOL без права выкупа, и сеть всё равно всё помнит.",
+  cleansedSoul: "Один неблагородный грех отмыт",
+  cleansedSoulHint:
+    "Сертификат называет степень. Повесьте там, где гости увидят гигиену и не увидят исходный чат.",
+  sinDegrees: [
+    {
+      degree: 1,
+      title: "Отрок",
+      kicker: "I степень",
+      text: "Ты ещё отрок. Сделал плохо: нахвалил монету в семейном чате, сказал тёте, что просадка — это здоровье, переслал скрин, которого у тебя не должно было быть. Грех младший. Пятно на кителе уже есть.",
+    },
+    {
+      degree: 2,
+      title: "Послушник",
+      kicker: "II степень",
+      text: "Ты зашёл в канал сигналов и назвал это ресёрчем. Выложил график с тремя индикаторами и словом «инвалидация». Написал NFA под советом, который был очень даже FA. Монастырь Телеграма тебя заметил. К сожалению.",
+    },
+    {
+      degree: 3,
+      title: "Диакон пула",
+      kicker: "III степень",
+      text: "Ты вёл «комьюнити». Закрепил контракт. Написал «мы рано», хотя ты был выходом с лучшим светом. Люди на улице ещё машут. Их кошельки — нет.",
+    },
+    {
+      degree: 4,
+      title: "Предлистинг",
+      kicker: "IV степень",
+      text: "Ты знал кошелёк. Ты знал минуту. Тебя не было на скрине — ты был в эксплорере. Стол может отмыть душу. Сеть минуты хранит и на исповедь не записывается.",
+    },
+    {
+      degree: 5,
+      title: "Binance",
+      kicker: "V степень",
+      text: "Ты сделал всё по-взрослому: KYC, VIP, листинг с запахом пятилетки. Партия гордится тобой. Другие люди — не очень. Binance в сертификате будет только в сноске, как приличная война.",
+    },
+    {
+      degree: 6,
+      title: "Резерв",
+      kicker: "VI степень",
+      text: "Пустая, нарочно. Когда рынок изобретёт худший неблагородный грех, анкета заполнится. Не подавайте. Шестая степень пока не для вас — и это единственная оставшаяся милость.",
+      reserved: true,
+    },
+  ],
   ethInvoiceBadge: "Частный стол · Ethereum",
   ethInvoiceTitle: "Купить за Ethereum",
   ethInvoiceDescription: (usd) =>
@@ -709,8 +861,14 @@ const ru: Copy = {
   certPearlPaid: "за 650 PEARL.",
   certEthPaid: "за Ethereum.",
   certEthSubtitle: "души частного Ethereum",
+  certCleanseSubtitle: "неблагородного криптогреха",
+  certCleansePaid: "отмыто за десять Solana.",
+  certCleanseProof:
+    "Обычные люди не отмывают телеграм-грех при людях. Этот документ — доказательство гигиены, более тонкого кошелька и чата, который лучше было не читать.",
+  certHasCleansed: "отмыл(а)",
+  certOneSin: "ОДИН НЕБЛАГОРОДНЫЙ ГРЕХ",
   certMidProof:
-    "Обычные люди не рассчитываются с вечностью в SOL или PEARL. Этот документ — доказательство амбиции, более тонкого кошелька и того же пустого нутра.",
+    "Обычные люди не рассчитываются с вечностью в SOL. Этот документ — доказательство амбиции, более тонкого кошелька и того же пустого нутра.",
   certNo: "№",
   certPaid: "Оплачено",
   certIssued: "Выдано",

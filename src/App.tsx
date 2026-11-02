@@ -1,5 +1,5 @@
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { DealButtons } from "@/components/pay-bitcoin-button";
+import { DealButtons, PayBitcoinButton } from "@/components/pay-bitcoin-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -85,6 +85,9 @@ export default function App() {
             </a>
             <a href="#clients" className="hover:text-primary">
               {copy.navClients}
+            </a>
+            <a href="#cleanse" className="hover:text-primary">
+              {copy.navCleanse}
             </a>
             <a href="#contract" className="hover:text-primary">
               {copy.navContract}
@@ -188,6 +191,53 @@ export default function App() {
                 </p>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section id="cleanse" className="border-y border-primary/10 bg-black/10">
+          <div className="mx-auto w-full max-w-6xl px-5 py-16">
+            <p className={kicker}>{copy.cleanseKicker}</p>
+            <h2 className="font-heading mt-2 max-w-2xl text-4xl sm:text-5xl">
+              {copy.cleanseHeading}
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">
+              {copy.cleanseBody}
+            </p>
+            <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {copy.sinDegrees.map((item) => (
+                <Card
+                  key={item.degree}
+                  className={
+                    item.reserved
+                      ? "border-dashed border-primary/20 bg-card/40"
+                      : "border-primary/20 bg-card/70"
+                  }
+                >
+                  <CardHeader>
+                    <p className={kicker}>{item.kicker}</p>
+                    <CardTitle className="font-heading text-2xl text-primary">
+                      {item.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm leading-6 text-muted-foreground">
+                      {item.text}
+                    </p>
+                    {item.reserved ? (
+                      <p className="mt-4 text-[11px] tracking-[0.16em] text-primary/80 uppercase">
+                        {copy.cleanseReserved}
+                      </p>
+                    ) : null}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <div className="mt-8">
+              <PayBitcoinButton
+                kind="cleanse"
+                className="h-12 px-6 text-base"
+              />
+            </div>
           </div>
         </section>
 

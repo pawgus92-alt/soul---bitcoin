@@ -57,6 +57,7 @@ export async function createCertificateNft(
       receiveAddress: record.receiveAddress,
       edition: record.edition,
       max: record.editionMax,
+      sinDegree: record.sinDegree,
     }),
   });
   return readNft(response);
