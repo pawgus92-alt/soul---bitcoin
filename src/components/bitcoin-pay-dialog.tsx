@@ -70,7 +70,12 @@ import {
   type CertificateNft,
 } from "@/lib/ordinals";
 import { useBtcQuote } from "@/lib/quote-context";
-import { isOpenSinDegree, sinLadderClass, type SinDegree } from "@/lib/sins";
+import {
+  isOpenSinDegree,
+  sinLadderClass,
+  sinLadderWidthPct,
+  type SinDegree,
+} from "@/lib/sins";
 import { watchDeskPayment, type PaymentWatch } from "@/lib/watch";
 
 type Step = "sins" | "invoice" | "watching" | "need-buyer" | "minting" | "done";
@@ -642,7 +647,7 @@ export function BitcoinPayDialog({
                     <div className="mb-3 h-[2px] w-full bg-black/50">
                       <div
                         className="h-[2px] bg-primary"
-                        style={{ width: `${Math.min(item.degree, 5) * 20}%` }}
+                        style={{ width: `${sinLadderWidthPct(item.degree)}%` }}
                       />
                     </div>
                     <p className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">

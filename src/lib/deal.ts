@@ -25,15 +25,18 @@ export const BTC_REGULAR_AMOUNT = 1;
 /** Last three Bitcoin NFTs: 888 luck charters at a flat 8 BTC. */
 export const BTC_LUCKY_AMOUNT = 8;
 export const PEARL_AMOUNT = 650;
-/** Degree I is 1.5 SOL; each open degree climbs until V (the dearest laptop) at 8.88 SOL. */
+/** Seven named sins climb from 1.5 SOL; the laptop sits last among the open stalls at 8.88 SOL. */
 export const CLEANSE_SOL_FIRST = 1.5;
 export const CLEANSE_SOL_BINANCE = 8.88;
-export const CLEANSE_SOL_BY_DEGREE: Record<1 | 2 | 3 | 4 | 5, number> = {
+export const CLEANSE_SOL_BY_DEGREE: Record<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8, number> = {
   1: CLEANSE_SOL_FIRST,
   2: 2.5,
-  3: 4,
-  4: 6,
-  5: CLEANSE_SOL_BINANCE,
+  3: 3.5,
+  4: 4.5,
+  5: 5.5,
+  6: 6.5,
+  7: 7.5,
+  8: CLEANSE_SOL_BINANCE,
 };
 export const CLEANSE_SOL_RANGE = `${CLEANSE_SOL_FIRST}–${CLEANSE_SOL_BINANCE} SOL`;
 
@@ -261,7 +264,16 @@ export function solAmountOf(kind: DealKind) {
 }
 
 export function cleanseSolAmount(degree?: number | null) {
-  if (degree === 1 || degree === 2 || degree === 3 || degree === 4 || degree === 5) {
+  if (
+    degree === 1 ||
+    degree === 2 ||
+    degree === 3 ||
+    degree === 4 ||
+    degree === 5 ||
+    degree === 6 ||
+    degree === 7 ||
+    degree === 8
+  ) {
     return CLEANSE_SOL_BY_DEGREE[degree];
   }
   return 0;

@@ -21,7 +21,7 @@ import {
 import { useI18n } from "@/lib/i18n";
 import { useNftSupply } from "@/lib/nft-supply";
 import { useBtcQuote } from "@/lib/quote-context";
-import { sinLadderClass } from "@/lib/sins";
+import { sinLadderClass, sinLadderWidthPct } from "@/lib/sins";
 
 function NftCaps() {
   const { copy } = useI18n();
@@ -300,7 +300,7 @@ export default function App() {
                     <div className="mb-2 h-[2px] w-full bg-black/50">
                       <div
                         className="h-[2px] bg-primary"
-                        style={{ width: `${Math.min(item.degree, 5) * 20}%` }}
+                        style={{ width: `${sinLadderWidthPct(item.degree)}%` }}
                       />
                     </div>
                     <p className={kicker}>{item.kicker}</p>

@@ -101,11 +101,14 @@ function rng(seed) {
 }
 
 function sinLatin(degree) {
-  if (degree === 1) return "VANITAS";
+  if (degree === 1) return "SUPERBIA";
   if (degree === 2) return "AVARITIA";
-  if (degree === 3) return "INVIDIA";
-  if (degree === 4) return "SUPERBIA";
-  if (degree === 5) return "DEGREE V";
+  if (degree === 3) return "LUXURIA";
+  if (degree === 4) return "INVIDIA";
+  if (degree === 5) return "GULA";
+  if (degree === 6) return "IRA";
+  if (degree === 7) return "ACEDIA";
+  if (degree === 8) return "THE DEAREST LAPTOP";
   return "";
 }
 
@@ -178,7 +181,7 @@ function kindCopy(kind, sinDegree, revealEncounter) {
     return {
       desk: latin ? `CLEANSING DESK · ${latin}` : "CLEANSING DESK",
       act: "hath washed",
-      prize: latin && sinDegree !== 5 ? latin : "ONE IGNOBLE SIN",
+      prize: latin && sinDegree !== 8 ? latin : "ONE IGNOBLE SIN",
     };
   }
   if (kind === "fa") {
@@ -328,7 +331,7 @@ export function certificateSvg(payload, options = {}) {
     traits.motto = "rara avis · octo solana";
     traits.palette = PALETTES[2];
   }
-  if (payload.kind === "cleanse" && payload.sinDegree && payload.sinDegree <= 4) {
+  if (payload.kind === "cleanse" && payload.sinDegree && payload.sinDegree <= 7) {
     traits.motto = `${sinLatin(payload.sinDegree).toLowerCase()} · peccatum venale`;
   }
   const { palette: c, seed } = traits;

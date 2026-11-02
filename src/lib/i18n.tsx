@@ -326,7 +326,7 @@ const en: Copy = {
     "The last three Bitcoin Ordinals — Nos. 8, 9 and 10 of ten — are 888 luck charters: the dearest, the richest, the ones that bring luck. Eight bitcoin each. The other seven are one bitcoin each.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is 1 BTC (about ${usd}) for seven ordinary souls, or 8 BTC for a 888 luck charter, or Ethereum: 0.5 / 1 / 2 ETH for fifteen NFTs. The middle desk takes Solana at Coinbase. The cleanse ladder is named: Vanity 1.5, Greed 2.5, Envy 4, Pride 6, then the most expensive laptop at 8.88 SOL.`,
+    `The private desk is 1 BTC (about ${usd}) for seven ordinary souls, or 8 BTC for a 888 luck charter, or Ethereum: 0.5 / 1 / 2 ETH for fifteen NFTs. The middle desk takes Solana at Coinbase. Seven pages of the Book of Souls, then the most expensive laptop at 8.88 SOL.`,
   terms: [
     {
       step: "01",
@@ -336,7 +336,7 @@ const en: Copy = {
     {
       step: "02",
       title: "Pay one Bitcoin",
-      text: "The invoice is one bitcoin — or 0.5 / 1 / 2 ETH, or Solana at 0.5 / 1 / 2 / 8 SOL. The last three Bitcoin NFTs are 888 luck charters at 8 BTC. Fifteen Ethereum NFTs: first ten at 0.5 ETH, three at 1 ETH, last two at 2 ETH. The cleanse ladder is Vanity, Greed, Envy, Pride, then the laptop at 8.88 SOL. One transfer, one hash, one eternity.",
+      text: "The invoice is one bitcoin — or 0.5 / 1 / 2 ETH, or Solana at 0.5 / 1 / 2 / 8 SOL. The last three Bitcoin NFTs are 888 luck charters at 8 BTC. Fifteen Ethereum NFTs: first ten at 0.5 ETH, three at 1 ETH, last two at 2 ETH. The cleanse ladder is seven named sins, then the laptop at 8.88 SOL. One transfer, one hash, one eternity.",
     },
     {
       step: "03",
@@ -433,7 +433,7 @@ const en: Copy = {
   solHint: "The middle desk takes Solana at the live Coinbase spot.",
   midClassLabel: "Middle desk",
   midClassHint:
-    "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk, named not numbered: Vanity 1.5, Greed 2.5, Envy 4, Pride 6, then the most expensive laptop at 8.88 SOL.",
+    "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk from the Book of Souls: Pride, Greed, Lust, Envy, Gluttony, Wrath, Sloth — then the most expensive laptop at 8.88 SOL.",
   nftCapsLine:
     "Bitcoin 10 · last three 888 · Ethereum 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
@@ -479,14 +479,14 @@ const en: Copy = {
   cleanseInvoiceBadge: "Cleansing desk · Solana",
   cleanseInvoiceTitle: "Wash an ignoble crypto sin",
   cleanseInvoiceDescription: (amount, usd) =>
-    `${amount} to the desk wallet, about ${usd} at the live Coinbase SOL spot. A Solana NFT certificate names the sin, not a number. The sixth stall is empty on purpose.`,
+    `${amount} to the desk wallet, about ${usd} at the live Coinbase SOL spot. A Solana NFT certificate names the sin, not a number. The stall after the laptop is empty on purpose.`,
   cleanseKicker: "Cleansing desk",
   cleanseHeading: "Cleanse the soul",
   cleanseBody:
-    "For ignoble sins of the crypto world — the ones that never make the prospectus, only the group chat. The ladder is named, not numbered, so the stain is something you want to own. Vanity at 1.5 SOL. Greed at 2.5. Envy at 4. Pride at 6. Then the fifth stall, left as it is: the most expensive laptop in history, 8.88 SOL. The sixth is vacant on purpose: when the market invents a meaner sin, the form will write itself.",
+    "Seven pages of the Book of Souls — Liber Animarum. Pride, Greed, Lust, Envy, Gluttony, Wrath, Sloth: each stall a named stain, each dearer than the last. Behind the last page sits the stall we do not rename: the most expensive laptop in history, 8.88 SOL. After that, a vacant leaf: when the market invents a meaner sin, the form will write itself.",
   cleansePickTitle: "Name the sin",
   cleansePickDescription:
-    "Buy the stain that fits. Vanity, greed, envy, pride — each stall dearer than the last, until you almost want the soul more than the wash. Degree V, 2026, sits at 8.88 SOL: the most expensive laptop in history, about six point three billion, because an engineer opened the wrong PDF. Not every hero wears a cape. If you ever opened one — ease the soul.",
+    "Buy the stain that fits. Seven pages, then the laptop. 2026 sits last among the open stalls at 8.88 SOL: the most expensive laptop in history, about six point three billion, because an engineer opened the wrong PDF. Not every hero wears a cape. If you ever opened one — ease the soul.",
   cleanseContinue: "Wash this sin",
   cleanseReserved: "Reserved for a later sin",
   cleanseAcceptTerms: (amount) =>
@@ -543,39 +543,57 @@ const en: Copy = {
   sinDegrees: [
     {
       degree: 1,
-      title: "Vanity",
-      kicker: "Vanitas · 1.5 SOL",
-      text: "You posted the PNL. Green candles cropped so the deposits would not show, a yacht emoji after one lucky ten-times, a screenshot that made the group chat go quiet. Vanity in this market is not beauty — it is the need to be seen winning. The first stall is cheap on purpose: buy it while it still looks like confidence.",
+      title: "Pride",
+      kicker: "Velemir · Superbia · 1.5 SOL",
+      text: "Velemir, the Mirror Patriarch — glass and old gold, always taller than whoever looks. In his oval you see yourself crowned, wearing other men’s merits. In this market: I am early. The thesis is identity. You refuse the stop. First line of the page: I saw myself — and stopped seeing the rest.",
     },
     {
       degree: 2,
       title: "Greed",
-      kicker: "Avaritia · 2.5 SOL",
-      text: "Leverage until the wick. Never take profit. The bag is never full; the next candle is always the one. You would rather die in a liquidation than leave a dollar on the table. Greed here is not hunger. It is the refusal to close a winning trade because winning, once, was not enough.",
+      kicker: "Kun · Avaritia · 2.5 SOL",
+      text: "Kun, Keeper of the Scales. A dry creature in sack-cords; his chest is an open casket. He does not steal. He “puts aside.” Leverage until the wick. Never take profit. First line: One more handful — and I will finally start spending.",
     },
     {
       degree: 3,
-      title: "Envy",
-      kicker: "Invidia · 4 SOL",
-      text: "You did not want the trade. You wanted their luck. Copytrading a stranger’s wallet, watching another man’s PNL like a liturgy, buying the same ticker because his story made yours feel poor. Envy in crypto is a second-hand soul: you borrow someone else’s conviction and still pay the liquidation yourself.",
+      title: "Lust",
+      kicker: "Neveya · Luxuria · 3.5 SOL",
+      text: "Neveya, Maiden of Smoke and Silk. Face always half-veiled, always the one you were afraid to want. She does not promise. She steps you one step closer than you needed. In this market: the new ticker, the candle chased like a body. First line: I called it love because I was afraid to call it by its name.",
     },
     {
       degree: 4,
-      title: "Pride",
-      kicker: "Superbia · 6 SOL",
-      text: "I am early. The thesis is identity. You refuse to close, you refuse to be wrong, you refuse the stop. The market can be mistaken for years; you cannot be mistaken for a minute. Pride is the last named stall before the laptop: the sin of a man who still believes the chart owes him an apology.",
+      title: "Envy",
+      kicker: "Sheptun · Invidia · 4.5 SOL",
+      text: "Sheptun, Wearer of Other Faces. A fan of porcelain masks, none of them fit. You did not want the trade. You wanted their luck. Copytrading a stranger’s wallet. First line: The neighbour’s grass is greener because I watered it with mine.",
     },
     {
       degree: 5,
-      title: "The Most Expensive Laptop in History",
-      kicker: "Degree V · 2026",
-      text: "About six point three billion dollars. They will file it under the dearest laptop ever bought. The door was a notebook on an engineer’s desk: he opened the wrong PDF, and the exchange parted with billions. In the cinema it is one shot — one employee, one attachment, a house that suddenly has less money than a small country. Not every hero wears a cape; sometimes a phishing letter is enough. If you ever opened one — ease the soul. The desk is open. The chain will remember the click anyway.",
+      title: "Gluttony",
+      kicker: "Pirozhnik · Gula · 5.5 SOL",
+      text: "Pirozhnik, Host of the Endless Table. Dishes rot faster than you taste them. Forty wallets, every airdrop, tabs that never close. You farm so you will not hear the silence. First line: I ate not to be full, but not to hear the quiet.",
     },
     {
       degree: 6,
+      title: "Wrath",
+      kicker: "Razlom · Ira · 6.5 SOL",
+      text: "Razlom, the Furnace Knight. Armour cracked from the heat inside. Revenge-trading the dump, rage at the wick, a list that grows. First line: First I burned the enemy. Then the list. Then anyone who might have been on it.",
+    },
+    {
+      degree: 7,
+      title: "Sloth",
+      kicker: "Dremota · Acedia · 7.5 SOL",
+      text: "Dremota, Sleeping in Grey Water. “Too early to get up” for a thousand years. Seed phrase in a drawer, claim tomorrow, bridge tomorrow. The last named page before the laptop. First line: Tomorrow. All my tomorrows are here, on the bottom.",
+    },
+    {
+      degree: 8,
+      title: "The Most Expensive Laptop in History",
+      kicker: "2026 · 8.88 SOL",
+      text: "About six point three billion dollars. They will file it under the dearest laptop ever bought. The door was a notebook on an engineer’s desk: he opened the wrong PDF, and the exchange parted with billions. In the cinema it is one shot — one employee, one attachment, a house that suddenly has less money than a small country. Not every hero wears a cape; sometimes a phishing letter is enough. If you ever opened one — ease the soul. The desk is open. The chain will remember the click anyway.",
+    },
+    {
+      degree: 9,
       title: "Reserved",
-      kicker: "Degree VI",
-      text: "Empty on purpose, a clean leaf for a future sin. When the market invents a disgrace worse than the fifth degree, the form will fill itself. Do not knock. The sixth degree is not for you yet — and that is the last mercy the desk still keeps.",
+      kicker: "After the laptop",
+      text: "Empty on purpose, a clean leaf for a future sin. When the market invents a disgrace worse than the laptop, the form will fill itself. Do not knock. This stall is not for you yet — and that is the last mercy the desk still keeps.",
       reserved: true,
     },
   ],
@@ -796,7 +814,7 @@ const ru: Copy = {
     "Последние три Bitcoin Ordinal — № 8, 9 и 10 из десяти — грамоты 888: самые дорогие, самые богатые, приносящие удачу. По 8 биткоинов. Остальные семь — по одному биткоину.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол — 1 BTC (около ${usd}) за семь обычных душ, или 8 BTC за грамоту 888, или Ethereum: 0.5 / 1 / 2 ETH, пятнадцать NFT. Средний стол берёт Solana по Coinbase. Лестница очищения названа: Тщеславие 1.5, Алчность 2.5, Зависть 4, Гордыня 6, затем самый дорогой ноутбук за 8.88 SOL.`,
+    `Частный стол — 1 BTC (около ${usd}) за семь обычных душ, или 8 BTC за грамоту 888, или Ethereum: 0.5 / 1 / 2 ETH, пятнадцать NFT. Средний стол берёт Solana по Coinbase. Семь страниц Книги Душ, затем самый дорогой ноутбук за 8.88 SOL.`,
   terms: [
     {
       step: "01",
@@ -806,7 +824,7 @@ const ru: Copy = {
     {
       step: "02",
       title: "Оплатите один Bitcoin",
-      text: "Счёт — один биткоин — или 0.5 / 1 / 2 ETH, или Solana по 0.5 / 1 / 2 / 8 SOL. Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Ethereum NFT пятнадцать: первые десять по 0.5 ETH, три по 1 ETH, последние две по 2 ETH. Лестница очищения: Тщеславие, Алчность, Зависть, Гордыня, затем ноутбук за 8.88 SOL. Один перевод, один хеш, одна вечность.",
+      text: "Счёт — один биткоин — или 0.5 / 1 / 2 ETH, или Solana по 0.5 / 1 / 2 / 8 SOL. Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Ethereum NFT пятнадцать: первые десять по 0.5 ETH, три по 1 ETH, последние две по 2 ETH. Лестница очищения: семь названных грехов, затем ноутбук за 8.88 SOL. Один перевод, один хеш, одна вечность.",
     },
     {
       step: "03",
@@ -903,7 +921,7 @@ const ru: Copy = {
   solHint: "Средний стол берёт Solana по живому споту Coinbase.",
   midClassLabel: "Средний стол",
   midClassHint:
-    "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом — не «уровень 1», а по имени: Тщеславие 1.5, Алчность 2.5, Зависть 4, Гордыня 6, затем самый дорогой ноутбук за 8.88 SOL.",
+    "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом по Книге Душ: Гордыня, Алчность, Похоть, Зависть, Чревоугодие, Гнев, Уныние — затем самый дорогой ноутбук за 8.88 SOL.",
   nftCapsLine:
     "Bitcoin 10 · последние три 888 · Ethereum 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
@@ -949,14 +967,14 @@ const ru: Copy = {
   cleanseInvoiceBadge: "Стол очищения · Solana",
   cleanseInvoiceTitle: "Отмыть неблагородный криптогрех",
   cleanseInvoiceDescription: (amount, usd) =>
-    `${amount} на кошелёк стола, около ${usd} по живому споту Coinbase SOL. Solana NFT-сертификат назовёт грех, а не номер. Шестая ступень нарочно пустая.`,
+    `${amount} на кошелёк стола, около ${usd} по живому споту Coinbase SOL. Solana NFT-сертификат назовёт грех, а не номер. Ступень после ноутбука нарочно пустая.`,
   cleanseKicker: "Стол очищения",
   cleanseHeading: "Очистить душу",
   cleanseBody:
-    "За неблагородные грехи криптовалютного мира — те, что не попадают в проспект, только в групповой чат. Лестница названа, не пронумерована, чтобы пятно хотелось купить. Тщеславие — 1.5 SOL. Алчность — 2.5. Зависть — 4. Гордыня — 6. Затем пятая ступень, как была: самый дорогой ноутбук в истории, 8.88 SOL. Шестая келья нарочно пуста: когда рынок изобретёт грех подлее, анкета напишет себя сама.",
+    "Семь страниц Книги Душ — Liber Animarum. Гордыня, Алчность, Похоть, Зависть, Чревоугодие, Гнев, Уныние: каждая ступень — названное пятно, каждая дороже прежней. За последней страницей — ступень, которую мы не переименовываем: самый дорогой ноутбук в истории, 8.88 SOL. Дальше пустой лист: когда рынок изобретёт грех подлее, анкета напишет себя сама.",
   cleansePickTitle: "Назовите грех",
   cleansePickDescription:
-    "Купите пятно, которое вам к лицу. Тщеславие, алчность, зависть, гордыня — каждая ступень дороже прежней, пока душу почти хочется больше, чем омовение. Пятая степень, 2026-й, сидит за 8.88 SOL: самый дорогой ноутбук в истории, около 6,3 миллиарда, потому что инженер открыл не тот PDF. Не все герои носят плащи. Если когда-то открывал — облегчи душу.",
+    "Купите пятно, которое вам к лицу. Семь страниц, затем ноутбук. 2026-й сидит последним среди открытых за 8.88 SOL: самый дорогой ноутбук в истории, около 6,3 миллиарда, потому что инженер открыл не тот PDF. Не все герои носят плащи. Если когда-то открывал — облегчи душу.",
   cleanseContinue: "Отмыть этот грех",
   cleanseReserved: "Зарезервировано под будущий грех",
   cleanseAcceptTerms: (amount) =>
@@ -1013,39 +1031,57 @@ const ru: Copy = {
   sinDegrees: [
     {
       degree: 1,
-      title: "Тщеславие",
-      kicker: "Vanitas · 1.5 SOL",
-      text: "Ты выложил PNL. Зелёные свечи обрезаны, чтобы не было видно депозитов, эмодзи яхты после одного счастливого десятикратного, скрин, от которого в чате стало тихо. Тщеславие на этом рынке — не красота, а нужда быть увиденным победителем. Первая ступень дешёвая нарочно: купи, пока это ещё похоже на уверенность.",
+      title: "Гордыня",
+      kicker: "Велемир · Superbia · 1.5 SOL",
+      text: "Велемир, Зеркальный Патриарх — стекло и старое золото, всегда выше того, кто смотрит. В его овале ты видишь себя увенчанным, в чужих заслугах. На этом рынке: я рано. Тезис — личность. Стоп не ставится. Первая строка страницы: «Я видел себя — и перестал видеть остальных».",
     },
     {
       degree: 2,
       title: "Алчность",
-      kicker: "Avaritia · 2.5 SOL",
-      text: "Плечо до самого фитиля. Не фиксировать. Мешок никогда не полон; следующая свеча всегда та самая. Лучше сгореть в ликвидации, чем оставить доллар на столе. Алчность здесь — не голод. Это отказ закрыть прибыльную сделку, потому что выиграть один раз было мало.",
+      kicker: "Кун · Avaritia · 2.5 SOL",
+      text: "Кун, Хранитель Весов. Сухое существо в рясе из мешочных верёвок; грудь — ларец без крышки. Он не ворует. Он «приберегает». Плечо до фитиля. Не фиксировать. Первая строка: «Ещё одна горсть — и я наконец начну тратить».",
     },
     {
       degree: 3,
-      title: "Зависть",
-      kicker: "Invidia · 4 SOL",
-      text: "Тебе была нужна не сделка. Тебе была нужна их удача. Копитрейдинг чужого кошелька, чужой PNL как литургия, тот же тикер, потому что его история сделала твою бедной. Зависть в крипте — подержанная душа: ты берёшь чужую убеждённость напрокат и ликвидацию всё равно платишь сам.",
+      title: "Похоть",
+      kicker: "Невея · Luxuria · 3.5 SOL",
+      text: "Невея, Дева Дыма и Шёлка. Лицо всегда наполовину под вуалью — и всегда то, которое боялся захотеть. Она не обещает. Она приближает на шаг ближе, чем нужно. На этом рынке: новый тикер, свеча, за которой гонишься как за телом. Первая строка: «Я назвал это любовью, потому что боялся назвать настоящим именем».",
     },
     {
       degree: 4,
-      title: "Гордыня",
-      kicker: "Superbia · 6 SOL",
-      text: "Я рано. Тезис — это личность. Ты не закрываешь, ты не ошибаешься, ты не ставишь стоп. Рынок может ошибаться годами; ты не можешь ошибиться ни на минуту. Гордыня — последняя названная ступень перед ноутбуком: грех человека, который всё ещё верит, что график ему должен извинение.",
+      title: "Зависть",
+      kicker: "Шептун · Invidia · 4.5 SOL",
+      text: "Шептун, Носящий Чужие Лица. Веер фарфоровых масок, ни одна не сидит. Тебе была нужна не сделка — их удача. Копитрейдинг чужого кошелька. Первая строка: «У соседа трава зеленее, потому что я поливал её своим».",
     },
     {
       degree: 5,
-      title: "Самый дорогой ноутбук в истории",
-      kicker: "V степень · 2026",
-      text: "Около 6,3 миллиарда долларов. Занесут в реестр как самый дорогой ноутбук в истории. Дверью стал ноутбук на столе инженера: он открыл не тот PDF — и биржа попрощалась с миллиардами. В кино это один кадр: один сотрудник, одно вложение, дом, у которого вдруг меньше денег, чем у небольшой страны. Не все герои носят плащи; иногда достаточно фишингового письма. Если когда-то открывал — облегчи душу. Стол открыт. Цепь всё равно запомнит клик.",
+      title: "Чревоугодие",
+      kicker: "Пирожник · Gula · 5.5 SOL",
+      text: "Пирожник, Хозяин Бесконечного Стола. Блюда гниют быстрее, чем их успевают попробовать. Сорок кошельков, каждый аирдроп, вкладки, которые не закрываются. Ешь, чтобы не слышать тишины. Первая строка: «Я ел не чтобы насытиться, а чтобы не слышать тишины».",
     },
     {
       degree: 6,
+      title: "Гнев",
+      kicker: "Разлом · Ira · 6.5 SOL",
+      text: "Разлом, Рыцарь-Печь. Доспех расколот изнутри жаром. Реванш после дампа, ярость на фитиль, список, который растёт. Первая строка: «Сначала я сжёг врага. Потом — список. Потом — тех, кто мог бы оказаться в списке».",
+    },
+    {
+      degree: 7,
+      title: "Уныние",
+      kicker: "Дремота · Acedia · 7.5 SOL",
+      text: "Дремота, Спящая в Серой Воде. «Ещё рано вставать» уже тысячу лет. Сид-фраза в ящике, клейм завтра, мост завтра. Последняя названная страница перед ноутбуком. Первая строка: «Завтра. Все мои завтра — здесь, на дне».",
+    },
+    {
+      degree: 8,
+      title: "Самый дорогой ноутбук в истории",
+      kicker: "2026 · 8.88 SOL",
+      text: "Около 6,3 миллиарда долларов. Занесут в реестр как самый дорогой ноутбук в истории. Дверью стал ноутбук на столе инженера: он открыл не тот PDF — и биржа попрощалась с миллиардами. В кино это один кадр: один сотрудник, одно вложение, дом, у которого вдруг меньше денег, чем у небольшой страны. Не все герои носят плащи; иногда достаточно фишингового письма. Если когда-то открывал — облегчи душу. Стол открыт. Цепь всё равно запомнит клик.",
+    },
+    {
+      degree: 9,
       title: "Резерв",
-      kicker: "VI степень",
-      text: "Пустая, нарочно, как чистый лист под будущий грех. Когда рынок изобретёт бесчестье хуже пятой степени, анкета заполнится сама. Не стучитесь. Шестая степень пока не для вас — и в этом единственная милость, которую стол ещё держит.",
+      kicker: "После ноутбука",
+      text: "Пустая, нарочно, как чистый лист под будущий грех. Когда рынок изобретёт бесчестье хуже ноутбука, анкета заполнится сама. Не стучитесь. Эта ступень пока не для вас — и в этом единственная милость, которую стол ещё держит.",
       reserved: true,
     },
   ],

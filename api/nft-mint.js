@@ -78,11 +78,14 @@ export default async function handler(request, response) {
       solLegendary: { rarity: "LEGENDARY", encounter: "4%", pool: "2 of 50" },
     }[payload.kind];
     const sinLatin = {
-      1: "VANITAS",
+      1: "SUPERBIA",
       2: "AVARITIA",
-      3: "INVIDIA",
-      4: "SUPERBIA",
-      5: "DEGREE V",
+      3: "LUXURIA",
+      4: "INVIDIA",
+      5: "GULA",
+      6: "IRA",
+      7: "ACEDIA",
+      8: "THE DEAREST LAPTOP",
     }[Number(payload.sinDegree)];
     const attributes = [
       { trait_type: "chain", value: chain },
