@@ -1,6 +1,13 @@
 export const DEAL_USD = 100_000;
 export const SELL_BTC = 0.5;
-export const ETH_AMOUNT = 2;
+/** First ten Ethereum souls: editions 1–10 at 0.5 ETH. */
+export const ETH_HALF_AMOUNT = 0.5;
+/** Next three Ethereum souls: editions 11–13 at 1 ETH. */
+export const ETH_ONE_AMOUNT = 1;
+/** Last two Ethereum souls: editions 14–15 at 2 ETH. */
+export const ETH_TWO_AMOUNT = 2;
+/** Default Ethereum desk (the first ten). */
+export const ETH_AMOUNT = ETH_HALF_AMOUNT;
 export const SOL_AMOUNT = 10;
 export const FA_AMOUNT = 8.88;
 /** Ordinary Bitcoin souls: editions 1–7 at a flat 1 BTC. */
@@ -37,9 +44,12 @@ export type DealKind =
   | "sol"
   | "pearl"
   | "eth"
+  | "ethOne"
+  | "ethTwo"
   | "cleanse"
   | "fa"
   | "lucky";
+export type EthDealKind = "eth" | "ethOne" | "ethTwo";
 export type DealAsset = "BTC" | "SOL" | "PEARL" | "ETH";
 export type DealChain = "bitcoin" | "solana" | "ethereum";
 export type DealClass = "private" | "middle";
@@ -48,12 +58,18 @@ export type NftChain = "bitcoin" | "solana" | "ethereum";
 export const NFT_MAX: Record<NftChain, number> = {
   bitcoin: 10,
   solana: 250,
-  ethereum: 50,
+  ethereum: 15,
 };
 /** Ordinary Bitcoin souls: editions 1–7 at a flat 1 BTC. */
 export const BTC_REGULAR_MAX = 7;
 /** Last three of ten: editions 8–10, 888 luck charters at 8 BTC. */
 export const BTC_LUCKY_MAX = 3;
+/** First ten Ethereum NFTs at 0.5 ETH. */
+export const ETH_HALF_MAX = 10;
+/** Next three Ethereum NFTs at 1 ETH, editions 11–13. */
+export const ETH_ONE_MAX = 3;
+/** Last two Ethereum NFTs at 2 ETH, editions 14–15. */
+export const ETH_TWO_MAX = 2;
 
 export type DealSpec = {
   kind: DealKind;
@@ -115,6 +131,24 @@ export const DEALS: Record<DealKind, DealSpec> = {
     address: ETH_ADDRESS,
     unit: "ETH",
   },
+  ethOne: {
+    kind: "ethOne",
+    asset: "ETH",
+    chain: "ethereum",
+    nftChain: "ethereum",
+    deskClass: "private",
+    address: ETH_ADDRESS,
+    unit: "ETH",
+  },
+  ethTwo: {
+    kind: "ethTwo",
+    asset: "ETH",
+    chain: "ethereum",
+    nftChain: "ethereum",
+    deskClass: "private",
+    address: ETH_ADDRESS,
+    unit: "ETH",
+  },
   cleanse: {
     kind: "cleanse",
     asset: "SOL",
@@ -146,6 +180,17 @@ export const DEALS: Record<DealKind, DealSpec> = {
 
 export function getDeal(kind: DealKind): DealSpec {
   return DEALS[kind];
+}
+
+export function isEthKind(kind: DealKind): kind is EthDealKind {
+  return kind === "eth" || kind === "ethOne" || kind === "ethTwo";
+}
+
+export function ethAmountOf(kind: DealKind) {
+  if (kind === "ethOne") return ETH_ONE_AMOUNT;
+  if (kind === "ethTwo") return ETH_TWO_AMOUNT;
+  if (kind === "eth") return ETH_HALF_AMOUNT;
+  return 0;
 }
 
 export function cleanseSolAmount(degree?: number | null) {
@@ -184,7 +229,7 @@ export function expectedAtomic(
   if (kind === "sell") return String(Math.round(SELL_BTC * 1e8));
   if (kind === "lucky") return String(Math.round(BTC_LUCKY_AMOUNT * 1e8));
   if (kind === "buy") return String(Math.round(BTC_REGULAR_AMOUNT * 1e8));
-  if (kind === "eth") return ethToWei(ETH_AMOUNT);
+  if (isEthKind(kind)) return ethToWei(ethAmountOf(kind));
   return String(Math.round(coinAmount * 1e8));
 }
 
@@ -200,13 +245,13 @@ export function formatDealAmount(
   if (kind === "sell") return `${SELL_BTC.toFixed(8)} BTC`;
   if (kind === "lucky") return `${BTC_LUCKY_AMOUNT.toFixed(8)} BTC`;
   if (kind === "buy") return `${BTC_REGULAR_AMOUNT.toFixed(8)} BTC`;
-  if (kind === "eth") return `${ETH_AMOUNT} ETH`;
+  if (isEthKind(kind)) return `${ethAmountOf(kind)} ETH`;
   if (typeof coinAmount === "number") return `${coinAmount.toFixed(8)} BTC`;
   return "BTC";
 }
 
 export function formatAtomic(kind: DealKind, atomic: string | number) {
-  if (kind === "eth") {
+  if (isEthKind(kind)) {
     const wei = BigInt(String(atomic || "0"));
     const whole = wei / 10n ** 18n;
     const frac = (wei % 10n ** 18n).toString().padStart(18, "0").slice(0, 6);
@@ -224,13 +269,15 @@ export function formatAtomic(kind: DealKind, atomic: string | number) {
 
 export const SERIAL_TAG: Record<
   DealKind,
-  "BUY" | "SELL" | "SOL" | "PRL" | "ETH" | "CLN" | "FA8" | "B88"
+  "BUY" | "SELL" | "SOL" | "PRL" | "ETH" | "ET1" | "ET2" | "CLN" | "FA8" | "B88"
 > = {
   buy: "BUY",
   sell: "SELL",
   sol: "SOL",
   pearl: "PRL",
   eth: "ETH",
+  ethOne: "ET1",
+  ethTwo: "ET2",
   cleanse: "CLN",
   fa: "FA8",
   lucky: "B88",

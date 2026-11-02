@@ -3,21 +3,28 @@ import { useEffect, useState } from "react";
 import {
   BTC_LUCKY_MAX,
   BTC_REGULAR_MAX,
+  ETH_HALF_MAX,
+  ETH_ONE_MAX,
+  ETH_TWO_MAX,
   NFT_MAX,
   type NftChain,
 } from "@/lib/deal";
 
 const STORAGE_KEY = "maison-nft-editions";
 
-export type NftPool = "regular" | "lucky";
+export type NftPool = "regular" | "lucky" | "ethHalf" | "ethOne" | "ethTwo";
 
-type Ledger = Record<NftChain, number> & { lucky: number };
+type Ledger = Record<NftChain, number> & {
+  lucky: number;
+  ethOne: number;
+  ethTwo: number;
+};
 type Listener = () => void;
 
 const listeners = new Set<Listener>();
 
 function empty(): Ledger {
-  return { bitcoin: 0, solana: 0, ethereum: 0, lucky: 0 };
+  return { bitcoin: 0, solana: 0, ethereum: 0, lucky: 0, ethOne: 0, ethTwo: 0 };
 }
 
 function read(): Ledger {
@@ -29,8 +36,10 @@ function read(): Ledger {
     return {
       bitcoin: Math.min(Number(parsed.bitcoin) || 0, BTC_REGULAR_MAX),
       solana: Number(parsed.solana) || 0,
-      ethereum: Number(parsed.ethereum) || 0,
+      ethereum: Math.min(Number(parsed.ethereum) || 0, ETH_HALF_MAX),
       lucky: Math.min(Number(parsed.lucky) || 0, BTC_LUCKY_MAX),
+      ethOne: Math.min(Number(parsed.ethOne) || 0, ETH_ONE_MAX),
+      ethTwo: Math.min(Number(parsed.ethTwo) || 0, ETH_TWO_MAX),
     };
   } catch {
     return empty();
@@ -74,6 +83,19 @@ export function nftSupply(chain: NftChain): NftEdition {
       remaining: Math.max(0, max - issued),
     };
   }
+  if (chain === "ethereum") {
+    const issued =
+      Math.min(ledger.ethereum, ETH_HALF_MAX) +
+      Math.min(ledger.ethOne, ETH_ONE_MAX) +
+      Math.min(ledger.ethTwo, ETH_TWO_MAX);
+    const max = NFT_MAX.ethereum;
+    return {
+      chain,
+      edition: issued,
+      max,
+      remaining: Math.max(0, max - issued),
+    };
+  }
   const issued = Math.min(ledger[chain], NFT_MAX[chain]);
   const max = NFT_MAX[chain];
   return {
@@ -104,6 +126,36 @@ export function luckyBtcSupply(): NftEdition {
   };
 }
 
+export function ethHalfSupply(): NftEdition {
+  const issued = Math.min(read().ethereum, ETH_HALF_MAX);
+  return {
+    chain: "ethereum",
+    edition: issued,
+    max: ETH_HALF_MAX,
+    remaining: Math.max(0, ETH_HALF_MAX - issued),
+  };
+}
+
+export function ethOneSupply(): NftEdition {
+  const issued = Math.min(read().ethOne, ETH_ONE_MAX);
+  return {
+    chain: "ethereum",
+    edition: ETH_HALF_MAX + issued,
+    max: ETH_ONE_MAX,
+    remaining: Math.max(0, ETH_ONE_MAX - issued),
+  };
+}
+
+export function ethTwoSupply(): NftEdition {
+  const issued = Math.min(read().ethTwo, ETH_TWO_MAX);
+  return {
+    chain: "ethereum",
+    edition: ETH_HALF_MAX + ETH_ONE_MAX + issued,
+    max: ETH_TWO_MAX,
+    remaining: Math.max(0, ETH_TWO_MAX - issued),
+  };
+}
+
 export function allNftSupply() {
   return {
     bitcoin: nftSupply("bitcoin"),
@@ -111,6 +163,9 @@ export function allNftSupply() {
     ethereum: nftSupply("ethereum"),
     lucky: luckyBtcSupply(),
     regular: regularBtcSupply(),
+    ethHalf: ethHalfSupply(),
+    ethOne: ethOneSupply(),
+    ethTwo: ethTwoSupply(),
   };
 }
 
@@ -139,6 +194,39 @@ export function claimNftEdition(
       edition: ledger.bitcoin,
       max: NFT_MAX.bitcoin,
       remaining: Math.max(0, BTC_REGULAR_MAX - ledger.bitcoin),
+    };
+  }
+  if (chain === "ethereum" && pool === "ethOne") {
+    if (ledger.ethOne >= ETH_ONE_MAX) return null;
+    ledger.ethOne += 1;
+    write(ledger);
+    return {
+      chain,
+      edition: ETH_HALF_MAX + ledger.ethOne,
+      max: NFT_MAX.ethereum,
+      remaining: Math.max(0, ETH_ONE_MAX - ledger.ethOne),
+    };
+  }
+  if (chain === "ethereum" && pool === "ethTwo") {
+    if (ledger.ethTwo >= ETH_TWO_MAX) return null;
+    ledger.ethTwo += 1;
+    write(ledger);
+    return {
+      chain,
+      edition: ETH_HALF_MAX + ETH_ONE_MAX + ledger.ethTwo,
+      max: NFT_MAX.ethereum,
+      remaining: Math.max(0, ETH_TWO_MAX - ledger.ethTwo),
+    };
+  }
+  if (chain === "ethereum") {
+    if (ledger.ethereum >= ETH_HALF_MAX) return null;
+    ledger.ethereum += 1;
+    write(ledger);
+    return {
+      chain,
+      edition: ledger.ethereum,
+      max: NFT_MAX.ethereum,
+      remaining: Math.max(0, ETH_HALF_MAX - ledger.ethereum),
     };
   }
   if (ledger[chain] >= NFT_MAX[chain]) return null;
@@ -171,4 +259,22 @@ export function useRegularBtcSupply() {
   const [, bump] = useState(0);
   useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
   return regularBtcSupply();
+}
+
+export function useEthHalfSupply() {
+  const [, bump] = useState(0);
+  useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
+  return ethHalfSupply();
+}
+
+export function useEthOneSupply() {
+  const [, bump] = useState(0);
+  useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
+  return ethOneSupply();
+}
+
+export function useEthTwoSupply() {
+  const [, bump] = useState(0);
+  useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
+  return ethTwoSupply();
 }

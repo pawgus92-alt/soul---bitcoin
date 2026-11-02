@@ -10,7 +10,9 @@ import {
   BTC_ADDRESS,
   BTC_REGULAR_AMOUNT,
   ETH_ADDRESS,
-  ETH_AMOUNT,
+  ETH_HALF_AMOUNT,
+  ETH_ONE_AMOUNT,
+  ETH_TWO_AMOUNT,
   SOL_ADDRESS,
   SOL_AMOUNT,
   cleanseSolAmount,
@@ -31,6 +33,9 @@ function NftCaps() {
       <li>
         {copy.nftRemaining(supply.ethereum.remaining, supply.ethereum.max, "ethereum")}
       </li>
+      <li>{copy.nftEthHalfRemaining(supply.ethHalf.remaining, supply.ethHalf.max)}</li>
+      <li>{copy.nftEthOneRemaining(supply.ethOne.remaining, supply.ethOne.max)}</li>
+      <li>{copy.nftEthTwoRemaining(supply.ethTwo.remaining, supply.ethTwo.max)}</li>
     </ul>
   );
 }
@@ -67,10 +72,18 @@ function LivePrice() {
         {formatUsd(quote.usdPerBtc)} / BTC · Coinbase
       </p>
       {ethQuote ? (
-        <p>
-          {ETH_AMOUNT} ETH · {formatUsd(ethQuote.usdAmount)} ·{" "}
-          {formatUsd(ethQuote.usdPerEth)} / ETH · Coinbase
-        </p>
+        <>
+          <p>
+            {ETH_HALF_AMOUNT} ETH · {formatUsd(ethQuote.usdPerEth * ETH_HALF_AMOUNT)} ·{" "}
+            {formatUsd(ethQuote.usdPerEth)} / ETH · Coinbase
+          </p>
+          <p>
+            {ETH_ONE_AMOUNT} ETH · {formatUsd(ethQuote.usdPerEth * ETH_ONE_AMOUNT)}
+          </p>
+          <p>
+            {ETH_TWO_AMOUNT} ETH · {formatUsd(ethQuote.usdPerEth * ETH_TWO_AMOUNT)}
+          </p>
+        </>
       ) : null}
       {solQuote ? (
         <p>
@@ -166,6 +179,9 @@ export default function App() {
               <p className="max-w-lg text-xs leading-5 text-primary">
                 {copy.luckyHint}
               </p>
+              <p className="max-w-lg text-xs leading-5 text-primary">
+                {copy.ethHint}
+              </p>
               <p className="max-w-lg text-xs leading-5 text-muted-foreground">
                 {copy.midClassHint}
               </p>
@@ -202,7 +218,9 @@ export default function App() {
                 </li>
                 <li>
                   {copy.skuBulletEth(
-                    ethQuote ? formatUsd(ethQuote.usdAmount) : "2 ETH",
+                    ethQuote
+                      ? formatUsd(ethQuote.usdPerEth * ETH_HALF_AMOUNT)
+                      : "0.5 ETH",
                   )}
                 </li>
                 <li>
@@ -390,16 +408,16 @@ export default function App() {
               />
               <SoulCertificate
                 compact
-                kind="eth"
+                kind="ethTwo"
                 holder="Князь Пустой"
-                serial="AE-1666-ETH-F00D1E5C0FFE"
+                serial="AE-1666-ET2-F00D1E5C0FFE"
                 digest="51f00d1e5c0ffe9876543210aabbccddeeff00112233445566778899aabbccdd"
-                btcAmount="2.00000000 ETH"
+                btcAmount="2 ETH"
                 issuedAt={new Date("1666-06-06T16:06:00Z")}
                 receiveAddress="0x1111111111111111111111111111111111111111"
                 nftChain="ethereum"
-                edition={7}
-                editionMax={50}
+                edition={15}
+                editionMax={15}
               />
             </div>
           </div>

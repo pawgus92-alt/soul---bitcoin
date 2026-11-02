@@ -12,9 +12,13 @@ import {
   BTC_LUCKY_AMOUNT,
   BTC_REGULAR_AMOUNT,
   CLEANSE_SOL_RANGE,
+  ETH_HALF_AMOUNT,
+  ETH_ONE_AMOUNT,
+  ETH_TWO_AMOUNT,
   FA_AMOUNT,
   SHOW_PEARL_DESK,
   SHOW_SELL_DESK,
+  isEthKind,
   type DealKind,
 } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
@@ -36,6 +40,8 @@ export function PayBitcoinButton({
   const luckyUsd = quote
     ? formatUsd(quote.usdPerBtc * BTC_LUCKY_AMOUNT)
     : null;
+  const ethUsd = (amount: number) =>
+    ethQuote ? formatUsd(ethQuote.usdPerEth * amount) : null;
   const label =
     kind === "sell"
       ? copy.sellSoul
@@ -55,13 +61,21 @@ export function PayBitcoinButton({
                 ? luckyUsd
                   ? `${copy.luckySoul} · ${luckyUsd}`
                   : copy.luckySoul
-              : kind === "eth"
-                ? ethQuote
-                  ? copy.payEthAmount(formatUsd(ethQuote.usdAmount))
-                  : copy.buyEth
-                : quote
-                  ? `${copy.payAmount(formatBtc(BTC_REGULAR_AMOUNT))} · ${formatUsd(quote.usdAmount)}`
-                  : copy.payAmount(formatBtc(BTC_REGULAR_AMOUNT));
+                : kind === "ethOne"
+                  ? ethUsd(ETH_ONE_AMOUNT)
+                    ? copy.payEthOneAmount(ethUsd(ETH_ONE_AMOUNT)!)
+                    : copy.buyEthOne
+                  : kind === "ethTwo"
+                    ? ethUsd(ETH_TWO_AMOUNT)
+                      ? copy.payEthTwoAmount(ethUsd(ETH_TWO_AMOUNT)!)
+                      : copy.buyEthTwo
+                    : kind === "eth"
+                      ? ethUsd(ETH_HALF_AMOUNT)
+                        ? copy.payEthAmount(ethUsd(ETH_HALF_AMOUNT)!)
+                        : copy.buyEth
+                      : quote
+                        ? `${copy.payAmount(formatBtc(BTC_REGULAR_AMOUNT))} · ${formatUsd(quote.usdAmount)}`
+                        : copy.payAmount(formatBtc(BTC_REGULAR_AMOUNT));
 
   const icon =
     kind === "sol" ? (
@@ -72,7 +86,7 @@ export function PayBitcoinButton({
       <Droplets data-icon="inline-start" />
     ) : kind === "fa" || kind === "lucky" ? (
       <Sparkles data-icon="inline-start" />
-    ) : kind === "eth" ? (
+    ) : isEthKind(kind) ? (
       <Hexagon data-icon="inline-start" />
     ) : (
       <Bitcoin data-icon="inline-start" />
@@ -83,7 +97,11 @@ export function PayBitcoinButton({
       kind={kind}
       triggerClassName={className}
       triggerLabel={label}
-      triggerVariant={kind === "buy" || kind === "lucky" ? "default" : "outline"}
+      triggerVariant={
+        kind === "buy" || kind === "lucky" || kind === "ethTwo"
+          ? "default"
+          : "outline"
+      }
       icon={icon}
     />
   );
@@ -108,6 +126,8 @@ export function DealButtons({
           <PayBitcoinButton kind="sell" className={buttonClassName} />
         ) : null}
         <PayBitcoinButton kind="eth" className={buttonClassName} />
+        <PayBitcoinButton kind="ethOne" className={buttonClassName} />
+        <PayBitcoinButton kind="ethTwo" className={buttonClassName} />
       </div>
       {showMiddle ? (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">

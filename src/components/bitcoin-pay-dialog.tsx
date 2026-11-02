@@ -34,25 +34,30 @@ import {
 import {
   BTC_LUCKY_AMOUNT,
   BTC_REGULAR_AMOUNT,
-  ETH_AMOUNT,
   FA_AMOUNT,
   PEARL_AMOUNT,
   SELL_BTC,
   SOL_AMOUNT,
   cleanseSolAmount,
+  ethAmountOf,
   expectedAtomic,
   formatAtomic,
   formatDealAmount,
   formatSolLabel,
   getDeal,
+  isEthKind,
   type DealKind,
 } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 import {
   claimNftEdition,
+  useEthHalfSupply,
+  useEthOneSupply,
+  useEthTwoSupply,
   useLuckyBtcSupply,
   useNftSupply,
   useRegularBtcSupply,
+  type NftPool,
 } from "@/lib/nft-supply";
 import {
   createCertificateNft,
@@ -120,6 +125,20 @@ function invoiceCopy(
       description: copy.ethInvoiceDescription(usd),
     };
   }
+  if (kind === "ethOne") {
+    return {
+      badge: copy.ethOneInvoiceBadge,
+      title: copy.ethOneInvoiceTitle,
+      description: copy.ethOneInvoiceDescription(usd),
+    };
+  }
+  if (kind === "ethTwo") {
+    return {
+      badge: copy.ethTwoInvoiceBadge,
+      title: copy.ethTwoInvoiceTitle,
+      description: copy.ethTwoInvoiceDescription(usd),
+    };
+  }
   return {
     badge: copy.invoiceBadge,
     title: copy.invoiceTitle,
@@ -134,6 +153,14 @@ function payAddressLabel(
   if (chain === "bitcoin") return copy.bitcoinAddress;
   if (chain === "ethereum") return copy.ethereumAddress;
   return copy.payAddress;
+}
+
+function nftPoolOf(kind: DealKind): NftPool {
+  if (kind === "lucky") return "lucky";
+  if (kind === "ethOne") return "ethOne";
+  if (kind === "ethTwo") return "ethTwo";
+  if (kind === "eth") return "ethHalf";
+  return "regular";
 }
 
 function hasPositiveAtomic(value: string) {
@@ -169,10 +196,14 @@ export function BitcoinPayDialog({
   const supply = useNftSupply(deal.nftChain);
   const regularBtc = useRegularBtcSupply();
   const luckyBtc = useLuckyBtcSupply();
+  const ethHalf = useEthHalfSupply();
+  const ethOne = useEthOneSupply();
+  const ethTwo = useEthTwoSupply();
   const sell = kind === "sell";
   const btcBuy = kind === "buy";
   const luckyDesk = kind === "lucky";
-  const ethBuy = kind === "eth";
+  const ethBuy = isEthKind(kind);
+  const ethCoin = ethAmountOf(kind);
   const cleansing = kind === "cleanse";
   const faBlessing = kind === "fa";
   const solDesk = kind === "sol" || cleansing || faBlessing;
@@ -192,7 +223,7 @@ export function BitcoinPayDialog({
       : btcBuy
         ? BTC_REGULAR_AMOUNT
         : ethBuy
-          ? ETH_AMOUNT
+          ? ethCoin
           : quote?.btcAmount;
   const firstStep: Step = cleansing ? "sins" : "invoice";
   const [open, setOpen] = useState(false);
@@ -203,7 +234,7 @@ export function BitcoinPayDialog({
   const ready = true;
   const invoiceUsd =
     ethBuy && ethQuote
-      ? formatUsd(ethQuote.usdAmount)
+      ? formatUsd(ethQuote.usdPerEth * ethCoin)
       : luckyDesk && quote
         ? formatUsd(quote.usdPerBtc * BTC_LUCKY_AMOUNT)
         : btcBuy && quote
@@ -219,7 +250,13 @@ export function BitcoinPayDialog({
     ? luckyBtc.remaining <= 0
     : btcBuy
       ? regularBtc.remaining <= 0
-      : supply.remaining <= 0;
+      : kind === "ethOne"
+        ? ethOne.remaining <= 0
+        : kind === "ethTwo"
+          ? ethTwo.remaining <= 0
+          : kind === "eth"
+            ? ethHalf.remaining <= 0
+            : supply.remaining <= 0;
   const invoice = invoiceCopy(kind, copy, invoiceUsd, paidLabel);
   const payUri =
     deal.chain === "solana"
@@ -235,7 +272,7 @@ export function BitcoinPayDialog({
           deal.mint,
         )
       : deal.chain === "ethereum"
-        ? ethereumPayUri(deal.address, ETH_AMOUNT)
+        ? ethereumPayUri(deal.address, ethCoin)
         : bitcoinPayUri(deal.address, dealCoin ?? SELL_BTC);
   const [name, setName] = useState("");
   const [nftAddress, setNftAddress] = useState("");
@@ -378,10 +415,7 @@ export function BitcoinPayDialog({
     closeLocked.current = true;
     setStep("minting");
     try {
-      const edition = claimNftEdition(
-        deal.nftChain,
-        kind === "lucky" ? "lucky" : "regular",
-      );
+      const edition = claimNftEdition(deal.nftChain, nftPoolOf(kind));
       if (!edition) {
         setError(copy.nftSoldOut);
         setStep("invoice");
@@ -660,7 +694,7 @@ export function BitcoinPayDialog({
                     ) : null}
                     {ethBuy && ethQuote ? (
                       <p className="font-mono text-sm text-muted-foreground">
-                        {`${formatUsd(ethQuote.usdAmount)} at ${formatUsd(ethQuote.usdPerEth)} / ETH`}
+                        {`${formatUsd(ethQuote.usdPerEth * ethCoin)} at ${formatUsd(ethQuote.usdPerEth)} / ETH`}
                       </p>
                     ) : null}
                     {solDesk && solQuote ? (
@@ -697,11 +731,17 @@ export function BitcoinPayDialog({
                     <p className="mt-2 text-xs text-primary">
                       {luckyDesk
                         ? copy.nftLuckyRemaining(luckyBtc.remaining, luckyBtc.max)
-                        : copy.nftRemaining(
-                            supply.remaining,
-                            supply.max,
-                            deal.nftChain,
-                          )}
+                        : kind === "eth"
+                          ? copy.nftEthHalfRemaining(ethHalf.remaining, ethHalf.max)
+                          : kind === "ethOne"
+                            ? copy.nftEthOneRemaining(ethOne.remaining, ethOne.max)
+                            : kind === "ethTwo"
+                              ? copy.nftEthTwoRemaining(ethTwo.remaining, ethTwo.max)
+                              : copy.nftRemaining(
+                                  supply.remaining,
+                                  supply.max,
+                                  deal.nftChain,
+                                )}
                     </p>
                   </div>
                   <div>
@@ -784,11 +824,17 @@ export function BitcoinPayDialog({
                   ? copy.faAcceptTerms
                   : luckyDesk
                     ? copy.luckyAcceptTerms
-                    : cleansing
-                      ? copy.cleanseAcceptTerms(paidLabel)
-                      : sell
-                        ? copy.acceptSellTerms
-                        : copy.acceptTerms}
+                    : kind === "eth"
+                      ? copy.ethAcceptTerms
+                      : kind === "ethOne"
+                        ? copy.ethOneAcceptTerms
+                        : kind === "ethTwo"
+                          ? copy.ethTwoAcceptTerms
+                          : cleansing
+                            ? copy.cleanseAcceptTerms(paidLabel)
+                            : sell
+                              ? copy.acceptSellTerms
+                              : copy.acceptTerms}
               </span>
             </label>
 

@@ -111,7 +111,17 @@ function kindCopy(kind, sinDegree) {
     return { desk: "MIDDLE DESK · 650 PEARL", act: "hath purchased", prize: "ONE SOUL" };
   }
   if (kind === "eth") {
-    return { desk: "PRIVATE DESK · ETHEREUM", act: "hath purchased", prize: "ONE SOUL" };
+    return { desk: "PRIVATE DESK · 0.5 ETH", act: "hath purchased", prize: "ONE SOUL" };
+  }
+  if (kind === "ethOne") {
+    return { desk: "PRIVATE DESK · 1 ETH", act: "hath purchased", prize: "ONE SOUL" };
+  }
+  if (kind === "ethTwo") {
+    return {
+      desk: "PRIVATE DESK · 2 ETH · THE LAST TWO",
+      act: "hath purchased",
+      prize: "ONE SOUL",
+    };
   }
   if (kind === "cleanse") {
     return {
@@ -141,7 +151,7 @@ export function nftChainOf(kind, nftChain) {
   if (nftChain === "solana" || nftChain === "ethereum" || nftChain === "bitcoin") {
     return nftChain;
   }
-  if (kind === "eth") return "ethereum";
+  if (kind === "eth" || kind === "ethOne" || kind === "ethTwo") return "ethereum";
   if (kind === "sol" || kind === "pearl" || kind === "cleanse" || kind === "fa") {
     return "solana";
   }
@@ -150,6 +160,9 @@ export function nftChainOf(kind, nftChain) {
 
 function chainLabel(chain, kind) {
   if (kind === "lucky") return "BITCOIN 888 NFT";
+  if (kind === "ethTwo") return "ETHEREUM 2 ETH NFT";
+  if (kind === "ethOne") return "ETHEREUM 1 ETH NFT";
+  if (kind === "eth") return "ETHEREUM 0.5 ETH NFT";
   if (chain === "ethereum") return "ETHEREUM NFT";
   if (chain === "solana") return "SOLANA NFT";
   return "BITCOIN ORDINALS NFT";
@@ -240,6 +253,10 @@ export function certificateSvg(payload, options = {}) {
   if (payload.kind === "lucky") {
     traits.motto = "888 · fortuna favet divitibus";
     traits.palette = PALETTES[2];
+  }
+  if (payload.kind === "ethTwo") {
+    traits.motto = "duo extrema · ether carissimus";
+    traits.palette = PALETTES[1];
   }
   const { palette: c, seed } = traits;
   const rand = rng(seed ^ 0x9e3779b9);

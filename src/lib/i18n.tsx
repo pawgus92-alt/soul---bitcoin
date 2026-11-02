@@ -86,8 +86,13 @@ export type Copy = {
   buyPearl: string;
   cleanseSoul: string;
   buyEth: string;
+  buyEthOne: string;
+  buyEthTwo: string;
   fetchingEthRate: string;
   payEthAmount: (eth: string) => string;
+  payEthOneAmount: (usd: string) => string;
+  payEthTwoAmount: (usd: string) => string;
+  ethHint: string;
   midClassLabel: string;
   midClassHint: string;
   nftCapsLine: string;
@@ -139,6 +144,9 @@ export type Copy = {
   luckyBought: string;
   luckyBoughtHint: string;
   nftLuckyRemaining: (remaining: number, max: number) => string;
+  nftEthHalfRemaining: (remaining: number, max: number) => string;
+  nftEthOneRemaining: (remaining: number, max: number) => string;
+  nftEthTwoRemaining: (remaining: number, max: number) => string;
   certLuckySubtitle: string;
   certLuckyPaid: string;
   certLuckyProof: string;
@@ -146,6 +154,15 @@ export type Copy = {
   ethInvoiceBadge: string;
   ethInvoiceTitle: string;
   ethInvoiceDescription: (usd: string) => string;
+  ethOneInvoiceBadge: string;
+  ethOneInvoiceTitle: string;
+  ethOneInvoiceDescription: (usd: string) => string;
+  ethTwoInvoiceBadge: string;
+  ethTwoInvoiceTitle: string;
+  ethTwoInvoiceDescription: (usd: string) => string;
+  ethAcceptTerms: string;
+  ethOneAcceptTerms: string;
+  ethTwoAcceptTerms: string;
   askingMarket: string;
   rateDeskSilentDetail: (detail: string) => string;
   amountDue: string;
@@ -222,6 +239,10 @@ export type Copy = {
   certPearlPaid: string;
   certEthPaid: string;
   certEthSubtitle: string;
+  certEthOnePaid: string;
+  certEthOneSubtitle: string;
+  certEthTwoPaid: string;
+  certEthTwoSubtitle: string;
   certCleanseSubtitle: string;
   certCleansePaid: string;
   certCleanseProof: string;
@@ -276,16 +297,16 @@ const en: Copy = {
   skuBulletSettle: (usd) =>
     `Settlement is 1 BTC, about ${usd} at the live Coinbase BTC/USD.`,
   skuBulletEth: (usd) =>
-    `Ethereum desk: 2 ETH at the live Coinbase spot, about ${usd}. Fifty Ethereum NFTs, no more.`,
+    `Ethereum desk: fifteen NFTs. First ten at 0.5 ETH, about ${usd} at Coinbase. Then three at 1 ETH. Last two at 2 ETH.`,
   skuBulletSol: (usd) =>
     `Solana desk: 10 SOL at the live Coinbase spot, about ${usd}.`,
   skuBulletNft:
-    "The certificate NFT is minted on the chain you paid. Bitcoin Ordinals: 10, the last three of them 888 luck charters. Solana NFTs: 250. Ethereum NFTs: 50. Each a unique mystical charter.",
+    "The certificate NFT is minted on the chain you paid. Bitcoin Ordinals: 10, the last three of them 888 luck charters. Solana NFTs: 250. Ethereum NFTs: 15 — ten at 0.5 ETH, three at 1 ETH, two at 2 ETH. Each a unique mystical charter.",
   skuBulletLucky:
     "The last three Bitcoin Ordinals — Nos. 8, 9 and 10 of ten — are 888 luck charters: the dearest, the richest, the ones that bring luck. Eight bitcoin each. The other seven are one bitcoin each.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is 1 BTC (about ${usd}) for seven ordinary souls, or 8 BTC for a 888 luck charter, or 2 ETH at Coinbase (50 Ethereum NFTs). The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
+    `The private desk is 1 BTC (about ${usd}) for seven ordinary souls, or 8 BTC for a 888 luck charter, or Ethereum: 0.5 / 1 / 2 ETH for fifteen NFTs. The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
   terms: [
     {
       step: "01",
@@ -295,12 +316,12 @@ const en: Copy = {
     {
       step: "02",
       title: "Pay one Bitcoin",
-      text: "The invoice is one bitcoin — or a flat 2 ETH / 10 SOL at Coinbase. The last three Bitcoin NFTs are 888 luck charters at 8 BTC. Washing a crypto sin starts at 1.5 SOL and climbs to 8.88 SOL at Binance. One transfer, one hash, one eternity.",
+      text: "The invoice is one bitcoin — or 0.5 / 1 / 2 ETH, or 10 SOL at Coinbase. The last three Bitcoin NFTs are 888 luck charters at 8 BTC. Fifteen Ethereum NFTs: first ten at 0.5 ETH, three at 1 ETH, last two at 2 ETH. Washing a crypto sin starts at 1.5 SOL and climbs to 8.88 SOL at Binance. One transfer, one hash, one eternity.",
     },
     {
       step: "03",
       title: "Receive the chain NFT",
-      text: "A unique certificate code. Bitcoin desk: Ordinal, 10 pieces — seven at 1 BTC, last three 888 at 8 BTC. Solana desk: Solana NFT, 250 pieces. Ethereum desk: Ethereum NFT, 50 pieces.",
+      text: "A unique certificate code. Bitcoin desk: Ordinal, 10 pieces — seven at 1 BTC, last three 888 at 8 BTC. Solana desk: Solana NFT, 250 pieces. Ethereum desk: 15 pieces — ten at 0.5 ETH, three at 1 ETH, last two at 2 ETH.",
     },
   ],
   assetsRetained: "Assets retained",
@@ -377,13 +398,19 @@ const en: Copy = {
   buySol: "Middle class · 10 SOL",
   buyPearl: "Middle class · 650 PEARL",
   cleanseSoul: "Cleanse the soul",
-  buyEth: "Buy 2 ETH",
+  buyEth: "Buy 0.5 ETH",
+  buyEthOne: "Buy 1 ETH",
+  buyEthTwo: "Buy 2 ETH",
   fetchingEthRate: "Fetching Coinbase ETH",
-  payEthAmount: (usd) => `Buy 2 ETH · ${usd}`,
+  payEthAmount: (usd) => `Buy 0.5 ETH · ${usd}`,
+  payEthOneAmount: (usd) => `Buy 1 ETH · ${usd}`,
+  payEthTwoAmount: (usd) => `Buy 2 ETH · ${usd}`,
+  ethHint:
+    "Fifteen Ethereum NFTs: first ten at 0.5 ETH, then three at 1 ETH, last two at 2 ETH.",
   midClassLabel: "Middle desk",
   midClassHint:
     "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk: 1.5 SOL at the first degree, then dearer until Binance at 8.88 SOL.",
-  nftCapsLine: "Bitcoin 10 · last three 888 · Solana 250 · Ethereum 50",
+  nftCapsLine: "Bitcoin 10 · last three 888 · Solana 250 · Ethereum 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT ${remaining} of ${max} remaining`
@@ -456,6 +483,12 @@ const en: Copy = {
     "The dearest Bitcoin NFT, a luck charter. Hang it where fortune can see the three eights.",
   nftLuckyRemaining: (remaining, max) =>
     `888 luck charters ${remaining} of ${max} remaining`,
+  nftEthHalfRemaining: (remaining, max) =>
+    `Ethereum 0.5 ETH ${remaining} of ${max} remaining`,
+  nftEthOneRemaining: (remaining, max) =>
+    `Ethereum 1 ETH ${remaining} of ${max} remaining`,
+  nftEthTwoRemaining: (remaining, max) =>
+    `Ethereum 2 ETH ${remaining} of ${max} remaining`,
   certLuckySubtitle: "of a Luck Charter · 888",
   certLuckyPaid: "paid in eight bitcoin.",
   certLuckyProof:
@@ -499,10 +532,24 @@ const en: Copy = {
       reserved: true,
     },
   ],
-  ethInvoiceBadge: "Private desk · Ethereum",
+  ethInvoiceBadge: "Private desk · 0.5 ETH",
   ethInvoiceTitle: "Buy in Ethereum",
   ethInvoiceDescription: (usd) =>
-    `One soul is 2 ETH, about ${usd} at the live Coinbase ETH spot, sent to the Ethereum desk. Ethereum NFT, limited to 50.`,
+    `One soul is 0.5 ETH, about ${usd} at the live Coinbase ETH spot, sent to the Ethereum desk. First ten of fifteen Ethereum NFTs.`,
+  ethOneInvoiceBadge: "Private desk · 1 ETH",
+  ethOneInvoiceTitle: "Buy the 1 ETH charter",
+  ethOneInvoiceDescription: (usd) =>
+    `One soul is 1 ETH, about ${usd} at Coinbase. Editions 11–13 of fifteen Ethereum NFTs.`,
+  ethTwoInvoiceBadge: "Private desk · 2 ETH · the last two",
+  ethTwoInvoiceTitle: "Buy the last Ethereum charter",
+  ethTwoInvoiceDescription: (usd) =>
+    `One soul is 2 ETH, about ${usd} at Coinbase. One of the last two Ethereum NFTs — editions 14 and 15 of fifteen.`,
+  ethAcceptTerms:
+    "I understand this is one of the first ten Ethereum NFTs, sold for 0.5 ETH without repurchase.",
+  ethOneAcceptTerms:
+    "I understand this is one of three Ethereum NFTs at 1 ETH, editions 11–13 of fifteen, without repurchase.",
+  ethTwoAcceptTerms:
+    "I understand this is one of the last two Ethereum NFTs, sold for 2 ETH without repurchase. The dearest Ethereum desk.",
   askingMarket: "Asking the market what a soul costs this minute.",
   rateDeskSilentDetail: (detail) => `The rate desk is silent. ${detail}`,
   amountDue: "Amount due",
@@ -629,8 +676,12 @@ const en: Copy = {
   certPearlSubtitle: "of a Pearl-Desk Soul",
   certTenSol: "paid in ten Solana.",
   certPearlPaid: "paid in 650 PEARL.",
-  certEthPaid: "paid in two ether.",
+  certEthPaid: "paid in half an ether.",
   certEthSubtitle: "of a Private Ethereum Soul",
+  certEthOnePaid: "paid in one ether.",
+  certEthOneSubtitle: "of an Ethereum Soul · 1 ETH",
+  certEthTwoPaid: "paid in two ether.",
+  certEthTwoSubtitle: "of the Last Two Ethereum Souls",
   certCleanseSubtitle: "of an Ignoble Crypto Sin",
   certCleansePaid: "washed in Solana, priced by the degree.",
   certCleanseProof:
@@ -688,16 +739,16 @@ const ru: Copy = {
   skuBulletSettle: (usd) =>
     `Расчёт — 1 BTC, около ${usd} по живому курсу Coinbase BTC/USD.`,
   skuBulletEth: (usd) =>
-    `Стол Ethereum: 2 ETH по живому споту Coinbase, около ${usd}. Ethereum NFT — пятьдесят, не больше.`,
+    `Стол Ethereum: пятнадцать NFT. Первые десять по 0.5 ETH, около ${usd} по Coinbase. Затем три по 1 ETH. Последние две по 2 ETH.`,
   skuBulletSol: (usd) =>
     `Стол Solana: 10 SOL по живому споту Coinbase, около ${usd}.`,
   skuBulletNft:
-    "NFT-сертификат чеканится в сети оплаты. Bitcoin Ordinal: 10, последние три — грамоты 888 на удачу. Solana NFT: 250. Ethereum NFT: 50. Каждый — уникальная мистическая грамота.",
+    "NFT-сертификат чеканится в сети оплаты. Bitcoin Ordinal: 10, последние три — грамоты 888 на удачу. Solana NFT: 250. Ethereum NFT: 15 — десять по 0.5 ETH, три по 1 ETH, две по 2 ETH. Каждый — уникальная мистическая грамота.",
   skuBulletLucky:
     "Последние три Bitcoin Ordinal — № 8, 9 и 10 из десяти — грамоты 888: самые дорогие, самые богатые, приносящие удачу. По 8 биткоинов. Остальные семь — по одному биткоину.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол — 1 BTC (около ${usd}) за семь обычных душ, или 8 BTC за грамоту 888, или 2 ETH по Coinbase (50 Ethereum NFT). Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
+    `Частный стол — 1 BTC (около ${usd}) за семь обычных душ, или 8 BTC за грамоту 888, или Ethereum: 0.5 / 1 / 2 ETH, пятнадцать NFT. Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
   terms: [
     {
       step: "01",
@@ -707,12 +758,12 @@ const ru: Copy = {
     {
       step: "02",
       title: "Оплатите один Bitcoin",
-      text: "Счёт — один биткоин — или ровно 2 ETH / 10 SOL по Coinbase. Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Очищение криптогреха начинается с 1.5 SOL и поднимается до 8.88 SOL на Binance. Один перевод, один хеш, одна вечность.",
+      text: "Счёт — один биткоин — или 0.5 / 1 / 2 ETH, или 10 SOL по Coinbase. Последние три Bitcoin NFT — грамоты 888 по 8 BTC. Ethereum NFT пятнадцать: первые десять по 0.5 ETH, три по 1 ETH, последние две по 2 ETH. Очищение криптогреха начинается с 1.5 SOL и поднимается до 8.88 SOL на Binance. Один перевод, один хеш, одна вечность.",
     },
     {
       step: "03",
       title: "Получите NFT в сети оплаты",
-      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 10 штук — семь по 1 BTC, последние три 888 по 8 BTC. Стол Solana: Solana NFT, 250 штук. Стол Ethereum: Ethereum NFT, 50 штук.",
+      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 10 штук — семь по 1 BTC, последние три 888 по 8 BTC. Стол Solana: Solana NFT, 250 штук. Стол Ethereum: 15 штук — десять по 0.5 ETH, три по 1 ETH, последние две по 2 ETH.",
     },
   ],
   assetsRetained: "Сохранённые активы",
@@ -789,13 +840,19 @@ const ru: Copy = {
   buySol: "Средний класс · 10 SOL",
   buyPearl: "Средний класс · 650 PEARL",
   cleanseSoul: "Очистить душу",
-  buyEth: "Купить 2 ETH",
+  buyEth: "Купить 0.5 ETH",
+  buyEthOne: "Купить 1 ETH",
+  buyEthTwo: "Купить 2 ETH",
   fetchingEthRate: "Запрашиваем Coinbase ETH",
-  payEthAmount: (usd) => `Купить 2 ETH · ${usd}`,
+  payEthAmount: (usd) => `Купить 0.5 ETH · ${usd}`,
+  payEthOneAmount: (usd) => `Купить 1 ETH · ${usd}`,
+  payEthTwoAmount: (usd) => `Купить 2 ETH · ${usd}`,
+  ethHint:
+    "Пятнадцать Ethereum NFT: первые десять по 0.5 ETH, затем три по 1 ETH, последние две по 2 ETH.",
   midClassLabel: "Средний стол",
   midClassHint:
     "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом: 1.5 SOL на первой степени, дальше дороже, до Binance за 8.88 SOL.",
-  nftCapsLine: "Bitcoin 10 · последние три 888 · Solana 250 · Ethereum 50",
+  nftCapsLine: "Bitcoin 10 · последние три 888 · Solana 250 · Ethereum 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT: осталось ${remaining} из ${max}`
@@ -868,6 +925,12 @@ const ru: Copy = {
     "Самый дорогой Bitcoin NFT, грамота удачи. Повесьте там, где фортуна увидит три восьмёрки.",
   nftLuckyRemaining: (remaining, max) =>
     `888 грамот удачи: осталось ${remaining} из ${max}`,
+  nftEthHalfRemaining: (remaining, max) =>
+    `Ethereum 0.5 ETH: осталось ${remaining} из ${max}`,
+  nftEthOneRemaining: (remaining, max) =>
+    `Ethereum 1 ETH: осталось ${remaining} из ${max}`,
+  nftEthTwoRemaining: (remaining, max) =>
+    `Ethereum 2 ETH: осталось ${remaining} из ${max}`,
   certLuckySubtitle: "грамоты удачи · 888",
   certLuckyPaid: "за восемь биткоинов.",
   certLuckyProof:
@@ -911,10 +974,24 @@ const ru: Copy = {
       reserved: true,
     },
   ],
-  ethInvoiceBadge: "Частный стол · Ethereum",
+  ethInvoiceBadge: "Частный стол · 0.5 ETH",
   ethInvoiceTitle: "Купить за Ethereum",
   ethInvoiceDescription: (usd) =>
-    `Одна душа — 2 ETH, около ${usd} по живому споту Coinbase ETH, на Ethereum-кошелёк стола. Ethereum NFT, тираж 50.`,
+    `Одна душа — 0.5 ETH, около ${usd} по живому споту Coinbase ETH, на Ethereum-кошелёк стола. Первые десять из пятнадцати Ethereum NFT.`,
+  ethOneInvoiceBadge: "Частный стол · 1 ETH",
+  ethOneInvoiceTitle: "Купить грамоту за 1 ETH",
+  ethOneInvoiceDescription: (usd) =>
+    `Одна душа — 1 ETH, около ${usd} по Coinbase. № 11–13 из пятнадцати Ethereum NFT.`,
+  ethTwoInvoiceBadge: "Частный стол · 2 ETH · последние две",
+  ethTwoInvoiceTitle: "Купить последнюю Ethereum-грамоту",
+  ethTwoInvoiceDescription: (usd) =>
+    `Одна душа — 2 ETH, около ${usd} по Coinbase. Одна из последних двух Ethereum NFT — № 14 и 15 из пятнадцати.`,
+  ethAcceptTerms:
+    "Я понимаю: это один из первых десяти Ethereum NFT за 0.5 ETH без права выкупа.",
+  ethOneAcceptTerms:
+    "Я понимаю: это один из трёх Ethereum NFT по 1 ETH, № 11–13 из пятнадцати, без права выкупа.",
+  ethTwoAcceptTerms:
+    "Я понимаю: это одна из последних двух Ethereum NFT за 2 ETH без права выкупа. Самый дорогой Ethereum-стол.",
   askingMarket: "Спрашиваем рынок, сколько стоит душа в эту минуту.",
   rateDeskSilentDetail: (detail) => `Стол котировок молчит. ${detail}`,
   amountDue: "К оплате",
@@ -1042,8 +1119,12 @@ const ru: Copy = {
   certPearlSubtitle: "души жемчужного стола",
   certTenSol: "за десять Solana.",
   certPearlPaid: "за 650 PEARL.",
-  certEthPaid: "за два эфира.",
+  certEthPaid: "за полэфира.",
   certEthSubtitle: "души частного Ethereum",
+  certEthOnePaid: "за один эфир.",
+  certEthOneSubtitle: "души Ethereum · 1 ETH",
+  certEthTwoPaid: "за два эфира.",
+  certEthTwoSubtitle: "последних двух душ Ethereum",
   certCleanseSubtitle: "неблагородного криптогреха",
   certCleansePaid: "отмыто за Solana по степени.",
   certCleanseProof:

@@ -39,16 +39,16 @@ export const zh: Copy = {
   skuBulletSettle: (usd) =>
     `结算为 1 BTC，Coinbase 约 ${usd}。`,
   skuBulletEth: (usd) =>
-    `以太坊柜台：2 ETH，Coinbase 即时现货，约 ${usd}。以太坊 NFT 五十枚，不再多。`,
+    `以太坊柜台：十五枚 NFT。前十枚各 0.5 ETH，Coinbase 约 ${usd}。其后三枚各 1 ETH。末两枚各 2 ETH。`,
   skuBulletSol: (usd) =>
     `Solana 柜台：10 SOL，Coinbase 即时现货，约 ${usd}。`,
   skuBulletNft:
-    "证书 NFT 铸于你付款之链。比特币铭文：10，其中最后三枚为 888 招财文书。Solana NFT：250。以太坊 NFT：50。各为一张独特的神秘文书。",
+    "证书 NFT 铸于你付款之链。比特币铭文：10，其中最后三枚为 888 招财文书。Solana NFT：250。以太坊 NFT：15——十枚各 0.5 ETH，三枚各 1 ETH，两枚各 2 ETH。各为一张独特的神秘文书。",
   skuBulletLucky:
     "最后三枚比特币铭文——第 8、9、10 号，共十枚——为 888 招财文书：最贵、最富、招财。每枚 8 枚比特币。其余七枚各一枚比特币。",
   skuBulletRefund: "恕不退款。悔恨是另一件定价过高的商品。",
   skuFoot: (usd) =>
-    `私人柜台：七枚寻常灵魂各 1 BTC（约 ${usd}），888 招财文书各 8 BTC，或 Coinbase 的 2 ETH（50 枚以太坊 NFT）。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
+    `私人柜台：七枚寻常灵魂各 1 BTC（约 ${usd}），888 招财文书各 8 BTC，或以太坊十五枚：0.5 / 1 / 2 ETH。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
   terms: [
     {
       step: "01",
@@ -58,12 +58,12 @@ export const zh: Copy = {
     {
       step: "02",
       title: "支付一枚比特币",
-      text: "账单是一枚比特币，或固定的 2 ETH / 10 SOL。最后三枚比特币 NFT 为 888 招财文书，各 8 BTC。洗涤加密罪过自 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
+      text: "账单是一枚比特币，或 0.5 / 1 / 2 ETH，或 10 SOL。最后三枚比特币 NFT 为 888 招财文书，各 8 BTC。以太坊 NFT 十五枚：前十枚各 0.5 ETH，三枚各 1 ETH，末两枚各 2 ETH。洗涤加密罪过自 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
     },
     {
       step: "03",
       title: "领取链上 NFT",
-      text: "独一无二的证书编号。比特币柜台：铭文，十枚——七枚各 1 BTC，末三枚 888 各 8 BTC。Solana 柜台：Solana NFT，二百五十枚。以太坊柜台：以太坊 NFT，五十枚。",
+      text: "独一无二的证书编号。比特币柜台：铭文，十枚——七枚各 1 BTC，末三枚 888 各 8 BTC。Solana 柜台：Solana NFT，二百五十枚。以太坊柜台：十五枚——十枚各 0.5 ETH，三枚各 1 ETH，末两枚各 2 ETH。",
     },
   ],
   assetsRetained: "仍归你所有",
@@ -137,13 +137,19 @@ export const zh: Copy = {
   buySol: "中产 · 10 SOL",
   buyPearl: "中产 · 650 PEARL",
   cleanseSoul: "洗涤灵魂",
-  buyEth: "购买 2 ETH",
+  buyEth: "购买 0.5 ETH",
+  buyEthOne: "购买 1 ETH",
+  buyEthTwo: "购买 2 ETH",
   fetchingEthRate: "正在读取 Coinbase ETH",
-  payEthAmount: (usd) => `购买 2 ETH · ${usd}`,
+  payEthAmount: (usd) => `购买 0.5 ETH · ${usd}`,
+  payEthOneAmount: (usd) => `购买 1 ETH · ${usd}`,
+  payEthTwoAmount: (usd) => `购买 2 ETH · ${usd}`,
+  ethHint:
+    "十五枚以太坊 NFT：前十枚各 0.5 ETH，其后三枚各 1 ETH，末两枚各 2 ETH。",
   midClassLabel: "中产柜台",
   midClassHint:
     "给已有 Solana、尚未有家族办公室的人家。不体面的加密罪过在同一柜台洗涤：第一等 1.5 SOL，逐等加价，至 Binance 8.88 SOL。中文支线另开 发发发。",
-  nftCapsLine: "比特币 10 · 末三枚 888 · Solana 250 · 以太坊 50",
+  nftCapsLine: "比特币 10 · 末三枚 888 · Solana 250 · 以太坊 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT 余 ${remaining} / ${max}`
@@ -216,6 +222,12 @@ export const zh: Copy = {
     "最贵的比特币 NFT，招财文书。挂在运气看得见三个八的地方。",
   nftLuckyRemaining: (remaining, max) =>
     `888 招财文书余 ${remaining} / ${max}`,
+  nftEthHalfRemaining: (remaining, max) =>
+    `以太坊 0.5 ETH 余 ${remaining} / ${max}`,
+  nftEthOneRemaining: (remaining, max) =>
+    `以太坊 1 ETH 余 ${remaining} / ${max}`,
+  nftEthTwoRemaining: (remaining, max) =>
+    `以太坊 2 ETH 余 ${remaining} / ${max}`,
   certLuckySubtitle: "招财文书 · 888",
   certLuckyPaid: "以八枚比特币支付。",
   certLuckyProof:
@@ -259,10 +271,24 @@ export const zh: Copy = {
       reserved: true,
     },
   ],
-  ethInvoiceBadge: "私人柜台 · 以太坊",
+  ethInvoiceBadge: "私人柜台 · 0.5 ETH",
   ethInvoiceTitle: "以以太坊购买",
   ethInvoiceDescription: (usd) =>
-    `一枚灵魂为 2 ETH，Coinbase ETH 现货约 ${usd}，汇入以太坊柜台。以太坊 NFT，限 50 枚。`,
+    `一枚灵魂为 0.5 ETH，Coinbase ETH 现货约 ${usd}，汇入以太坊柜台。十五枚中的前十枚。`,
+  ethOneInvoiceBadge: "私人柜台 · 1 ETH",
+  ethOneInvoiceTitle: "以 1 ETH 购买文书",
+  ethOneInvoiceDescription: (usd) =>
+    `一枚灵魂为 1 ETH，Coinbase 约 ${usd}。十五枚以太坊 NFT 的第 11、12、13 号。`,
+  ethTwoInvoiceBadge: "私人柜台 · 2 ETH · 末两枚",
+  ethTwoInvoiceTitle: "购买末两枚以太坊文书",
+  ethTwoInvoiceDescription: (usd) =>
+    `一枚灵魂为 2 ETH，Coinbase 约 ${usd}。十五枚中末两枚之一——第 14、15 号。`,
+  ethAcceptTerms:
+    "我明白：此为前十枚以太坊 NFT 之一，以 0.5 ETH 出售，不得赎回。",
+  ethOneAcceptTerms:
+    "我明白：此为三枚 1 ETH 以太坊 NFT 之一，第 11–13 号，共十五枚，不得赎回。",
+  ethTwoAcceptTerms:
+    "我明白：此为末两枚以太坊 NFT 之一，以 2 ETH 出售，不得赎回。最贵的以太坊柜台。",
   askingMarket: "正在询问市场：这一刻灵魂值多少。",
   rateDeskSilentDetail: (detail) => `牌价柜台沉默。${detail}`,
   amountDue: "应付",
@@ -386,8 +412,12 @@ export const zh: Copy = {
   certPearlSubtitle: "珍珠柜台之灵魂",
   certTenSol: "以十枚 Solana 支付。",
   certPearlPaid: "以 650 PEARL 支付。",
-  certEthPaid: "以两枚以太支付。",
+  certEthPaid: "以半枚以太支付。",
   certEthSubtitle: "私人以太坊之灵魂",
+  certEthOnePaid: "以一枚以太支付。",
+  certEthOneSubtitle: "以太坊之灵魂 · 1 ETH",
+  certEthTwoPaid: "以两枚以太支付。",
+  certEthTwoSubtitle: "末两枚以太坊之灵魂",
   certCleanseSubtitle: "不体面的加密罪过",
   certCleansePaid: "以 Solana 按等第洗净。",
   certCleanseProof:

@@ -2,7 +2,7 @@ import {
   BTC_ADDRESS,
   BTC_REGULAR_AMOUNT,
   ETH_ADDRESS,
-  ETH_AMOUNT,
+  ETH_HALF_AMOUNT,
   SOL_AMOUNT,
 } from "@/lib/deal";
 
@@ -74,8 +74,8 @@ export async function fetchEthQuote(): Promise<EthQuote> {
   const usdPerEth = await fetchCoinbaseSpot("ETH-USD");
   return {
     usdPerEth,
-    ethAmount: ETH_AMOUNT,
-    usdAmount: ETH_AMOUNT * usdPerEth,
+    ethAmount: ETH_HALF_AMOUNT,
+    usdAmount: ETH_HALF_AMOUNT * usdPerEth,
     source: "Coinbase",
     fetchedAt: Date.now(),
   };
