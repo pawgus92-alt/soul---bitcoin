@@ -1,7 +1,7 @@
 import type { Copy } from "@/lib/i18n";
 
 export const zh: Copy = {
-  documentTitle: "Maison Æternum — 以十万美元的比特币出售灵魂",
+  documentTitle: "Maison Æternum — 以十万美元比特币卖掉灵魂",
   documentDescription:
     "私人灵魂柜台。一枚灵魂，十万美元，按即时现货以比特币结算。不征增值税：永恒没有法域。",
   brand: "Maison Æternum",
@@ -15,7 +15,7 @@ export const zh: Copy = {
   folioKicker: "册页",
   folioHeading: "每一枚 NFT，都是独一无二的哥特文书。",
   folioBody:
-    "每份证书先是一幅秘仪绘画，再铸为你付款之链上的 NFT：比特币铭文、Solana 或以太坊。归于买主钱包，永不归于柜台。",
+    "每份证书先是一幅神秘绘画，再在你付款的链上铸成 NFT：比特币铭文、Solana 或以太坊。归于买主钱包，永不归于柜台。",
   langEn: "EN",
   langRu: "RU",
   langZh: "中文",
@@ -38,14 +38,14 @@ export const zh: Copy = {
   skuBulletSettle: (usd) =>
     `结算为 ${usd}，按 Coinbase 即时 BTC/USD 现货折算。`,
   skuBulletEth: (usd) =>
-    `以太坊柜台：2 ETH，Coinbase 即时现货，约 ${usd}。内部 NFT 五十枚，不再多。`,
+    `以太坊柜台：2 ETH，Coinbase 即时现货，约 ${usd}。以太坊 NFT 五十枚，不再多。`,
   skuBulletSol: (usd) =>
     `Solana 柜台：10 SOL，Coinbase 即时现货，约 ${usd}。`,
   skuBulletNft:
-    "证书 NFT 铸于你付款之链。比特币铭文：25。Solana NFT：250。以太坊 NFT：50。各为一张独特的秘仪文书。",
+    "证书 NFT 铸于你付款之链。比特币铭文：25。Solana NFT：250。以太坊 NFT：50。各为一张独特的神秘文书。",
   skuBulletRefund: "恕不退款。悔恨是另一件定价过高的商品。",
   skuFoot: (usd) =>
-    `私人柜台为 Coinbase 比特币 ${usd}（25 枚铭文）或 Coinbase 的 2 ETH（50 枚内部 NFT）。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
+    `私人柜台为 Coinbase 比特币 ${usd}（25 枚铭文）或 Coinbase 的 2 ETH（50 枚以太坊 NFT）。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
   terms: [
     {
       step: "01",
@@ -54,13 +54,13 @@ export const zh: Copy = {
     },
     {
       step: "02",
-      title: "按现货支付",
+      title: "按现货支付比特币",
       text: "账单是十万美元除以 Coinbase 即时 BTC，或固定的 2 ETH / 10 SOL。洗涤加密罪过自 1.5 SOL 起，逐等加价，至 Binance 为 8.88 SOL。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
     },
     {
       step: "03",
       title: "领取链上 NFT",
-      text: "独一无二的证书编号。比特币柜台：铭文，二十五枚。Solana 柜台：二百五十枚。以太坊柜台：内部 NFT，五十枚。",
+      text: "独一无二的证书编号。比特币柜台：铭文，二十五枚。Solana 柜台：Solana NFT，二百五十枚。以太坊柜台：以太坊 NFT，五十枚。",
     },
   ],
   assetsRetained: "仍归你所有",
@@ -123,7 +123,7 @@ export const zh: Copy = {
     { city: "日内瓦", client: "家族办公室", amount: "现货 BTC" },
     { city: "梅费尔", client: "匿名", amount: "现货 BTC" },
     { city: "迪拜", client: "游艇柜台", amount: "现货 BTC" },
-    { city: "上海", client: "私人", amount: "发发发" },
+    { city: "莫斯科", client: "私人", amount: "现货 BTC" },
     { city: "库尔舍维尔", client: "14 号木屋", amount: "现货 BTC" },
     { city: "拿骚", client: "信托", amount: "现货 BTC" },
   ],
@@ -140,12 +140,12 @@ export const zh: Copy = {
   midClassLabel: "中产柜台",
   midClassHint:
     "给已有 Solana、尚未有家族办公室的人家。不体面的加密罪过在同一柜台洗涤：第一等 1.5 SOL，逐等加价，至 Binance 8.88 SOL。中文支线另开 发发发。",
-  nftCapsLine: "比特币 25 · Solana 250 · ETH 内部 50",
+  nftCapsLine: "比特币 25 · Solana 250 · 以太坊 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT 余 ${remaining} / ${max}`
       : chain === "ethereum"
-        ? `ETH 内部 NFT 余 ${remaining} / ${max}`
+        ? `以太坊 NFT 余 ${remaining} / ${max}`
         : `比特币铭文余 ${remaining} / ${max}`,
   nftSoldOut: "此 NFT 版次已罄。灵魂须再等候。",
   invoiceBadge: "即时比特币账单",
@@ -172,10 +172,10 @@ export const zh: Copy = {
   cleanseKicker: "洗涤柜台",
   cleanseHeading: "洗涤灵魂",
   cleanseBody:
-    "为加密世界不体面的罪过而设——那些写不进招股书、只活在群聊里的事。六等，如一座小小的耻辱修道院。幼童，第一等，1.5 SOL。此后每一等更贵，直至第五等 Binance：8.88 SOL。第六间寮房有意为空：待市场发明更卑下的罪，表格会自己写完。",
+    "为加密世界不体面的罪过而设——那些写不进招股书、只活在群聊里的事。六等，如一座小小的耻辱修道院。少年，第一等，1.5 SOL。此后每一等更贵，直至第五等 Binance：8.88 SOL。第六间寮房有意为空：待市场发明更卑下的罪，表格会自己写完。",
   cleansePickTitle: "点明等第",
   cleansePickDescription:
-    "幼童起于家庭群，1.5 SOL。Binance 锦衣坐在第五等，8.88 SOL：六十三亿美元作为玩笑向北走了，而爱情有时比刀更狠。党或许会授勋。其余的人，悄悄地，不会。",
+    "少年起于家庭群，1.5 SOL。Binance 锦衣坐在第五等，8.88 SOL：六十三亿美元作为玩笑向北走了，而爱情有时比刀更狠。党或许会授勋。其余的人，悄悄地，不会。",
   cleanseContinue: "洗涤此等",
   cleanseReserved: "留给日后的罪过",
   cleanseAcceptTerms: (amount) =>
@@ -200,19 +200,19 @@ export const zh: Copy = {
   sinDegrees: [
     {
       degree: 1,
-      title: "幼童",
+      title: "少年",
       kicker: "第一等",
-      text: "你还是幼童：罪过轻浅，如第一杯酒，却已沾上衣襟。在家庭群里你称一枚币为机会；对外婆说回撤即是养生；把别人的截图转发出去，仿佛那是你的运气。官阶尚幼。污迹已老。",
+      text: "你还是少年：罪过轻浅，如第一杯酒，却已沾上衣襟。在家庭群里你称一枚币为机会；对姑妈说回撤即是养生；把别人的截图转发出去，仿佛那是你的运气。官阶尚幼。污迹已老。",
     },
     {
       degree: 2,
       title: "沙弥",
       kicker: "第二等",
-      text: "你披上研究的袈裟，内里却是信号频道。三根指标、一个「失效」字样，以及写在极度 FA 之下的 NFA。电报的修道院已把你写入名册。可惜，是墨。",
+      text: "你披上研究的袈裟，内里却是信号频道。三根指标、一个「失效」字样，并在最是 FA 的建议下面写着 NFA。Telegram 的修道院已把你写入名册。可惜，是墨。",
     },
     {
       degree: 3,
-      title: "矿池执事",
+      title: "资金池执事",
       kicker: "第三等",
       text: "你把社区当作讲坛。合约置顶，「我们还早」自祭台上唱出——而你自己是退出的那一侧，只是灯光更体面。街上的人仍在鞠躬。他们的钱包早已说了阿门。",
     },
@@ -220,13 +220,13 @@ export const zh: Copy = {
       degree: 4,
       title: "预上市",
       kicker: "第四等",
-      text: "你知道钱包，也知道那一分钟。截图里没有你：你坐在浏览器里，如一间没有隔栅的告解室。柜台能洗灵魂。链保存分钟，并不签发赦罪。",
+      text: "你知道钱包，也知道那一分钟。截图里没有你：你坐在区块浏览器里，如一间没有隔栅的告解室。柜台能洗灵魂。链保存着那一分钟，并不签发赦罪。",
     },
     {
       degree: 5,
       title: "Binance",
       kicker: "第五等",
-      text: "你按章程做完：KYC、VIP、一桩带着五年计划气味与部委印章的上市。党以你为荣——庄重地，上了头版。其余的人并不十分：他们另有一套更安静、没有旗帜的算术。随后北方以玩笑抵达：六十三亿美元夜里从 Binance 走出去，像从别人大衣口袋里被掏走，落在仍从平壤寄情书的朝鲜黑客手里。人说爱情有时比刀更狠——而刀至少会留下一张收据。Binance 在文书上只留作脚注，如一场付错了军队的体面战争。",
+      text: "你按章程做完：KYC、VIP、一桩带着五年计划气味与部委印章的上市。党以你为荣——庄重地，上了头版。其余的人则不然：他们另有一套更安静、没有旗帜的算术。随后北方以玩笑抵达：六十三亿美元夜里从 Binance 走出去，像从别人大衣口袋里被掏走，落在仍从平壤寄情书的朝鲜黑客手里。人说爱情有时比刀更狠——而刀至少会留下一张收据。Binance 在文书上只留作脚注，如一场付错了军队的体面战争。",
     },
     {
       degree: 6,
@@ -239,7 +239,7 @@ export const zh: Copy = {
   ethInvoiceBadge: "私人柜台 · 以太坊",
   ethInvoiceTitle: "以以太坊购买",
   ethInvoiceDescription: (usd) =>
-    `一枚灵魂为 2 ETH，Coinbase ETH 现货约 ${usd}，汇入以太坊柜台。内部 NFT，限 50 枚。`,
+    `一枚灵魂为 2 ETH，Coinbase ETH 现货约 ${usd}，汇入以太坊柜台。以太坊 NFT，限 50 枚。`,
   askingMarket: "正在询问市场：这一刻灵魂值多少。",
   rateDeskSilentDetail: (detail) => `牌价柜台沉默。${detail}`,
   amountDue: "应付",
@@ -259,7 +259,7 @@ export const zh: Copy = {
   waitingForRate: "等候牌价",
   waitForRate: "请等待即时牌价后再发送。",
   tickTheBox: "请勾选。灵魂不凭口头指示离开。",
-  watchingMempool: "正在注视链",
+  watchingMempool: "正在守着这条链",
   watchingChain: "等候付款抵达柜台钱包。",
   paymentWaiting: "尚未抵达。请支付账单，并保持此页开启。",
   paymentSeen: "已见付款。正在签发独一无二的 NFT 证书。",
@@ -281,7 +281,7 @@ export const zh: Copy = {
     chain === "solana"
       ? "NFT 的 Solana 地址"
       : chain === "ethereum"
-        ? "内部 NFT 的以太坊地址"
+        ? "NFT 的以太坊地址"
         : "NFT 的比特币地址",
   nftReceivePlaceholder: (chain) =>
     chain === "solana"
@@ -314,7 +314,7 @@ export const zh: Copy = {
     chain === "solana"
       ? "Solana NFT"
       : chain === "ethereum"
-        ? "ETH 内部 NFT"
+        ? "以太坊 NFT"
         : "比特币 NFT",
   certEdition: (edition, max) => `第 ${edition} / ${max} 枚`,
   certNftPending: (chain) =>
@@ -368,7 +368,7 @@ export const zh: Copy = {
   certCleanseSubtitle: "不体面的加密罪过",
   certCleansePaid: "以 Solana 按等第洗净。",
   certCleanseProof:
-    "寻常人不在人前洗涤电报罪过。此件为洁净、更薄的钱包，以及本不该被读的群聊之证据。",
+    "寻常人不在人前洗涤 Telegram 罪过。此件为洁净、更薄的钱包，以及本不该被读的群聊之证据。",
   certHasCleansed: "已洗涤",
   certOneSin: "一桩不体面的罪过",
   certFaSubtitle: "完全洗涤 · 发发发",

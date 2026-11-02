@@ -262,14 +262,14 @@ const en: Copy = {
   skuBulletSettle: (usd) =>
     `Settlement is ${usd} converted at the live Coinbase BTC/USD spot.`,
   skuBulletEth: (usd) =>
-    `Ethereum desk: 2 ETH at the live Coinbase spot, about ${usd}. Fifty inner NFTs, no more.`,
+    `Ethereum desk: 2 ETH at the live Coinbase spot, about ${usd}. Fifty Ethereum NFTs, no more.`,
   skuBulletSol: (usd) =>
     `Solana desk: 10 SOL at the live Coinbase spot, about ${usd}.`,
   skuBulletNft:
     "The certificate NFT is minted on the chain you paid. Bitcoin Ordinals: 25. Solana NFTs: 250. Ethereum NFTs: 50. Each a unique mystical charter.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is ${usd} in Bitcoin at Coinbase (25 Ordinals) or 2 ETH at Coinbase (50 inner NFTs). The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
+    `The private desk is ${usd} in Bitcoin at Coinbase (25 Ordinals) or 2 ETH at Coinbase (50 Ethereum NFTs). The middle desk takes 10 SOL at Coinbase for a soul (250 NFTs). Washing ignoble crypto sins starts at 1.5 SOL and climbs to 8.88 SOL at Binance.`,
   terms: [
     {
       step: "01",
@@ -278,13 +278,13 @@ const en: Copy = {
     },
     {
       step: "02",
-      title: "Pay the spot Bitcoin",
+      title: "Pay Bitcoin at the spot",
       text: "The invoice is $100,000 divided by the live Coinbase BTC price — or a flat 2 ETH / 10 SOL at Coinbase. Washing a crypto sin starts at 1.5 SOL and climbs to 8.88 SOL at Binance. One transfer, one hash, one eternity.",
     },
     {
       step: "03",
       title: "Receive the chain NFT",
-      text: "A unique certificate code. Bitcoin desk: Ordinal, 25 pieces. Solana desk: Solana NFT, 250 pieces. Ethereum desk: inner NFT, 50 pieces.",
+      text: "A unique certificate code. Bitcoin desk: Ordinal, 25 pieces. Solana desk: Solana NFT, 250 pieces. Ethereum desk: Ethereum NFT, 50 pieces.",
     },
   ],
   assetsRetained: "Assets retained",
@@ -367,12 +367,12 @@ const en: Copy = {
   midClassLabel: "Middle desk",
   midClassHint:
     "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk: 1.5 SOL at the first degree, then dearer until Binance at 8.88 SOL.",
-  nftCapsLine: "Bitcoin 25 · Solana 250 · ETH inner 50",
+  nftCapsLine: "Bitcoin 25 · Solana 250 · Ethereum 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT ${remaining} of ${max} remaining`
       : chain === "ethereum"
-        ? `ETH inner NFT ${remaining} of ${max} remaining`
+        ? `Ethereum NFT ${remaining} of ${max} remaining`
         : `Bitcoin Ordinal ${remaining} of ${max} remaining`,
   nftSoldOut: "This NFT edition is sold out. The soul will have to wait.",
   invoiceBadge: "Live Bitcoin invoice",
@@ -414,7 +414,7 @@ const en: Copy = {
   faKicker: "Chinese desk · 发发发",
   faHeading: "Three eights",
   faBody:
-    "A complete washing: every ignoble crypto sin, and the unluck that clung to them. In the Chinese branch the three eights mean prosper, grow rich, grow richer — 发发发. Paid in 8.88 SOL at the Coinbase spot, minted as a unique gothic NFT to the buyer.",
+    "A complete washing: every ignoble crypto sin, and the misfortune that clung to them. In the Chinese branch the three eights mean prosper, grow rich, grow richer — 发发发. Paid in 8.88 SOL at the Coinbase spot, minted as a unique gothic NFT to the buyer.",
   faInvoiceBadge: "发发发 · 888",
   faInvoiceTitle: "Complete cleansing · 8.88 SOL",
   faInvoiceDescription: (usd) =>
@@ -423,7 +423,7 @@ const en: Copy = {
     "I understand this is a complete cleansing for 8.88 SOL, without repurchase, and that 发发发 is a blessing the chain will still remember.",
   faCleansed: "发发发 · washed clean",
   faCleansedHint:
-    "All ignoble crypto sins, and the unluck beside them. Hang the gothic charter where fortune can see the three eights.",
+    "All ignoble crypto sins, and the misfortune beside them. Hang the gothic charter where fortune can see the three eights.",
   sinDegrees: [
     {
       degree: 1,
@@ -447,13 +447,13 @@ const en: Copy = {
       degree: 4,
       title: "Pre-listing",
       kicker: "Degree IV",
-      text: "You knew the wallet and you knew the minute. You are not in the screenshot: you sat in the explorer, a confessional without a grille. The desk can wash a soul. The chain keeps the minutes, and it does not sign indulgences.",
+      text: "You knew the wallet and you knew the minute. You are not in the screenshot: you sat in the block explorer, a confessional without a grille. The desk can wash a soul. The chain keeps the minutes, and it does not sign indulgences.",
     },
     {
       degree: 5,
       title: "Binance",
       kicker: "Degree V",
-      text: "You did it by the book: KYC, VIP, a listing that smelled of a five-year plan and a ministry stamp. The Party is proud of you — solemnly, on the front page. Other people are not very: they keep a quieter arithmetic, without a banner. Then the north arrived as a joke: six point three billion walked out of Binance at night, as from a stranger's coat, in the hands of North Korean hackers who still post love-letters from Pyongyang. Love, they say, sometimes strikes harder than a knife — and a knife, at least, leaves a receipt. Binance remains a footnote on the charter, like a discreet war that paid the wrong army.",
+      text: "You did it by the book: KYC, VIP, a listing that smelled of a five-year plan and a ministry stamp. The Party is proud of you — solemnly, on the front page. Other people, not so much: they keep a quieter arithmetic, without a banner. Then the north arrived as a joke: six point three billion dollars walked out of Binance at night, as from a stranger’s coat, in the hands of North Korean hackers who still post love-letters from Pyongyang. Love, they say, sometimes strikes harder than a knife — and a knife, at least, leaves a receipt. Binance remains a footnote on the charter, like a discreet war that paid the wrong army.",
     },
     {
       degree: 6,
@@ -466,7 +466,7 @@ const en: Copy = {
   ethInvoiceBadge: "Private desk · Ethereum",
   ethInvoiceTitle: "Buy in Ethereum",
   ethInvoiceDescription: (usd) =>
-    `One soul is 2 ETH, about ${usd} at the live Coinbase ETH spot, sent to the Ethereum desk. Inner NFT, limited to 50.`,
+    `One soul is 2 ETH, about ${usd} at the live Coinbase ETH spot, sent to the Ethereum desk. Ethereum NFT, limited to 50.`,
   askingMarket: "Asking the market what a soul costs this minute.",
   rateDeskSilentDetail: (detail) => `The rate desk is silent. ${detail}`,
   amountDue: "Amount due",
@@ -510,7 +510,7 @@ const en: Copy = {
     chain === "solana"
       ? "Solana address for the NFT"
       : chain === "ethereum"
-        ? "Ethereum address for the inner NFT"
+        ? "Ethereum address for the NFT"
         : "Bitcoin address for the NFT",
   nftReceivePlaceholder: (chain) =>
     chain === "solana"
@@ -544,7 +544,7 @@ const en: Copy = {
     chain === "solana"
       ? "Solana NFT"
       : chain === "ethereum"
-        ? "ETH inner NFT"
+        ? "Ethereum NFT"
         : "Bitcoin NFT",
   certEdition: (edition, max) => `Edition ${edition} / ${max}`,
   certNftPending: (chain) =>
@@ -599,7 +599,7 @@ const en: Copy = {
   certCleansePaid: "washed in Solana, priced by the degree.",
   certCleanseProof:
     "Ordinary people do not wash a Telegram sin in public. This document is proof of hygiene, a thinner wallet, and a group chat that should have stayed unread.",
-  certHasCleansed: "has had washed",
+  certHasCleansed: "has washed",
   certOneSin: "ONE IGNOBLE SIN",
   certFaSubtitle: "of Complete Cleansing · 发发发",
   certFaPaid: "washed in 8.88 Solana · prosper, grow rich, grow richer.",
@@ -629,7 +629,7 @@ const ru: Copy = {
   folioKicker: "Фолио",
   folioHeading: "Каждый NFT — уникальная готическая грамота.",
   folioBody:
-    "Каждый сертификат — мистическая картина, затем NFT в той сети, где его купили: Bitcoin Ordinals, Solana или Ethereum. Кошелёк покупателя держит его. Стол — никогда.",
+    "Каждый сертификат — мистическая картина, затем NFT в сети оплаты: Bitcoin Ordinals, Solana или Ethereum. Кошелёк покупателя его держит. Стол — никогда.",
   langEn: "EN",
   langRu: "RU",
   langZh: "中文",
@@ -644,22 +644,22 @@ const ru: Copy = {
   vatLine: "НДС не начисляется: у вечности нет юрисдикции.",
   heroAside:
     "Проводки остаются для тех, кто ещё верит в государства. Наличные пахнут моралью. Bitcoin по споту — единственный приличный язык в этой комнате.",
-  skuLabel: "Частный SKU",
+  skuLabel: "Частный артикул",
   fetchingRate: "Запрашиваем споты Coinbase…",
   rateDeskSilent: "Стол котировок молчит.",
   fetchRateAgain: "Запросить курс снова",
   skuBulletOne: "Одна душа. Без рассрочки. Без семейного пакета.",
   skuBulletSettle: (usd) =>
-    `Расчёт — ${usd}, конвертированные по живому споту Coinbase BTC/USD.`,
+    `Расчёт — ${usd}, конвертированных по живому споту Coinbase BTC/USD.`,
   skuBulletEth: (usd) =>
-    `Стол Ethereum: 2 ETH по живому споту Coinbase, около ${usd}. Inner NFT — пятьдесят, не больше.`,
+    `Стол Ethereum: 2 ETH по живому споту Coinbase, около ${usd}. Ethereum NFT — пятьдесят, не больше.`,
   skuBulletSol: (usd) =>
     `Стол Solana: 10 SOL по живому споту Coinbase, около ${usd}.`,
   skuBulletNft:
-    "NFT-сертификат чеканится в той сети, где его купили. Bitcoin Ordinal: 25. Solana NFT: 250. Ethereum NFT: 50. Каждый — уникальная мистическая грамота.",
+    "NFT-сертификат чеканится в сети оплаты. Bitcoin Ordinal: 25. Solana NFT: 250. Ethereum NFT: 50. Каждый — уникальная мистическая грамота.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол — ${usd} в Bitcoin по Coinbase (25 Ordinal) или 2 ETH по Coinbase (50 inner NFT). Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
+    `Частный стол — ${usd} в Bitcoin по Coinbase (25 Ordinals) или 2 ETH по Coinbase (50 Ethereum NFT). Средний стол берёт 10 SOL по Coinbase за душу (250 NFT). Неблагородные криптогрехи моют от 1.5 SOL на первой степени до 8.88 SOL на Binance.`,
   terms: [
     {
       step: "01",
@@ -673,11 +673,11 @@ const ru: Copy = {
     },
     {
       step: "03",
-      title: "Получите NFT сети",
-      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 25 штук. Стол Solana: Solana NFT, 250 штук. Стол Ethereum: inner NFT, 50 штук.",
+      title: "Получите NFT в сети оплаты",
+      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 25 штук. Стол Solana: Solana NFT, 250 штук. Стол Ethereum: Ethereum NFT, 50 штук.",
     },
   ],
-  assetsRetained: "Оставленные активы",
+  assetsRetained: "Сохранённые активы",
   whatYouKeep: "Что остаётся вам",
   keep: [
     {
@@ -716,7 +716,7 @@ const ru: Copy = {
       quote:
         "Дешевле лондонского развода и тише швейцарского траста. Бронируйте до первого слушания.",
       name: "K.",
-      role: "Family office, Мэйфер",
+      role: "Family office, Мейфер",
     },
     {
       quote:
@@ -738,7 +738,7 @@ const ru: Copy = {
   footerDesk: "Maison Æternum · Частный стол приобретений · Est. 1666",
   ledger: [
     { city: "Женева", client: "Family office", amount: "Spot BTC" },
-    { city: "Мэйфер", client: "Аноним", amount: "Spot BTC" },
+    { city: "Мейфер", client: "Аноним", amount: "Spot BTC" },
     { city: "Дубай", client: "Яхтенный стол", amount: "Spot BTC" },
     { city: "Москва", client: "Частный", amount: "Spot BTC" },
     { city: "Куршевель", client: "Шале 14", amount: "Spot BTC" },
@@ -757,12 +757,12 @@ const ru: Copy = {
   midClassLabel: "Средний стол",
   midClassHint:
     "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом: 1.5 SOL на первой степени, дальше дороже, до Binance за 8.88 SOL.",
-  nftCapsLine: "Bitcoin 25 · Solana 250 · ETH inner 50",
+  nftCapsLine: "Bitcoin 25 · Solana 250 · Ethereum 50",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT: осталось ${remaining} из ${max}`
       : chain === "ethereum"
-        ? `ETH inner NFT: осталось ${remaining} из ${max}`
+        ? `Ethereum NFT: осталось ${remaining} из ${max}`
         : `Bitcoin Ordinal: осталось ${remaining} из ${max}`,
   nftSoldOut: "Этот тираж NFT распродан. Душе придётся подождать.",
   invoiceBadge: "Живой счёт в Bitcoin",
@@ -837,7 +837,7 @@ const ru: Copy = {
       degree: 4,
       title: "Предлистинг",
       kicker: "IV степень",
-      text: "Ты знал кошелёк и знал минуту. На скрине тебя нет: ты сидел в эксплорере, как в исповедальне без решётки. Стол душу смоет. Цепочка минуты хранит и на отпущение не подписывается.",
+      text: "Ты знал кошелёк и знал минуту. На скрине тебя нет: ты сидел в блокчейн-эксплорере, как в исповедальне без решётки. Стол душу смоет. Сеть хранит минуты и на отпущение не подписывается.",
     },
     {
       degree: 5,
@@ -856,7 +856,7 @@ const ru: Copy = {
   ethInvoiceBadge: "Частный стол · Ethereum",
   ethInvoiceTitle: "Купить за Ethereum",
   ethInvoiceDescription: (usd) =>
-    `Одна душа — 2 ETH, около ${usd} по живому споту Coinbase ETH, на Ethereum-кошелёк стола. Inner NFT, тираж 50.`,
+    `Одна душа — 2 ETH, около ${usd} по живому споту Coinbase ETH, на Ethereum-кошелёк стола. Ethereum NFT, тираж 50.`,
   askingMarket: "Спрашиваем рынок, сколько стоит душа в эту минуту.",
   rateDeskSilentDetail: (detail) => `Стол котировок молчит. ${detail}`,
   amountDue: "К оплате",
@@ -888,20 +888,20 @@ const ru: Copy = {
     `Отправьте ${btc} на кошелёк стола. Сертификат выдаётся только когда сеть покажет перевод.`,
   boughtSoul: "Вы купили одну душу",
   boughtSoulHint:
-    "У сертификата уникальный код, он чеканится как NFT в той сети, которой вы оплатили. Повесьте это там, где гости увидят, а налоговая — нет.",
+    "У сертификата уникальный код, он чеканится как NFT в сети оплаты. Повесьте там, где гости увидят, а налоговая — нет.",
   soldSoul: "Вы продали одну душу",
   soldSoulHint:
     "Полбиткоина, уникальный код и Bitcoin Ordinal NFT. Сертификат держите подальше от капеллана.",
   acceptSellTerms:
     "Я понимаю: душа продаётся за 0.5 BTC без права выкупа. Раскаяния по-прежнему нет в наличии.",
-  printCertificate: "Печать сертификата",
+  printCertificate: "Распечатать сертификат",
   returnToSociety: "Вернуться в общество",
   anonymousHolder: "Анонимный коллекционер",
   nftReceiveLabel: (chain) =>
     chain === "solana"
       ? "Адрес Solana для NFT"
       : chain === "ethereum"
-        ? "Адрес Ethereum для inner NFT"
+        ? "Адрес Ethereum для NFT"
         : "Адрес Bitcoin для NFT",
   nftReceivePlaceholder: (chain) =>
     chain === "solana"
@@ -930,12 +930,12 @@ const ru: Copy = {
   needBuyerTitle: "Куда чеканить NFT?",
   needBuyerHint:
     "Душа уже оплачена. Укажите кошелёк покупателя — туда уйдёт NFT-сертификат.",
-  certMintedTo: "Чеканка на",
+  certMintedTo: "Отчеканен на",
   certNft: (chain) =>
     chain === "solana"
       ? "Solana NFT"
       : chain === "ethereum"
-        ? "ETH inner NFT"
+        ? "Ethereum NFT"
         : "Bitcoin NFT",
   certEdition: (edition, max) => `Тираж ${edition} / ${max}`,
   certNftPending: (chain) =>
@@ -973,7 +973,7 @@ const ru: Copy = {
   certHasPurchased: "приобрёл(а)",
   certHasSold: "продал(а)",
   certOneSoul: "ОДНУ ДУШУ",
-  certVeryRich: "и потому очень богат.",
+  certVeryRich: "и потому очень богат(а).",
   certHalfBitcoin: "за полбиткоина.",
   certProof:
     "Обычные люди не рассчитываются с вечностью в Bitcoin. Этот документ — доказательство избытка, вкуса и опасно пустого нутра.",
@@ -984,12 +984,12 @@ const ru: Copy = {
   certPearlSubtitle: "души жемчужного стола",
   certTenSol: "за десять Solana.",
   certPearlPaid: "за 650 PEARL.",
-  certEthPaid: "за два ether.",
+  certEthPaid: "за два эфира.",
   certEthSubtitle: "души частного Ethereum",
   certCleanseSubtitle: "неблагородного криптогреха",
   certCleansePaid: "отмыто за Solana по степени.",
   certCleanseProof:
-    "Обычные люди не отмывают телеграм-грех при людях. Этот документ — доказательство гигиены, более тонкого кошелька и чата, который лучше было не читать.",
+    "Обычные люди не отмывают Telegram-грех при людях. Этот документ — доказательство гигиены, более тонкого кошелька и чата, который лучше было не читать.",
   certHasCleansed: "отмыл(а)",
   certOneSin: "ОДИН НЕБЛАГОРОДНЫЙ ГРЕХ",
   certFaSubtitle: "полного очищения · 发发发",
