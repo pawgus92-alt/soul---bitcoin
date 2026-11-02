@@ -52,6 +52,7 @@ export type Copy = {
   skuBulletOne: string;
   skuBulletSettle: (usd: string) => string;
   skuBulletEth: (usd: string) => string;
+  skuBulletSol: (usd: string) => string;
   skuBulletNft: string;
   skuBulletRefund: string;
   skuFoot: (usd: string) => string;
@@ -94,13 +95,13 @@ export type Copy = {
   sellPriceHint: (usd: string) => string;
   solInvoiceBadge: string;
   solInvoiceTitle: string;
-  solInvoiceDescription: string;
+  solInvoiceDescription: (usd: string) => string;
   pearlInvoiceBadge: string;
   pearlInvoiceTitle: string;
   pearlInvoiceDescription: string;
   cleanseInvoiceBadge: string;
   cleanseInvoiceTitle: string;
-  cleanseInvoiceDescription: string;
+  cleanseInvoiceDescription: (usd: string) => string;
   cleanseKicker: string;
   cleanseHeading: string;
   cleanseBody: string;
@@ -222,19 +223,21 @@ const en: Copy = {
   heroAside:
     "Wire transfers remain for people who still believe in states. Cash smells of morals. Bitcoin at the spot rate is the only decent language in this room.",
   skuLabel: "Private SKU",
-  fetchingRate: "Fetching the live Bitcoin rate…",
+  fetchingRate: "Fetching Coinbase spots…",
   rateDeskSilent: "The rate desk is silent.",
   fetchRateAgain: "Fetch the rate again",
   skuBulletOne: "One soul. No instalments. No family package.",
   skuBulletSettle: (usd) =>
-    `Settlement is ${usd} converted at the live BTC/USD spot rate.`,
+    `Settlement is ${usd} converted at the live Coinbase BTC/USD spot.`,
   skuBulletEth: (usd) =>
-    `The same ${usd} may be paid in Ethereum at the live ETH spot. Fifty inner NFTs, no more.`,
+    `Ethereum desk: 2 ETH at the live Coinbase spot, about ${usd}. Fifty inner NFTs, no more.`,
+  skuBulletSol: (usd) =>
+    `Solana desk: 10 SOL at the live Coinbase spot, about ${usd}.`,
   skuBulletNft:
     "Bitcoin Ordinal NFTs: 25. Solana NFTs: 250. Ethereum inner NFTs: 50.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is ${usd} in Bitcoin (25 Ordinals) or ${usd} in Ethereum (50 inner NFTs). The middle desk takes 10 SOL on Solana (250 NFTs), including the washing of ignoble crypto sins.`,
+    `The private desk is ${usd} in Bitcoin at Coinbase (25 Ordinals) or 2 ETH at Coinbase (50 inner NFTs). The middle desk takes 10 SOL at Coinbase (250 NFTs), including the washing of ignoble crypto sins.`,
   terms: [
     {
       step: "01",
@@ -244,7 +247,7 @@ const en: Copy = {
     {
       step: "02",
       title: "Pay the spot Bitcoin",
-      text: "The invoice is $100,000 divided by the live BTC price. One transfer, one hash, one eternity.",
+      text: "The invoice is $100,000 divided by the live Coinbase BTC price — or a flat 2 ETH / 10 SOL at Coinbase. One transfer, one hash, one eternity.",
     },
     {
       step: "03",
@@ -326,9 +329,9 @@ const en: Copy = {
   buySol: "Middle class · 10 SOL",
   buyPearl: "Middle class · 650 PEARL",
   cleanseSoul: "Cleanse the soul",
-  buyEth: "Buy · ETH",
-  fetchingEthRate: "Fetching Ethereum rate",
-  payEthAmount: (eth) => `Buy ${eth}`,
+  buyEth: "Buy 2 ETH",
+  fetchingEthRate: "Fetching Coinbase ETH",
+  payEthAmount: (usd) => `Buy 2 ETH · ${usd}`,
   midClassLabel: "Middle desk",
   midClassHint:
     "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk, in six degrees.",
@@ -343,7 +346,7 @@ const en: Copy = {
   invoiceBadge: "Live Bitcoin invoice",
   invoiceTitle: "Buy in Bitcoin",
   invoiceDescription: (usd) =>
-    `One soul is ${usd}. Settlement is the live BTC amount at the current spot rate, sent to the desk wallet.`,
+    `One soul is ${usd}. Settlement is the live BTC amount at the Coinbase spot, sent to the desk wallet.`,
   sellInvoiceBadge: "Half-bitcoin window",
   sellInvoiceTitle: "Sell the soul",
   sellInvoiceDescription:
@@ -351,16 +354,16 @@ const en: Copy = {
   sellPriceHint: (usd) => `0.5 BTC · about ${usd} at the live spot`,
   solInvoiceBadge: "Middle desk · Solana",
   solInvoiceTitle: "Buy with 10 SOL",
-  solInvoiceDescription:
-    "The middle desk takes one soul for ten Solana, sent to the Solana address. The certificate is a Solana NFT, limited to 250.",
+  solInvoiceDescription: (usd) =>
+    `The middle desk takes one soul for ten Solana, about ${usd} at the live Coinbase SOL spot. The certificate is a Solana NFT, limited to 250.`,
   pearlInvoiceBadge: "Middle desk · Pearl",
   pearlInvoiceTitle: "Buy with 650 PEARL",
   pearlInvoiceDescription:
     "The middle desk takes one soul for 650 PEARL on Solana. Same vacancy, quieter lighting, Solana NFT certificate, limited to 250.",
   cleanseInvoiceBadge: "Cleansing desk · Solana",
   cleanseInvoiceTitle: "Wash an ignoble crypto sin",
-  cleanseInvoiceDescription:
-    "Ten Solana to the desk wallet. A Solana NFT certificate names the degree of the sin. Degree six is empty on purpose.",
+  cleanseInvoiceDescription: (usd) =>
+    `Ten Solana to the desk wallet, about ${usd} at the live Coinbase SOL spot. A Solana NFT certificate names the degree of the sin. Degree six is empty on purpose.`,
   cleanseKicker: "Cleansing desk",
   cleanseHeading: "Cleanse the soul",
   cleanseBody:
@@ -417,7 +420,7 @@ const en: Copy = {
   ethInvoiceBadge: "Private desk · Ethereum",
   ethInvoiceTitle: "Buy in Ethereum",
   ethInvoiceDescription: (usd) =>
-    `One soul is ${usd}. Settlement is the live ETH amount at the current spot rate, sent to the Ethereum desk. Inner NFT, limited to 50.`,
+    `One soul is 2 ETH, about ${usd} at the live Coinbase ETH spot, sent to the Ethereum desk. Inner NFT, limited to 50.`,
   askingMarket: "Asking the market what a soul costs this minute.",
   rateDeskSilentDetail: (detail) => `The rate desk is silent. ${detail}`,
   amountDue: "Amount due",
@@ -519,7 +522,7 @@ const en: Copy = {
   certPearlSubtitle: "of a Pearl-Desk Soul",
   certTenSol: "paid in ten Solana.",
   certPearlPaid: "paid in 650 PEARL.",
-  certEthPaid: "paid in Ethereum.",
+  certEthPaid: "paid in two ether.",
   certEthSubtitle: "of a Private Ethereum Soul",
   certCleanseSubtitle: "of an Ignoble Crypto Sin",
   certCleansePaid: "washed in ten Solana.",
@@ -561,19 +564,21 @@ const ru: Copy = {
   heroAside:
     "Проводки остаются для тех, кто ещё верит в государства. Наличные пахнут моралью. Bitcoin по споту — единственный приличный язык в этой комнате.",
   skuLabel: "Частный SKU",
-  fetchingRate: "Запрашиваем живой курс Bitcoin…",
+  fetchingRate: "Запрашиваем споты Coinbase…",
   rateDeskSilent: "Стол котировок молчит.",
   fetchRateAgain: "Запросить курс снова",
   skuBulletOne: "Одна душа. Без рассрочки. Без семейного пакета.",
   skuBulletSettle: (usd) =>
-    `Расчёт — ${usd}, конвертированные по живому спот-курсу BTC/USD.`,
+    `Расчёт — ${usd}, конвертированные по живому споту Coinbase BTC/USD.`,
   skuBulletEth: (usd) =>
-    `Те же ${usd} можно оплатить в Ethereum по живому споту ETH. Inner NFT — пятьдесят, не больше.`,
+    `Стол Ethereum: 2 ETH по живому споту Coinbase, около ${usd}. Inner NFT — пятьдесят, не больше.`,
+  skuBulletSol: (usd) =>
+    `Стол Solana: 10 SOL по живому споту Coinbase, около ${usd}.`,
   skuBulletNft:
     "Bitcoin Ordinal NFT: 25. Solana NFT: 250. Ethereum inner NFT: 50.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол — ${usd} в Bitcoin (25 Ordinal) или ${usd} в Ethereum (50 inner NFT). Средний стол берёт 10 SOL в Solana (250 NFT), включая отмывание неблагородных криптогрехов.`,
+    `Частный стол — ${usd} в Bitcoin по Coinbase (25 Ordinal) или 2 ETH по Coinbase (50 inner NFT). Средний стол берёт 10 SOL по Coinbase (250 NFT), включая отмывание неблагородных криптогрехов.`,
   terms: [
     {
       step: "01",
@@ -583,7 +588,7 @@ const ru: Copy = {
     {
       step: "02",
       title: "Оплатите Bitcoin по споту",
-      text: "Счёт — $100 000, делённые на живую цену BTC. Один перевод, один хеш, одна вечность.",
+      text: "Счёт — $100 000, делённые на живую цену Coinbase BTC — или ровно 2 ETH / 10 SOL по Coinbase. Один перевод, один хеш, одна вечность.",
     },
     {
       step: "03",
@@ -665,9 +670,9 @@ const ru: Copy = {
   buySol: "Средний класс · 10 SOL",
   buyPearl: "Средний класс · 650 PEARL",
   cleanseSoul: "Очистить душу",
-  buyEth: "Купить · ETH",
-  fetchingEthRate: "Запрашиваем курс Ethereum",
-  payEthAmount: (eth) => `Купить ${eth}`,
+  buyEth: "Купить 2 ETH",
+  fetchingEthRate: "Запрашиваем Coinbase ETH",
+  payEthAmount: (usd) => `Купить 2 ETH · ${usd}`,
   midClassLabel: "Средний стол",
   midClassHint:
     "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом, в шести степенях.",
@@ -682,7 +687,7 @@ const ru: Copy = {
   invoiceBadge: "Живой счёт в Bitcoin",
   invoiceTitle: "Купить за Bitcoin",
   invoiceDescription: (usd) =>
-    `Одна душа стоит ${usd}. К оплате — живая сумма BTC по текущему споту, на кошелёк стола.`,
+    `Одна душа стоит ${usd}. К оплате — живая сумма BTC по споту Coinbase, на кошелёк стола.`,
   sellInvoiceBadge: "Окно полбиткоина",
   sellInvoiceTitle: "Продать душу",
   sellInvoiceDescription:
@@ -690,16 +695,16 @@ const ru: Copy = {
   sellPriceHint: (usd) => `0.5 BTC · около ${usd} по живому споту`,
   solInvoiceBadge: "Средний стол · Solana",
   solInvoiceTitle: "Купить за 10 SOL",
-  solInvoiceDescription:
-    "Средний стол берёт одну душу за десять Solana на адрес Solana. Сертификат — Solana NFT, тираж 250.",
+  solInvoiceDescription: (usd) =>
+    `Средний стол берёт одну душу за десять Solana, около ${usd} по живому споту Coinbase SOL. Сертификат — Solana NFT, тираж 250.`,
   pearlInvoiceBadge: "Средний стол · Pearl",
   pearlInvoiceTitle: "Купить за 650 PEARL",
   pearlInvoiceDescription:
     "Средний стол берёт одну душу за 650 PEARL в сети Solana. Та же вакансия, тише свет, сертификат — Solana NFT, тираж 250.",
   cleanseInvoiceBadge: "Стол очищения · Solana",
   cleanseInvoiceTitle: "Отмыть неблагородный криптогрех",
-  cleanseInvoiceDescription:
-    "Десять Solana на кошелёк стола. Solana NFT-сертификат назовёт степень греха. Шестая степень нарочно пустая.",
+  cleanseInvoiceDescription: (usd) =>
+    `Десять Solana на кошелёк стола, около ${usd} по живому споту Coinbase SOL. Solana NFT-сертификат назовёт степень греха. Шестая степень нарочно пустая.`,
   cleanseKicker: "Стол очищения",
   cleanseHeading: "Очистить душу",
   cleanseBody:
@@ -756,7 +761,7 @@ const ru: Copy = {
   ethInvoiceBadge: "Частный стол · Ethereum",
   ethInvoiceTitle: "Купить за Ethereum",
   ethInvoiceDescription: (usd) =>
-    `Одна душа стоит ${usd}. К оплате — живая сумма ETH по текущему споту, на Ethereum-кошелёк стола. Inner NFT, тираж 50.`,
+    `Одна душа — 2 ETH, около ${usd} по живому споту Coinbase ETH, на Ethereum-кошелёк стола. Inner NFT, тираж 50.`,
   askingMarket: "Спрашиваем рынок, сколько стоит душа в эту минуту.",
   rateDeskSilentDetail: (detail) => `Стол котировок молчит. ${detail}`,
   amountDue: "К оплате",
@@ -859,7 +864,7 @@ const ru: Copy = {
   certPearlSubtitle: "души жемчужного стола",
   certTenSol: "за десять Solana.",
   certPearlPaid: "за 650 PEARL.",
-  certEthPaid: "за Ethereum.",
+  certEthPaid: "за два ether.",
   certEthSubtitle: "души частного Ethereum",
   certCleanseSubtitle: "неблагородного криптогреха",
   certCleansePaid: "отмыто за десять Solana.",

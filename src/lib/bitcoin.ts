@@ -1,9 +1,34 @@
-import { BTC_ADDRESS, DEAL_USD, ETH_ADDRESS } from "@/lib/deal";
+import {
+  BTC_ADDRESS,
+  DEAL_USD,
+  ETH_ADDRESS,
+  ETH_AMOUNT,
+  SOL_AMOUNT,
+} from "@/lib/deal";
+
+export type SpotSource = "Coinbase";
 
 export type BtcQuote = {
   usdPerBtc: number;
   btcAmount: number;
-  source: string;
+  usdAmount: number;
+  source: SpotSource;
+  fetchedAt: number;
+};
+
+export type EthQuote = {
+  usdPerEth: number;
+  ethAmount: number;
+  usdAmount: number;
+  source: SpotSource;
+  fetchedAt: number;
+};
+
+export type SolQuote = {
+  usdPerSol: number;
+  solAmount: number;
+  usdAmount: number;
+  source: SpotSource;
   fetchedAt: number;
 };
 
@@ -15,51 +40,56 @@ async function readJson(url: string) {
   return response.json();
 }
 
-export async function fetchBtcQuote(): Promise<BtcQuote> {
+async function fetchCoinbaseSpot(pair: "BTC-USD" | "ETH-USD" | "SOL-USD") {
+  const local = `/api/${pair.slice(0, 3).toLowerCase()}-usd`;
+  const urls = [local, `https://api.coinbase.com/v2/prices/${pair}/spot`];
   const errors: string[] = [];
 
-  const coinbaseUrls = [
-    "/api/btc-usd",
-    "https://api.coinbase.com/v2/prices/BTC-USD/spot",
-  ];
-
-  for (const url of coinbaseUrls) {
+  for (const url of urls) {
     try {
       const data = await readJson(url);
-      const usdPerBtc = Number(data?.data?.amount);
-      if (usdPerBtc > 0) {
-        return {
-          usdPerBtc,
-          btcAmount: DEAL_USD / usdPerBtc,
-          source: "Coinbase",
-          fetchedAt: Date.now(),
-        };
-      }
+      const amount = Number(data?.data?.amount);
+      if (amount > 0) return amount;
       errors.push(`${url} returned an empty rate.`);
     } catch (error) {
       errors.push(error instanceof Error ? error.message : `${url} failed.`);
     }
   }
 
-  try {
-    const data = await readJson(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
-    );
-    const usdPerBtc = Number(data?.bitcoin?.usd);
-    if (usdPerBtc > 0) {
-      return {
-        usdPerBtc,
-        btcAmount: DEAL_USD / usdPerBtc,
-        source: "CoinGecko",
-        fetchedAt: Date.now(),
-      };
-    }
-    errors.push("CoinGecko returned an empty rate.");
-  } catch (error) {
-    errors.push(error instanceof Error ? error.message : "CoinGecko failed.");
-  }
-
   throw new Error(errors.join(" "));
+}
+
+export async function fetchBtcQuote(): Promise<BtcQuote> {
+  const usdPerBtc = await fetchCoinbaseSpot("BTC-USD");
+  return {
+    usdPerBtc,
+    btcAmount: DEAL_USD / usdPerBtc,
+    usdAmount: DEAL_USD,
+    source: "Coinbase",
+    fetchedAt: Date.now(),
+  };
+}
+
+export async function fetchEthQuote(): Promise<EthQuote> {
+  const usdPerEth = await fetchCoinbaseSpot("ETH-USD");
+  return {
+    usdPerEth,
+    ethAmount: ETH_AMOUNT,
+    usdAmount: ETH_AMOUNT * usdPerEth,
+    source: "Coinbase",
+    fetchedAt: Date.now(),
+  };
+}
+
+export async function fetchSolQuote(): Promise<SolQuote> {
+  const usdPerSol = await fetchCoinbaseSpot("SOL-USD");
+  return {
+    usdPerSol,
+    solAmount: SOL_AMOUNT,
+    usdAmount: SOL_AMOUNT * usdPerSol,
+    source: "Coinbase",
+    fetchedAt: Date.now(),
+  };
 }
 
 export function formatUsd(value: number, digits = 0) {
@@ -75,6 +105,10 @@ export function formatBtc(value: number) {
   return `${value.toFixed(8)} BTC`;
 }
 
+export function formatEth(value: number) {
+  return `${value} ETH`;
+}
+
 export function bitcoinPayUri(
   address: string,
   amount: number,
@@ -85,64 +119,6 @@ export function bitcoinPayUri(
 
 export function bitcoinUri(amount: number) {
   return bitcoinPayUri(BTC_ADDRESS, amount);
-}
-
-export type EthQuote = {
-  usdPerEth: number;
-  ethAmount: number;
-  source: string;
-  fetchedAt: number;
-};
-
-export async function fetchEthQuote(): Promise<EthQuote> {
-  const errors: string[] = [];
-
-  const coinbaseUrls = [
-    "/api/eth-usd",
-    "https://api.coinbase.com/v2/prices/ETH-USD/spot",
-  ];
-
-  for (const url of coinbaseUrls) {
-    try {
-      const data = await readJson(url);
-      const usdPerEth = Number(data?.data?.amount);
-      if (usdPerEth > 0) {
-        return {
-          usdPerEth,
-          ethAmount: DEAL_USD / usdPerEth,
-          source: "Coinbase",
-          fetchedAt: Date.now(),
-        };
-      }
-      errors.push(`${url} returned an empty rate.`);
-    } catch (error) {
-      errors.push(error instanceof Error ? error.message : `${url} failed.`);
-    }
-  }
-
-  try {
-    const data = await readJson(
-      "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd",
-    );
-    const usdPerEth = Number(data?.ethereum?.usd);
-    if (usdPerEth > 0) {
-      return {
-        usdPerEth,
-        ethAmount: DEAL_USD / usdPerEth,
-        source: "CoinGecko",
-        fetchedAt: Date.now(),
-      };
-    }
-    errors.push("CoinGecko returned an empty rate.");
-  } catch (error) {
-    errors.push(error instanceof Error ? error.message : "CoinGecko failed.");
-  }
-
-  throw new Error(errors.join(" "));
-}
-
-export function formatEth(value: number) {
-  return `${value.toFixed(6)} ETH`;
 }
 
 function ethToWei(eth: number) {

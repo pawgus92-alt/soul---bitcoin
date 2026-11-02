@@ -1,7 +1,7 @@
 import { Bitcoin, Coins, Droplets, Hexagon, LoaderCircle } from "lucide-react";
 
 import { BitcoinPayDialog } from "@/components/bitcoin-pay-dialog";
-import { formatBtc, formatEth } from "@/lib/bitcoin";
+import { formatBtc, formatUsd } from "@/lib/bitcoin";
 import {
   SHOW_PEARL_DESK,
   SHOW_SELL_DESK,
@@ -19,22 +19,22 @@ export function PayBitcoinButton({
   kind?: DealKind;
 }) {
   const { copy } = useI18n();
-  const { quote, ethQuote, loading, ethLoading } = useBtcQuote();
+  const { quote, ethQuote, solQuote, loading } = useBtcQuote();
   const label =
     kind === "sell"
       ? copy.sellSoul
       : kind === "sol"
-        ? copy.buySol
+        ? solQuote
+          ? `${copy.buySol} · ${formatUsd(solQuote.usdAmount)}`
+          : copy.buySol
         : kind === "pearl"
           ? copy.buyPearl
           : kind === "cleanse"
             ? copy.cleanseSoul
             : kind === "eth"
               ? ethQuote
-                ? copy.payEthAmount(formatEth(ethQuote.ethAmount))
-                : ethLoading
-                  ? copy.fetchingEthRate
-                  : copy.buyEth
+                ? copy.payEthAmount(formatUsd(ethQuote.usdAmount))
+                : copy.buyEth
               : quote
                 ? copy.payAmount(formatBtc(quote.btcAmount))
                 : loading
@@ -49,11 +49,7 @@ export function PayBitcoinButton({
     ) : kind === "cleanse" ? (
       <Droplets data-icon="inline-start" />
     ) : kind === "eth" ? (
-      ethLoading && !ethQuote ? (
-        <LoaderCircle data-icon="inline-start" className="animate-spin" />
-      ) : (
-        <Hexagon data-icon="inline-start" />
-      )
+      <Hexagon data-icon="inline-start" />
     ) : !kind || kind === "buy" ? (
       loading && !quote ? (
         <LoaderCircle data-icon="inline-start" className="animate-spin" />

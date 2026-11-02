@@ -1,5 +1,6 @@
 export const DEAL_USD = 100_000;
 export const SELL_BTC = 0.5;
+export const ETH_AMOUNT = 2;
 export const SOL_AMOUNT = 10;
 export const PEARL_AMOUNT = 650;
 
@@ -112,7 +113,7 @@ export function expectedAtomic(kind: DealKind, coinAmount = 0) {
   }
   if (kind === "pearl") return String(PEARL_AMOUNT * 10 ** PEARL_DECIMALS);
   if (kind === "sell") return String(Math.round(SELL_BTC * 1e8));
-  if (kind === "eth") return ethToWei(coinAmount);
+  if (kind === "eth") return ethToWei(ETH_AMOUNT);
   return String(Math.round(coinAmount * 1e8));
 }
 
@@ -120,9 +121,7 @@ export function formatDealAmount(kind: DealKind, coinAmount?: number) {
   if (kind === "sol" || kind === "cleanse") return `${SOL_AMOUNT} SOL`;
   if (kind === "pearl") return `${PEARL_AMOUNT} PEARL`;
   if (kind === "sell") return `${SELL_BTC.toFixed(8)} BTC`;
-  if (kind === "eth" && typeof coinAmount === "number") {
-    return `${coinAmount.toFixed(6)} ETH`;
-  }
+  if (kind === "eth") return `${ETH_AMOUNT} ETH`;
   if (typeof coinAmount === "number") return `${coinAmount.toFixed(8)} BTC`;
   return "BTC";
 }

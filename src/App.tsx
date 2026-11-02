@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatBtc, formatUsd } from "@/lib/bitcoin";
-import { BTC_ADDRESS, DEAL_USD, ETH_ADDRESS, SOL_ADDRESS } from "@/lib/deal";
+import {
+  BTC_ADDRESS,
+  DEAL_USD,
+  ETH_ADDRESS,
+  ETH_AMOUNT,
+  SOL_ADDRESS,
+  SOL_AMOUNT,
+} from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 import { useNftSupply } from "@/lib/nft-supply";
 import { useBtcQuote } from "@/lib/quote-context";
@@ -26,7 +33,7 @@ function NftCaps() {
 
 function LivePrice() {
   const { copy } = useI18n();
-  const { quote, loading, error, refresh } = useBtcQuote();
+  const { quote, ethQuote, solQuote, loading, error, refresh } = useBtcQuote();
 
   if (loading && !quote) {
     return (
@@ -50,15 +57,29 @@ function LivePrice() {
   if (!quote) return null;
 
   return (
-    <p className="font-mono text-sm text-muted-foreground">
-      {formatUsd(DEAL_USD)} ÷ {formatUsd(quote.usdPerBtc)} · {quote.source} spot
-    </p>
+    <div className="space-y-1 font-mono text-sm text-muted-foreground">
+      <p>
+        {formatUsd(DEAL_USD)} ÷ {formatUsd(quote.usdPerBtc)} / BTC · Coinbase
+      </p>
+      {ethQuote ? (
+        <p>
+          {ETH_AMOUNT} ETH · {formatUsd(ethQuote.usdAmount)} ·{" "}
+          {formatUsd(ethQuote.usdPerEth)} / ETH · Coinbase
+        </p>
+      ) : null}
+      {solQuote ? (
+        <p>
+          {SOL_AMOUNT} SOL · {formatUsd(solQuote.usdAmount)} ·{" "}
+          {formatUsd(solQuote.usdPerSol)} / SOL · Coinbase
+        </p>
+      ) : null}
+    </div>
   );
 }
 
 export default function App() {
   const { copy, locale } = useI18n();
-  const { quote } = useBtcQuote();
+  const { quote, ethQuote, solQuote } = useBtcQuote();
   const kicker =
     locale === "ru"
       ? "text-[11px] tracking-[0.16em] text-primary/80 uppercase"
@@ -164,7 +185,16 @@ export default function App() {
               <ul className="space-y-3 text-sm leading-6 text-muted-foreground">
                 <li>{copy.skuBulletOne}</li>
                 <li>{copy.skuBulletSettle(formatUsd(DEAL_USD))}</li>
-                <li>{copy.skuBulletEth(formatUsd(DEAL_USD))}</li>
+                <li>
+                  {copy.skuBulletEth(
+                    ethQuote ? formatUsd(ethQuote.usdAmount) : "2 ETH",
+                  )}
+                </li>
+                <li>
+                  {copy.skuBulletSol(
+                    solQuote ? formatUsd(solQuote.usdAmount) : "10 SOL",
+                  )}
+                </li>
                 <li>{copy.skuBulletNft}</li>
                 <li>{copy.skuBulletRefund}</li>
                 <li>{copy.vatLine}</li>

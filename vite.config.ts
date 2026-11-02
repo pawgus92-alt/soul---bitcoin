@@ -98,6 +98,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: () => "/v2/prices/ETH-USD/spot",
       },
+      "/api/sol-usd": {
+        target: "https://api.coinbase.com",
+        changeOrigin: true,
+        rewrite: () => "/v2/prices/SOL-USD/spot",
+      },
     },
   },
   preview: {

@@ -12,16 +12,20 @@ import {
 import {
   fetchBtcQuote,
   fetchEthQuote,
+  fetchSolQuote,
   type BtcQuote,
   type EthQuote,
+  type SolQuote,
 } from "@/lib/bitcoin";
 import { useI18n } from "@/lib/i18n";
 
 type QuoteState = {
   quote: BtcQuote | null;
   ethQuote: EthQuote | null;
+  solQuote: SolQuote | null;
   loading: boolean;
   ethLoading: boolean;
+  solLoading: boolean;
   error: string | null;
   refresh: () => void;
 };
@@ -32,8 +36,10 @@ export function QuoteProvider({ children }: { children: ReactNode }) {
   const { copy } = useI18n();
   const [quote, setQuote] = useState<BtcQuote | null>(null);
   const [ethQuote, setEthQuote] = useState<EthQuote | null>(null);
+  const [solQuote, setSolQuote] = useState<SolQuote | null>(null);
   const [loading, setLoading] = useState(true);
   const [ethLoading, setEthLoading] = useState(true);
+  const [solLoading, setSolLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const fallbackError = useRef(`${copy.rateDeskSilent} ${copy.fetchRateAgain}.`);
   fallbackError.current = `${copy.rateDeskSilent} ${copy.fetchRateAgain}.`;
@@ -59,6 +65,11 @@ export function QuoteProvider({ children }: { children: ReactNode }) {
       .then(setEthQuote)
       .catch(() => setEthQuote(null))
       .finally(() => setEthLoading(false));
+    setSolLoading(true);
+    void fetchSolQuote()
+      .then(setSolQuote)
+      .catch(() => setSolQuote(null))
+      .finally(() => setSolLoading(false));
   }, []);
 
   useEffect(() => {
@@ -68,8 +79,26 @@ export function QuoteProvider({ children }: { children: ReactNode }) {
   }, [refresh]);
 
   const value = useMemo(
-    () => ({ quote, ethQuote, loading, ethLoading, error, refresh }),
-    [quote, ethQuote, loading, ethLoading, error, refresh],
+    () => ({
+      quote,
+      ethQuote,
+      solQuote,
+      loading,
+      ethLoading,
+      solLoading,
+      error,
+      refresh,
+    }),
+    [
+      quote,
+      ethQuote,
+      solQuote,
+      loading,
+      ethLoading,
+      solLoading,
+      error,
+      refresh,
+    ],
   );
 
   return <QuoteContext.Provider value={value}>{children}</QuoteContext.Provider>;

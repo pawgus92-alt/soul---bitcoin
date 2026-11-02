@@ -31,6 +31,7 @@ import {
 } from "@/lib/certificate";
 import {
   DEAL_USD,
+  ETH_AMOUNT,
   PEARL_AMOUNT,
   SELL_BTC,
   SOL_AMOUNT,
@@ -69,7 +70,7 @@ function invoiceCopy(
     return {
       badge: copy.solInvoiceBadge,
       title: copy.solInvoiceTitle,
-      description: copy.solInvoiceDescription,
+      description: copy.solInvoiceDescription(usd),
     };
   }
   if (kind === "pearl") {
@@ -83,7 +84,7 @@ function invoiceCopy(
     return {
       badge: copy.cleanseInvoiceBadge,
       title: copy.cleanseInvoiceTitle,
-      description: copy.cleanseInvoiceDescription,
+      description: copy.cleanseInvoiceDescription(usd),
     };
   }
   if (kind === "eth") {
@@ -134,8 +135,8 @@ export function BitcoinPayDialog({
   const {
     quote,
     ethQuote,
+    solQuote,
     loading,
-    ethLoading,
     error: quoteError,
     refresh,
   } = useBtcQuote();
@@ -151,16 +152,18 @@ export function BitcoinPayDialog({
   const dealCoin = sell
     ? SELL_BTC
     : ethBuy
-      ? ethQuote?.ethAmount
+      ? ETH_AMOUNT
       : quote?.btcAmount;
   const paidLabel = formatDealAmount(kind, dealCoin);
-  const ready = btcBuy
-    ? Boolean(quote)
-    : ethBuy
-      ? Boolean(ethQuote)
-      : true;
+  const ready = btcBuy ? Boolean(quote) : true;
+  const invoiceUsd =
+    ethBuy && ethQuote
+      ? formatUsd(ethQuote.usdAmount)
+      : (kind === "sol" || cleansing) && solQuote
+        ? formatUsd(solQuote.usdAmount)
+        : formatUsd(DEAL_USD);
   const soldOut = supply.remaining <= 0;
-  const invoice = invoiceCopy(kind, copy, formatUsd(DEAL_USD));
+  const invoice = invoiceCopy(kind, copy, invoiceUsd);
   const payUri =
     deal.chain === "solana"
       ? solanaPayUri(
@@ -169,7 +172,7 @@ export function BitcoinPayDialog({
           deal.mint,
         )
       : deal.chain === "ethereum"
-        ? ethereumPayUri(deal.address, dealCoin ?? 0)
+        ? ethereumPayUri(deal.address, ETH_AMOUNT)
         : bitcoinPayUri(deal.address, dealCoin ?? SELL_BTC);
   const firstStep: Step = cleansing ? "sins" : "invoice";
   const [open, setOpen] = useState(false);
@@ -246,7 +249,7 @@ export function BitcoinPayDialog({
   }
 
   function startWatch() {
-    if ((btcBuy && !quote) || (ethBuy && !ethQuote)) {
+    if (btcBuy && !quote) {
       setError(copy.waitForRate);
       return;
     }
@@ -375,11 +378,8 @@ export function BitcoinPayDialog({
           "Maison Aeternum NFT",
         )
       : "";
-  const askingRate =
-    (btcBuy && loading && !quote) || (ethBuy && ethLoading && !ethQuote);
-  const silentRate =
-    (btcBuy && Boolean(quoteError) && !quote) ||
-    (ethBuy && !ethLoading && !ethQuote);
+  const askingRate = btcBuy && loading && !quote;
+  const silentRate = btcBuy && Boolean(quoteError) && !quote;
 
   return (
     <Dialog
@@ -540,7 +540,12 @@ export function BitcoinPayDialog({
                     ) : null}
                     {ethBuy && ethQuote ? (
                       <p className="font-mono text-sm text-muted-foreground">
-                        {`${formatUsd(DEAL_USD)} at ${formatUsd(ethQuote.usdPerEth)} / ETH`}
+                        {`${formatUsd(ethQuote.usdAmount)} at ${formatUsd(ethQuote.usdPerEth)} / ETH`}
+                      </p>
+                    ) : null}
+                    {(kind === "sol" || cleansing) && solQuote ? (
+                      <p className="font-mono text-sm text-muted-foreground">
+                        {`${formatUsd(solQuote.usdAmount)} at ${formatUsd(solQuote.usdPerSol)} / SOL`}
                       </p>
                     ) : null}
                     {sell && quote ? (
@@ -556,6 +561,11 @@ export function BitcoinPayDialog({
                     {ethBuy && ethQuote ? (
                       <p className="mt-1 text-[11px] text-muted-foreground">
                         {copy.spotVia(ethQuote.source)}
+                      </p>
+                    ) : null}
+                    {(kind === "sol" || cleansing) && solQuote ? (
+                      <p className="mt-1 text-[11px] text-muted-foreground">
+                        {copy.spotVia(solQuote.source)}
                       </p>
                     ) : null}
                     <p className="mt-2 text-xs text-primary">
