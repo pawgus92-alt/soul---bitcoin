@@ -78,6 +78,7 @@ export function SoulCertificate({
     editionMax,
     sinDegree,
     nftChain,
+    revealEncounter: !compact,
   });
 
   return (

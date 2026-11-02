@@ -109,9 +109,25 @@ function sinLatin(degree) {
   return "";
 }
 
-function kindCopy(kind, sinDegree) {
+function isSolRarityKind(kind) {
+  return (
+    kind === "sol" ||
+    kind === "solRare" ||
+    kind === "solEpic" ||
+    kind === "solLegendary"
+  );
+}
+
+function kindCopy(kind, sinDegree, revealEncounter) {
   if (kind === "sell") {
     return { desk: "SOUL DISPOSAL", act: "hath sold", prize: "ONE SOUL" };
+  }
+  if (isSolRarityKind(kind) && !revealEncounter) {
+    return {
+      desk: "MIDDLE DESK · SOLANA",
+      act: "hath purchased",
+      prize: "ONE SOUL",
+    };
   }
   if (kind === "sol") {
     return {
@@ -201,15 +217,15 @@ export function nftChainOf(kind, nftChain) {
   return "bitcoin";
 }
 
-function chainLabel(chain, kind) {
+function chainLabel(chain, kind, revealEncounter) {
   if (kind === "lucky") return "BITCOIN 888 NFT";
   if (kind === "ethTwo") return "ETHEREUM 2 ETH NFT";
   if (kind === "ethOne") return "ETHEREUM 1 ETH NFT";
   if (kind === "eth") return "ETHEREUM 0.5 ETH NFT";
-  if (kind === "solLegendary") return "SOLANA NFT · LEGENDARY · 4%";
-  if (kind === "solEpic") return "SOLANA NFT · EPIC · 12%";
-  if (kind === "solRare") return "SOLANA NFT · RARE · 24%";
-  if (kind === "sol") return "SOLANA NFT · COMMON · 60%";
+  if (revealEncounter && kind === "solLegendary") return "SOLANA NFT · LEGENDARY · 4%";
+  if (revealEncounter && kind === "solEpic") return "SOLANA NFT · EPIC · 12%";
+  if (revealEncounter && kind === "solRare") return "SOLANA NFT · RARE · 24%";
+  if (revealEncounter && kind === "sol") return "SOLANA NFT · COMMON · 60%";
   if (chain === "ethereum") return "ETHEREUM NFT";
   if (chain === "solana") return "SOLANA NFT";
   return "BITCOIN ORDINALS NFT";
@@ -290,11 +306,14 @@ export function certificateSvg(payload, options = {}) {
   );
   const issued = escapeXml(String(payload.issuedAt || "").slice(0, 10));
   const mintedTo = escapeXml(String(payload.receiveAddress || "").slice(0, 52));
+  const revealEncounter = Boolean(payload.revealEncounter);
   const edition =
-    payload.edition && (payload.max || payload.editionMax)
+    payload.edition &&
+    (payload.max || payload.editionMax) &&
+    (revealEncounter || !isSolRarityKind(payload.kind))
       ? `No. ${payload.edition} / ${payload.max || payload.editionMax}`
       : "";
-  const copy = kindCopy(payload.kind, payload.sinDegree);
+  const copy = kindCopy(payload.kind, payload.sinDegree, revealEncounter);
   const chain = nftChainOf(payload.kind, payload.nftChain);
   const traits = certificateTraits(payload);
   if (payload.kind === "lucky") {
@@ -305,7 +324,7 @@ export function certificateSvg(payload, options = {}) {
     traits.motto = "duo extrema · ether carissimus";
     traits.palette = PALETTES[1];
   }
-  if (payload.kind === "solLegendary") {
+  if (payload.kind === "solLegendary" && revealEncounter) {
     traits.motto = "rara avis · octo solana";
     traits.palette = PALETTES[2];
   }
@@ -388,7 +407,7 @@ export function certificateSvg(payload, options = {}) {
   <text x="${W / 2}" y="492" text-anchor="middle" fill="${c.gold}" font-size="54" class="goth">${escapeXml(copy.prize)}</text>
   <text x="${W / 2}" y="536" text-anchor="middle" fill="${c.moss}" font-size="20" class="gar">${paid} · ${issued}</text>
   <text x="${W / 2}" y="568" text-anchor="middle" fill="${c.ink}" font-size="15" font-style="italic" class="gar">${escapeXml(traits.motto)}</text>
-  <text x="${W / 2}" y="598" text-anchor="middle" fill="${chainGold}" font-size="13" letter-spacing="4" class="cinzel">${escapeXml(chainLabel(chain, payload.kind))}</text>
+  <text x="${W / 2}" y="598" text-anchor="middle" fill="${chainGold}" font-size="13" letter-spacing="4" class="cinzel">${escapeXml(chainLabel(chain, payload.kind, revealEncounter))}</text>
   <rect x="150" y="648" width="500" height="76" fill="#120c0a" fill-opacity="0.45" stroke="${c.blood}" stroke-width="1"/>
   <text x="${W / 2}" y="676" text-anchor="middle" fill="${c.blood}" font-size="11" letter-spacing="5" class="cinzel">UNIQUE CODE</text>
   <text x="${W / 2}" y="706" text-anchor="middle" fill="${c.gold}" font-size="17" font-family="Courier New,monospace">${serial}</text>

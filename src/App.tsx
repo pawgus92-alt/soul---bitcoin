@@ -15,9 +15,6 @@ import {
   ETH_TWO_AMOUNT,
   SOL_ADDRESS,
   SOL_COMMON_AMOUNT,
-  SOL_EPIC_AMOUNT,
-  SOL_LEGENDARY_AMOUNT,
-  SOL_RARE_AMOUNT,
   cleanseSolAmount,
   formatSolLabel,
 } from "@/lib/deal";
@@ -33,22 +30,6 @@ function NftCaps() {
     <ul className="space-y-1 text-[11px] leading-5 text-primary/80">
       <li>{copy.nftRemaining(supply.bitcoin.remaining, supply.bitcoin.max, "bitcoin")}</li>
       <li>{copy.nftLuckyRemaining(supply.lucky.remaining, supply.lucky.max)}</li>
-      <li>{copy.nftRemaining(supply.solana.remaining, supply.solana.max, "solana")}</li>
-      <li>
-        {copy.nftSolCommonRemaining(supply.solCommon.remaining, supply.solCommon.max)}
-      </li>
-      <li>
-        {copy.nftSolRareRemaining(supply.solRare.remaining, supply.solRare.max)}
-      </li>
-      <li>
-        {copy.nftSolEpicRemaining(supply.solEpic.remaining, supply.solEpic.max)}
-      </li>
-      <li>
-        {copy.nftSolLegendaryRemaining(
-          supply.solLegendary.remaining,
-          supply.solLegendary.max,
-        )}
-      </li>
       <li>
         {copy.nftRemaining(supply.ethereum.remaining, supply.ethereum.max, "ethereum")}
       </li>
@@ -105,23 +86,9 @@ function LivePrice() {
         </>
       ) : null}
       {solQuote ? (
-        <>
-          <p>
-            {SOL_COMMON_AMOUNT} SOL ·{" "}
-            {formatUsd(solQuote.usdPerSol * SOL_COMMON_AMOUNT)} ·{" "}
-            {formatUsd(solQuote.usdPerSol)} / SOL · Coinbase
-          </p>
-          <p>
-            {SOL_RARE_AMOUNT} SOL · {formatUsd(solQuote.usdPerSol * SOL_RARE_AMOUNT)}
-          </p>
-          <p>
-            {SOL_EPIC_AMOUNT} SOL · {formatUsd(solQuote.usdPerSol * SOL_EPIC_AMOUNT)}
-          </p>
-          <p>
-            {SOL_LEGENDARY_AMOUNT} SOL ·{" "}
-            {formatUsd(solQuote.usdPerSol * SOL_LEGENDARY_AMOUNT)}
-          </p>
-        </>
+        <p>
+          {formatUsd(solQuote.usdPerSol)} / SOL · Coinbase
+        </p>
       ) : null}
     </div>
   );
@@ -216,9 +183,6 @@ export default function App() {
               </p>
               <p className="max-w-lg text-xs leading-5 text-primary">
                 {copy.ethHint}
-              </p>
-              <p className="max-w-lg text-xs leading-5 text-muted-foreground">
-                {copy.solHint}
               </p>
               <p className="max-w-lg text-xs leading-5 text-muted-foreground">
                 {copy.midClassHint}
@@ -438,16 +402,14 @@ export default function App() {
               />
               <SoulCertificate
                 compact
-                kind="solLegendary"
+                kind="sol"
                 holder="Signora Sol"
-                serial="AE-1666-SLG-C0FFEEBABE01"
+                serial="AE-1666-SOL-C0FFEEBABE01"
                 digest="c0ffeebabe0112233445566778899aabbccddeeff00112233445566778899a06"
-                btcAmount="8 SOL"
+                btcAmount="0.5 SOL"
                 issuedAt={new Date("1666-06-06T16:06:00Z")}
                 receiveAddress="7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
                 nftChain="solana"
-                edition={45}
-                editionMax={50}
               />
               <SoulCertificate
                 compact

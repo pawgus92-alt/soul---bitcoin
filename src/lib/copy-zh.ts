@@ -42,14 +42,14 @@ export const zh: Copy = {
   skuBulletEth: (usd) =>
     `以太坊柜台：十五枚 NFT。前十枚各 0.5 ETH，Coinbase 约 ${usd}。其后三枚各 1 ETH。末两枚各 2 ETH。`,
   skuBulletSol: (usd) =>
-    `Solana 柜台：五十枚 NFT，牌组只洗一次。普通 0.5 SOL（60%，约 ${usd}），稀有 1 SOL（24%），史诗 2 SOL（12%），传说 8 SOL（4%——五十枚中的两枚）。出现率写在 NFT 上。`,
+    `Solana 柜台：0.5、1、2 或 8 SOL，Coinbase 即时现货，0.5 SOL 约 ${usd}。`,
   skuBulletNft:
-    "证书 NFT 铸于你付款之链。比特币铭文：10，其中最后三枚为 888 招财文书。Solana NFT：50——普通、稀有、史诗、传说。以太坊 NFT：15——十枚各 0.5 ETH，三枚各 1 ETH，两枚各 2 ETH。各为一张独特的神秘文书。",
+    "证书 NFT 铸于你付款之链。比特币铭文：10，其中最后三枚为 888 招财文书。Solana 上为 Solana NFT。以太坊 NFT：15——十枚各 0.5 ETH，三枚各 1 ETH，两枚各 2 ETH。各为一张独特的神秘文书。",
   skuBulletLucky:
     "最后三枚比特币铭文——第 8、9、10 号，共十枚——为 888 招财文书：最贵、最富、招财。每枚 8 枚比特币。其余七枚各一枚比特币。",
   skuBulletRefund: "恕不退款。悔恨是另一件定价过高的商品。",
   skuFoot: (usd) =>
-    `私人柜台：七枚寻常灵魂各 1 BTC（约 ${usd}），888 招财文书各 8 BTC，或以太坊十五枚：0.5 / 1 / 2 ETH。中产柜台出售五十枚 Solana 灵魂：0.5 / 1 / 2 / 8 SOL。洗涤之梯有名无号：虚荣 1.5，贪婪 2.5，嫉妒 4，傲慢 6，然后是史上最贵的笔记本 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
+    `私人柜台：七枚寻常灵魂各 1 BTC（约 ${usd}），888 招财文书各 8 BTC，或以太坊十五枚：0.5 / 1 / 2 ETH。中产柜台按 Coinbase 收取 Solana。洗涤之梯有名无号：虚荣 1.5，贪婪 2.5，嫉妒 4，傲慢 6，然后是史上最贵的笔记本 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
   terms: [
     {
       step: "01",
@@ -64,7 +64,7 @@ export const zh: Copy = {
     {
       step: "03",
       title: "领取链上 NFT",
-      text: "独一无二的证书编号。比特币柜台：铭文，十枚——七枚各 1 BTC，末三枚 888 各 8 BTC。Solana 柜台：五十枚 NFT，文书写明稀有度与出现率。以太坊柜台：十五枚——十枚各 0.5 ETH，三枚各 1 ETH，末两枚各 2 ETH。",
+      text: "独一无二的证书编号。比特币柜台：铭文，十枚——七枚各 1 BTC，末三枚 888 各 8 BTC。Solana 柜台：一枚 Solana NFT。以太坊柜台：十五枚——十枚各 0.5 ETH，三枚各 1 ETH，末两枚各 2 ETH。",
     },
   ],
   assetsRetained: "仍归你所有",
@@ -135,10 +135,10 @@ export const zh: Copy = {
   fetchingBitcoinRate: "正在读取比特币牌价",
   payAmount: (btc) => `购买 ${btc}`,
   sellSoul: "出售灵魂 · 0.5 BTC",
-  buySol: "普通 · 0.5 SOL",
-  buySolRare: "稀有 · 1 SOL",
-  buySolEpic: "史诗 · 2 SOL",
-  buySolLegendary: "传说 · 8 SOL",
+  buySol: "0.5 SOL",
+  buySolRare: "1 SOL",
+  buySolEpic: "2 SOL",
+  buySolLegendary: "8 SOL",
   buyPearl: "中产 · 650 PEARL",
   cleanseSoul: "洗涤灵魂",
   buyEth: "购买 0.5 ETH",
@@ -150,13 +150,12 @@ export const zh: Copy = {
   payEthTwoAmount: (usd) => `购买 2 ETH · ${usd}`,
   ethHint:
     "十五枚以太坊 NFT：前十枚各 0.5 ETH，其后三枚各 1 ETH，末两枚各 2 ETH。",
-  solHint:
-    "五十枚 Solana 灵魂，牌组只洗一次。普通 0.5 SOL——百分之六十。稀有 1 SOL——百分之二十四。史诗 2 SOL——百分之十二。传说 8 SOL——百分之四，五十枚中的两枚。NFT 写明出现率。",
+  solHint: "中产柜台按 Coinbase 现货收取 Solana。",
   midClassLabel: "中产柜台",
   midClassHint:
-    "给已有 Solana、尚未有家族办公室的人家。四种稀有度：0.5、1、2 与 8 SOL。不体面的加密罪过在同一柜台洗涤——不称「第一等」，而称其名：虚荣 1.5，贪婪 2.5，嫉妒 4，傲慢 6，然后是史上最贵的笔记本 8.88 SOL。中文支线另开 发发发。",
+    "给已有 Solana、尚未有家族办公室的人家。不体面的加密罪过在同一柜台洗涤——不称「第一等」，而称其名：虚荣 1.5，贪婪 2.5，嫉妒 4，傲慢 6，然后是史上最贵的笔记本 8.88 SOL。中文支线另开 发发发。",
   nftCapsLine:
-    "比特币 10 · 末三枚 888 · Solana 50 · 0.5 / 1 / 2 / 8 SOL · 以太坊 15 · 0.5 / 1 / 2 ETH",
+    "比特币 10 · 末三枚 888 · 以太坊 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT 余 ${remaining} / ${max}`
@@ -175,28 +174,28 @@ export const zh: Copy = {
   sellInvoiceDescription:
     "柜台以固定半枚比特币收取灵魂。一笔转账，一个空缺，不论现货。",
   sellPriceHint: (usd) => `0.5 BTC · 按即时现货约 ${usd}`,
-  solInvoiceBadge: "中产柜台 · 普通 · 60%",
-  solInvoiceTitle: "购买普通 Solana 灵魂",
+  solInvoiceBadge: "中产柜台 · 0.5 SOL",
+  solInvoiceTitle: "以 0.5 SOL 购买",
   solInvoiceDescription: (usd) =>
-    `半枚 Solana，Coinbase SOL 现货约 ${usd}。普通：五十枚中的三十枚，出现率百分之六十。NFT 将把稀有度写在文书上。`,
-  solRareInvoiceBadge: "中产柜台 · 稀有 · 24%",
-  solRareInvoiceTitle: "购买稀有 Solana 灵魂",
+    `半枚 Solana，Coinbase SOL 现货约 ${usd}。证书为 Solana NFT。`,
+  solRareInvoiceBadge: "中产柜台 · 1 SOL",
+  solRareInvoiceTitle: "以 1 SOL 购买",
   solRareInvoiceDescription: (usd) =>
-    `一枚 Solana，约 ${usd}。稀有：五十枚中的十二枚，出现率百分之二十四。更稀的光，同样的空缺。`,
-  solEpicInvoiceBadge: "中产柜台 · 史诗 · 12%",
-  solEpicInvoiceTitle: "购买史诗 Solana 灵魂",
+    `一枚 Solana，Coinbase SOL 现货约 ${usd}。证书为 Solana NFT。`,
+  solEpicInvoiceBadge: "中产柜台 · 2 SOL",
+  solEpicInvoiceTitle: "以 2 SOL 购买",
   solEpicInvoiceDescription: (usd) =>
-    `两枚 Solana，约 ${usd}。史诗：五十枚中的六枚，出现率百分之十二。牌组并不常发这一手。`,
-  solLegendaryInvoiceBadge: "中产柜台 · 传说 · 4%",
-  solLegendaryInvoiceTitle: "购买传说 Solana 灵魂",
+    `两枚 Solana，Coinbase SOL 现货约 ${usd}。证书为 Solana NFT。`,
+  solLegendaryInvoiceBadge: "中产柜台 · 8 SOL",
+  solLegendaryInvoiceTitle: "以 8 SOL 购买",
   solLegendaryInvoiceDescription: (usd) =>
-    `八枚 Solana，约 ${usd}。传说：五十枚中的两枚，出现率百分之四。最贵的 Solana 文书。NFT 会如实写上。`,
+    `八枚 Solana，Coinbase SOL 现货约 ${usd}。证书为 Solana NFT。`,
   solAcceptTerms: (amount) =>
-    `我明白：此枚 Solana 灵魂以 ${amount} 出售，不得赎回；稀有度与出现率印在 NFT 上。`,
+    `我明白：此枚 Solana 灵魂以 ${amount} 出售，不得赎回。`,
   pearlInvoiceBadge: "中产柜台 · Pearl",
   pearlInvoiceTitle: "以 650 PEARL 购买",
   pearlInvoiceDescription:
-    "中产柜台以 650 PEARL 在 Solana 上收取一枚灵魂。同样的空缺，更安静的灯光，Solana NFT，限 50 枚。",
+    "中产柜台以 650 PEARL 在 Solana 上收取一枚灵魂。同样的空缺，更安静的灯光，Solana NFT。",
   cleanseInvoiceBadge: "洗涤柜台 · Solana",
   cleanseInvoiceTitle: "洗去一桩不体面的加密罪过",
   cleanseInvoiceDescription: (amount, usd) =>
@@ -250,13 +249,13 @@ export const zh: Copy = {
   nftEthTwoRemaining: (remaining, max) =>
     `以太坊 2 ETH 余 ${remaining} / ${max}`,
   nftSolCommonRemaining: (remaining, max) =>
-    `普通 Solana 余 ${remaining} / ${max} · 60%`,
+    `Solana 余 ${remaining} / ${max}`,
   nftSolRareRemaining: (remaining, max) =>
-    `稀有 Solana 余 ${remaining} / ${max} · 24%`,
+    `Solana 余 ${remaining} / ${max}`,
   nftSolEpicRemaining: (remaining, max) =>
-    `史诗 Solana 余 ${remaining} / ${max} · 12%`,
+    `Solana 余 ${remaining} / ${max}`,
   nftSolLegendaryRemaining: (remaining, max) =>
-    `传说 Solana 余 ${remaining} / ${max} · 4%`,
+    `Solana 余 ${remaining} / ${max}`,
   certLuckySubtitle: "招财文书 · 888",
   certLuckyPaid: "以八枚比特币支付。",
   certLuckyProof:
@@ -439,7 +438,7 @@ export const zh: Copy = {
   certSellSubtitle: "灵魂出让",
   certSolSubtitle: "中产之灵魂",
   certPearlSubtitle: "珍珠柜台之灵魂",
-  certTenSol: "以 Solana 支付，文书写明稀有度。",
+  certTenSol: "以 Solana 支付。",
   certPearlPaid: "以 650 PEARL 支付。",
   certEthPaid: "以半枚以太支付。",
   certEthSubtitle: "私人以太坊之灵魂",

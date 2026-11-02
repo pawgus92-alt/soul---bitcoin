@@ -778,6 +778,7 @@ export function BitcoinPayDialog({
                         {copy.spotVia(solQuote.source)}
                       </p>
                     ) : null}
+                    {deal.nftChain === "solana" ? null : (
                     <p className="mt-2 text-xs text-primary">
                       {luckyDesk
                         ? copy.nftLuckyRemaining(luckyBtc.remaining, luckyBtc.max)
@@ -787,32 +788,13 @@ export function BitcoinPayDialog({
                             ? copy.nftEthOneRemaining(ethOne.remaining, ethOne.max)
                             : kind === "ethTwo"
                               ? copy.nftEthTwoRemaining(ethTwo.remaining, ethTwo.max)
-                              : kind === "sol"
-                                ? copy.nftSolCommonRemaining(
-                                    solCommon.remaining,
-                                    solCommon.max,
-                                  )
-                                : kind === "solRare"
-                                  ? copy.nftSolRareRemaining(
-                                      solRare.remaining,
-                                      solRare.max,
-                                    )
-                                  : kind === "solEpic"
-                                    ? copy.nftSolEpicRemaining(
-                                        solEpic.remaining,
-                                        solEpic.max,
-                                      )
-                                    : kind === "solLegendary"
-                                      ? copy.nftSolLegendaryRemaining(
-                                          solLegendary.remaining,
-                                          solLegendary.max,
-                                        )
-                                      : copy.nftRemaining(
-                                          supply.remaining,
-                                          supply.max,
-                                          deal.nftChain,
-                                        )}
+                              : copy.nftRemaining(
+                                  supply.remaining,
+                                  supply.max,
+                                  deal.nftChain,
+                                )}
                     </p>
+                    )}
                   </div>
                   <div>
                     <p className="mb-1 text-[11px] tracking-[0.22em] text-primary/80 uppercase">

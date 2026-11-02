@@ -1,9 +1,7 @@
 import {
   Bitcoin,
   Coins,
-  Crown,
   Droplets,
-  Gem,
   Hexagon,
   Sparkles,
 } from "lucide-react";
@@ -98,11 +96,7 @@ export function PayBitcoinButton({
                         : copy.payAmount(formatBtc(BTC_REGULAR_AMOUNT));
 
   const icon =
-    kind === "solLegendary" ? (
-      <Crown data-icon="inline-start" />
-    ) : kind === "solEpic" ? (
-      <Gem data-icon="inline-start" />
-    ) : kind === "solRare" || kind === "sol" || kind === "pearl" ? (
+    isSolKind(kind) || kind === "pearl" ? (
       <Coins data-icon="inline-start" />
     ) : kind === "cleanse" ? (
       <Droplets data-icon="inline-start" />
@@ -120,10 +114,7 @@ export function PayBitcoinButton({
       triggerClassName={className}
       triggerLabel={label}
       triggerVariant={
-        kind === "buy" ||
-        kind === "lucky" ||
-        kind === "ethTwo" ||
-        kind === "solLegendary"
+        kind === "buy" || kind === "lucky" || kind === "ethTwo"
           ? "default"
           : "outline"
       }

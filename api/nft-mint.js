@@ -67,6 +67,7 @@ export default async function handler(request, response) {
         serial,
         edition,
         max: max || payload.editionMax,
+        revealEncounter: true,
       },
       { embedded: CERTIFICATE_PLATES },
     );

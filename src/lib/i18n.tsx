@@ -319,14 +319,14 @@ const en: Copy = {
   skuBulletEth: (usd) =>
     `Ethereum desk: fifteen NFTs. First ten at 0.5 ETH, about ${usd} at Coinbase. Then three at 1 ETH. Last two at 2 ETH.`,
   skuBulletSol: (usd) =>
-    `Solana desk: fifty NFTs, shuffled once. Common 0.5 SOL (60%, about ${usd}), rare 1 SOL (24%), epic 2 SOL (12%), legendary 8 SOL (4% — two of fifty). Encounter rates are written on the NFT.`,
+    `Solana desk: 0.5, 1, 2 or 8 SOL at the live Coinbase spot, about ${usd} for 0.5 SOL.`,
   skuBulletNft:
-    "The certificate NFT is minted on the chain you paid. Bitcoin Ordinals: 10, the last three of them 888 luck charters. Solana NFTs: 50 — common, rare, epic, legendary. Ethereum NFTs: 15 — ten at 0.5 ETH, three at 1 ETH, two at 2 ETH. Each a unique mystical charter.",
+    "The certificate NFT is minted on the chain you paid. Bitcoin Ordinals: 10, the last three of them 888 luck charters. A Solana NFT on Solana. Ethereum NFTs: 15 — ten at 0.5 ETH, three at 1 ETH, two at 2 ETH. Each a unique mystical charter.",
   skuBulletLucky:
     "The last three Bitcoin Ordinals — Nos. 8, 9 and 10 of ten — are 888 luck charters: the dearest, the richest, the ones that bring luck. Eight bitcoin each. The other seven are one bitcoin each.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is 1 BTC (about ${usd}) for seven ordinary souls, or 8 BTC for a 888 luck charter, or Ethereum: 0.5 / 1 / 2 ETH for fifteen NFTs. The middle desk sells fifty Solana souls: 0.5 / 1 / 2 / 8 SOL. The cleanse ladder is named: Vanity 1.5, Greed 2.5, Envy 4, Pride 6, then the most expensive laptop at 8.88 SOL.`,
+    `The private desk is 1 BTC (about ${usd}) for seven ordinary souls, or 8 BTC for a 888 luck charter, or Ethereum: 0.5 / 1 / 2 ETH for fifteen NFTs. The middle desk takes Solana at Coinbase. The cleanse ladder is named: Vanity 1.5, Greed 2.5, Envy 4, Pride 6, then the most expensive laptop at 8.88 SOL.`,
   terms: [
     {
       step: "01",
@@ -341,7 +341,7 @@ const en: Copy = {
     {
       step: "03",
       title: "Receive the chain NFT",
-      text: "A unique certificate code. Bitcoin desk: Ordinal, 10 pieces — seven at 1 BTC, last three 888 at 8 BTC. Solana desk: fifty NFTs, rarity and encounter printed on the charter. Ethereum desk: 15 pieces — ten at 0.5 ETH, three at 1 ETH, last two at 2 ETH.",
+      text: "A unique certificate code. Bitcoin desk: Ordinal, 10 pieces — seven at 1 BTC, last three 888 at 8 BTC. Solana desk: a Solana NFT. Ethereum desk: 15 pieces — ten at 0.5 ETH, three at 1 ETH, last two at 2 ETH.",
     },
   ],
   assetsRetained: "Assets retained",
@@ -415,10 +415,10 @@ const en: Copy = {
   fetchingBitcoinRate: "Fetching Bitcoin rate",
   payAmount: (btc) => `Buy ${btc}`,
   sellSoul: "Sell soul · 0.5 BTC",
-  buySol: "Common · 0.5 SOL",
-  buySolRare: "Rare · 1 SOL",
-  buySolEpic: "Epic · 2 SOL",
-  buySolLegendary: "Legendary · 8 SOL",
+  buySol: "0.5 SOL",
+  buySolRare: "1 SOL",
+  buySolEpic: "2 SOL",
+  buySolLegendary: "8 SOL",
   buyPearl: "Middle class · 650 PEARL",
   cleanseSoul: "Cleanse the soul",
   buyEth: "Buy 0.5 ETH",
@@ -430,13 +430,12 @@ const en: Copy = {
   payEthTwoAmount: (usd) => `Buy 2 ETH · ${usd}`,
   ethHint:
     "Fifteen Ethereum NFTs: first ten at 0.5 ETH, then three at 1 ETH, last two at 2 ETH.",
-  solHint:
-    "Fifty Solana souls, shuffled once. Common 0.5 SOL — sixty percent. Rare 1 SOL — twenty-four. Epic 2 SOL — twelve. Legendary 8 SOL — four percent, two of fifty. The NFT names the encounter.",
+  solHint: "The middle desk takes Solana at the live Coinbase spot.",
   midClassLabel: "Middle desk",
   midClassHint:
-    "For households that have Solana, but not yet a family office. Four rarities: 0.5, 1, 2 and 8 SOL. Ignoble crypto sins are washed at the same desk, named not numbered: Vanity 1.5, Greed 2.5, Envy 4, Pride 6, then the most expensive laptop at 8.88 SOL.",
+    "For households that have Solana, but not yet a family office. Ignoble crypto sins are washed at the same desk, named not numbered: Vanity 1.5, Greed 2.5, Envy 4, Pride 6, then the most expensive laptop at 8.88 SOL.",
   nftCapsLine:
-    "Bitcoin 10 · last three 888 · Solana 50 · 0.5 / 1 / 2 / 8 SOL · Ethereum 15 · 0.5 / 1 / 2 ETH",
+    "Bitcoin 10 · last three 888 · Ethereum 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT ${remaining} of ${max} remaining`
@@ -455,28 +454,28 @@ const en: Copy = {
   sellInvoiceDescription:
     "The desk takes the soul for a flat half bitcoin. One transfer, one vacancy, no debate about the spot.",
   sellPriceHint: (usd) => `0.5 BTC · about ${usd} at the live spot`,
-  solInvoiceBadge: "Middle desk · Common · 60%",
-  solInvoiceTitle: "Buy the common Solana soul",
+  solInvoiceBadge: "Middle desk · 0.5 SOL",
+  solInvoiceTitle: "Buy with 0.5 SOL",
   solInvoiceDescription: (usd) =>
-    `Half a Solana, about ${usd} at the live Coinbase SOL spot. Common: thirty of fifty, sixty percent encounter. The NFT writes the rarity on the charter.`,
-  solRareInvoiceBadge: "Middle desk · Rare · 24%",
-  solRareInvoiceTitle: "Buy the rare Solana soul",
+    `Half a Solana, about ${usd} at the live Coinbase SOL spot. The certificate is a Solana NFT.`,
+  solRareInvoiceBadge: "Middle desk · 1 SOL",
+  solRareInvoiceTitle: "Buy with 1 SOL",
   solRareInvoiceDescription: (usd) =>
-    `One Solana, about ${usd}. Rare: twelve of fifty, twenty-four percent encounter. Scarcer light, same vacancy.`,
-  solEpicInvoiceBadge: "Middle desk · Epic · 12%",
-  solEpicInvoiceTitle: "Buy the epic Solana soul",
+    `One Solana, about ${usd} at the live Coinbase SOL spot. The certificate is a Solana NFT.`,
+  solEpicInvoiceBadge: "Middle desk · 2 SOL",
+  solEpicInvoiceTitle: "Buy with 2 SOL",
   solEpicInvoiceDescription: (usd) =>
-    `Two Solana, about ${usd}. Epic: six of fifty, twelve percent encounter. The deck does not deal this often.`,
-  solLegendaryInvoiceBadge: "Middle desk · Legendary · 4%",
-  solLegendaryInvoiceTitle: "Buy the legendary Solana soul",
+    `Two Solana, about ${usd} at the live Coinbase SOL spot. The certificate is a Solana NFT.`,
+  solLegendaryInvoiceBadge: "Middle desk · 8 SOL",
+  solLegendaryInvoiceTitle: "Buy with 8 SOL",
   solLegendaryInvoiceDescription: (usd) =>
-    `Eight Solana, about ${usd}. Legendary: two of fifty, four percent encounter. The dearest Solana charter. The NFT will say so.`,
+    `Eight Solana, about ${usd} at the live Coinbase SOL spot. The certificate is a Solana NFT.`,
   solAcceptTerms: (amount) =>
-    `I understand this Solana soul is ${amount} without repurchase, and that rarity and encounter are printed on the NFT.`,
+    `I understand this Solana soul is ${amount} without repurchase.`,
   pearlInvoiceBadge: "Middle desk · Pearl",
   pearlInvoiceTitle: "Buy with 650 PEARL",
   pearlInvoiceDescription:
-    "The middle desk takes one soul for 650 PEARL on Solana. Same vacancy, quieter lighting, Solana NFT certificate, limited to 50.",
+    "The middle desk takes one soul for 650 PEARL on Solana. Same vacancy, quieter lighting, Solana NFT certificate.",
   cleanseInvoiceBadge: "Cleansing desk · Solana",
   cleanseInvoiceTitle: "Wash an ignoble crypto sin",
   cleanseInvoiceDescription: (amount, usd) =>
@@ -530,13 +529,13 @@ const en: Copy = {
   nftEthTwoRemaining: (remaining, max) =>
     `Ethereum 2 ETH ${remaining} of ${max} remaining`,
   nftSolCommonRemaining: (remaining, max) =>
-    `Common Solana ${remaining} of ${max} remaining · 60%`,
+    `Solana ${remaining} of ${max} remaining`,
   nftSolRareRemaining: (remaining, max) =>
-    `Rare Solana ${remaining} of ${max} remaining · 24%`,
+    `Solana ${remaining} of ${max} remaining`,
   nftSolEpicRemaining: (remaining, max) =>
-    `Epic Solana ${remaining} of ${max} remaining · 12%`,
+    `Solana ${remaining} of ${max} remaining`,
   nftSolLegendaryRemaining: (remaining, max) =>
-    `Legendary Solana ${remaining} of ${max} remaining · 4%`,
+    `Solana ${remaining} of ${max} remaining`,
   certLuckySubtitle: "of a Luck Charter · 888",
   certLuckyPaid: "paid in eight bitcoin.",
   certLuckyProof:
@@ -722,7 +721,7 @@ const en: Copy = {
   certSellSubtitle: "of Soul Disposal",
   certSolSubtitle: "of a Middle-Class Soul",
   certPearlSubtitle: "of a Pearl-Desk Soul",
-  certTenSol: "paid in Solana, named by rarity.",
+  certTenSol: "paid in Solana.",
   certPearlPaid: "paid in 650 PEARL.",
   certEthPaid: "paid in half an ether.",
   certEthSubtitle: "of a Private Ethereum Soul",
@@ -790,14 +789,14 @@ const ru: Copy = {
   skuBulletEth: (usd) =>
     `Стол Ethereum: пятнадцать NFT. Первые десять по 0.5 ETH, около ${usd} по Coinbase. Затем три по 1 ETH. Последние две по 2 ETH.`,
   skuBulletSol: (usd) =>
-    `Стол Solana: пятьдесят NFT, колода перемешана однажды. Обычные 0.5 SOL (60%, около ${usd}), раритет 1 SOL (24%), эпик 2 SOL (12%), легендарные 8 SOL (4% — две из пятидесяти). Встречаемость написана на NFT.`,
+    `Стол Solana: 0.5, 1, 2 или 8 SOL по живому споту Coinbase, около ${usd} за 0.5 SOL.`,
   skuBulletNft:
-    "NFT-сертификат чеканится в сети оплаты. Bitcoin Ordinal: 10, последние три — грамоты 888 на удачу. Solana NFT: 50 — обычные, раритет, эпик, легендарные. Ethereum NFT: 15 — десять по 0.5 ETH, три по 1 ETH, две по 2 ETH. Каждый — уникальная мистическая грамота.",
+    "NFT-сертификат чеканится в сети оплаты. Bitcoin Ordinal: 10, последние три — грамоты 888 на удачу. Solana NFT — в сети Solana. Ethereum NFT: 15 — десять по 0.5 ETH, три по 1 ETH, две по 2 ETH. Каждый — уникальная мистическая грамота.",
   skuBulletLucky:
     "Последние три Bitcoin Ordinal — № 8, 9 и 10 из десяти — грамоты 888: самые дорогие, самые богатые, приносящие удачу. По 8 биткоинов. Остальные семь — по одному биткоину.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол — 1 BTC (около ${usd}) за семь обычных душ, или 8 BTC за грамоту 888, или Ethereum: 0.5 / 1 / 2 ETH, пятнадцать NFT. Средний стол продаёт пятьдесят душ Solana: 0.5 / 1 / 2 / 8 SOL. Лестница очищения названа: Тщеславие 1.5, Алчность 2.5, Зависть 4, Гордыня 6, затем самый дорогой ноутбук за 8.88 SOL.`,
+    `Частный стол — 1 BTC (около ${usd}) за семь обычных душ, или 8 BTC за грамоту 888, или Ethereum: 0.5 / 1 / 2 ETH, пятнадцать NFT. Средний стол берёт Solana по Coinbase. Лестница очищения названа: Тщеславие 1.5, Алчность 2.5, Зависть 4, Гордыня 6, затем самый дорогой ноутбук за 8.88 SOL.`,
   terms: [
     {
       step: "01",
@@ -812,7 +811,7 @@ const ru: Copy = {
     {
       step: "03",
       title: "Получите NFT в сети оплаты",
-      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 10 штук — семь по 1 BTC, последние три 888 по 8 BTC. Стол Solana: пятьдесят NFT, редкость и встречаемость на грамоте. Стол Ethereum: 15 штук — десять по 0.5 ETH, три по 1 ETH, последние две по 2 ETH.",
+      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 10 штук — семь по 1 BTC, последние три 888 по 8 BTC. Стол Solana: Solana NFT. Стол Ethereum: 15 штук — десять по 0.5 ETH, три по 1 ETH, последние две по 2 ETH.",
     },
   ],
   assetsRetained: "Сохранённые активы",
@@ -886,10 +885,10 @@ const ru: Copy = {
   fetchingBitcoinRate: "Запрашиваем курс Bitcoin",
   payAmount: (btc) => `Купить ${btc}`,
   sellSoul: "Продать душу · 0.5 BTC",
-  buySol: "Обычная · 0.5 SOL",
-  buySolRare: "Раритет · 1 SOL",
-  buySolEpic: "Эпик · 2 SOL",
-  buySolLegendary: "Легендарная · 8 SOL",
+  buySol: "0.5 SOL",
+  buySolRare: "1 SOL",
+  buySolEpic: "2 SOL",
+  buySolLegendary: "8 SOL",
   buyPearl: "Средний класс · 650 PEARL",
   cleanseSoul: "Очистить душу",
   buyEth: "Купить 0.5 ETH",
@@ -901,13 +900,12 @@ const ru: Copy = {
   payEthTwoAmount: (usd) => `Купить 2 ETH · ${usd}`,
   ethHint:
     "Пятнадцать Ethereum NFT: первые десять по 0.5 ETH, затем три по 1 ETH, последние две по 2 ETH.",
-  solHint:
-    "Пятьдесят душ Solana, колода перемешана однажды. Обычные 0.5 SOL — шестьдесят процентов. Раритет 1 SOL — двадцать четыре. Эпик 2 SOL — двенадцать. Легендарные 8 SOL — четыре процента, две из пятидесяти. NFT называет встречаемость.",
+  solHint: "Средний стол берёт Solana по живому споту Coinbase.",
   midClassLabel: "Средний стол",
   midClassHint:
-    "Для тех, у кого есть Solana, но ещё нет family office. Четыре редкости: 0.5, 1, 2 и 8 SOL. Неблагородные криптогрехи моют за тем же столом — не «уровень 1», а по имени: Тщеславие 1.5, Алчность 2.5, Зависть 4, Гордыня 6, затем самый дорогой ноутбук за 8.88 SOL.",
+    "Для тех, у кого есть Solana, но ещё нет family office. Неблагородные криптогрехи моют за тем же столом — не «уровень 1», а по имени: Тщеславие 1.5, Алчность 2.5, Зависть 4, Гордыня 6, затем самый дорогой ноутбук за 8.88 SOL.",
   nftCapsLine:
-    "Bitcoin 10 · последние три 888 · Solana 50 · 0.5 / 1 / 2 / 8 SOL · Ethereum 15 · 0.5 / 1 / 2 ETH",
+    "Bitcoin 10 · последние три 888 · Ethereum 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT: осталось ${remaining} из ${max}`
@@ -926,28 +924,28 @@ const ru: Copy = {
   sellInvoiceDescription:
     "Стол берёт душу за ровно полбиткоина. Один перевод, одна вакансия, без спора про спот.",
   sellPriceHint: (usd) => `0.5 BTC · около ${usd} по живому споту`,
-  solInvoiceBadge: "Средний стол · обычная · 60%",
-  solInvoiceTitle: "Купить обычную душу Solana",
+  solInvoiceBadge: "Средний стол · 0.5 SOL",
+  solInvoiceTitle: "Купить за 0.5 SOL",
   solInvoiceDescription: (usd) =>
-    `Полсоланы, около ${usd} по живому споту Coinbase SOL. Обычная: тридцать из пятидесяти, встречаемость шестьдесят процентов. NFT напишет редкость на грамоте.`,
-  solRareInvoiceBadge: "Средний стол · раритет · 24%",
-  solRareInvoiceTitle: "Купить раритетную душу Solana",
+    `Полсоланы, около ${usd} по живому споту Coinbase SOL. Сертификат — Solana NFT.`,
+  solRareInvoiceBadge: "Средний стол · 1 SOL",
+  solRareInvoiceTitle: "Купить за 1 SOL",
   solRareInvoiceDescription: (usd) =>
-    `Одна Solana, около ${usd}. Раритет: двенадцать из пятидесяти, встречаемость двадцать четыре процента. Реже свет, та же вакансия.`,
-  solEpicInvoiceBadge: "Средний стол · эпик · 12%",
-  solEpicInvoiceTitle: "Купить эпическую душу Solana",
+    `Одна Solana, около ${usd} по живому споту Coinbase SOL. Сертификат — Solana NFT.`,
+  solEpicInvoiceBadge: "Средний стол · 2 SOL",
+  solEpicInvoiceTitle: "Купить за 2 SOL",
   solEpicInvoiceDescription: (usd) =>
-    `Две Solana, около ${usd}. Эпик: шесть из пятидесяти, встречаемость двенадцать процентов. Колода так часто не сдаёт.`,
-  solLegendaryInvoiceBadge: "Средний стол · легендарная · 4%",
-  solLegendaryInvoiceTitle: "Купить легендарную душу Solana",
+    `Две Solana, около ${usd} по живому споту Coinbase SOL. Сертификат — Solana NFT.`,
+  solLegendaryInvoiceBadge: "Средний стол · 8 SOL",
+  solLegendaryInvoiceTitle: "Купить за 8 SOL",
   solLegendaryInvoiceDescription: (usd) =>
-    `Восемь Solana, около ${usd}. Легендарная: две из пятидесяти, встречаемость четыре процента. Самая дорогая грамота Solana. NFT так и скажет.`,
+    `Восемь Solana, около ${usd} по живому споту Coinbase SOL. Сертификат — Solana NFT.`,
   solAcceptTerms: (amount) =>
-    `Я понимаю: эта душа Solana стоит ${amount} без права выкупа, а редкость и встречаемость напечатаны на NFT.`,
+    `Я понимаю: эта душа Solana стоит ${amount} без права выкупа.`,
   pearlInvoiceBadge: "Средний стол · Pearl",
   pearlInvoiceTitle: "Купить за 650 PEARL",
   pearlInvoiceDescription:
-    "Средний стол берёт одну душу за 650 PEARL в сети Solana. Та же вакансия, тише свет, сертификат — Solana NFT, тираж 50.",
+    "Средний стол берёт одну душу за 650 PEARL в сети Solana. Та же вакансия, тише свет, сертификат — Solana NFT.",
   cleanseInvoiceBadge: "Стол очищения · Solana",
   cleanseInvoiceTitle: "Отмыть неблагородный криптогрех",
   cleanseInvoiceDescription: (amount, usd) =>
@@ -1001,13 +999,13 @@ const ru: Copy = {
   nftEthTwoRemaining: (remaining, max) =>
     `Ethereum 2 ETH: осталось ${remaining} из ${max}`,
   nftSolCommonRemaining: (remaining, max) =>
-    `Обычные Solana: осталось ${remaining} из ${max} · 60%`,
+    `Solana: осталось ${remaining} из ${max}`,
   nftSolRareRemaining: (remaining, max) =>
-    `Раритет Solana: осталось ${remaining} из ${max} · 24%`,
+    `Solana: осталось ${remaining} из ${max}`,
   nftSolEpicRemaining: (remaining, max) =>
-    `Эпик Solana: осталось ${remaining} из ${max} · 12%`,
+    `Solana: осталось ${remaining} из ${max}`,
   nftSolLegendaryRemaining: (remaining, max) =>
-    `Легендарные Solana: осталось ${remaining} из ${max} · 4%`,
+    `Solana: осталось ${remaining} из ${max}`,
   certLuckySubtitle: "грамоты удачи · 888",
   certLuckyPaid: "за восемь биткоинов.",
   certLuckyProof:
@@ -1194,7 +1192,7 @@ const ru: Copy = {
   certSellSubtitle: "отчуждения души",
   certSolSubtitle: "души среднего класса",
   certPearlSubtitle: "души жемчужного стола",
-  certTenSol: "за Solana, с указанной редкостью.",
+  certTenSol: "за Solana.",
   certPearlPaid: "за 650 PEARL.",
   certEthPaid: "за полэфира.",
   certEthSubtitle: "души частного Ethereum",
