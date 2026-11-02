@@ -100,12 +100,46 @@ function rng(seed) {
   };
 }
 
+function sinLatin(degree) {
+  if (degree === 1) return "VANITAS";
+  if (degree === 2) return "AVARITIA";
+  if (degree === 3) return "INVIDIA";
+  if (degree === 4) return "SUPERBIA";
+  if (degree === 5) return "DEGREE V";
+  return "";
+}
+
 function kindCopy(kind, sinDegree) {
   if (kind === "sell") {
     return { desk: "SOUL DISPOSAL", act: "hath sold", prize: "ONE SOUL" };
   }
   if (kind === "sol") {
-    return { desk: "MIDDLE DESK · 10 SOL", act: "hath purchased", prize: "ONE SOUL" };
+    return {
+      desk: "MIDDLE DESK · COMMON · 0.5 SOL · 60%",
+      act: "hath purchased",
+      prize: "ONE SOUL",
+    };
+  }
+  if (kind === "solRare") {
+    return {
+      desk: "MIDDLE DESK · RARE · 1 SOL · 24%",
+      act: "hath purchased",
+      prize: "ONE SOUL",
+    };
+  }
+  if (kind === "solEpic") {
+    return {
+      desk: "MIDDLE DESK · EPIC · 2 SOL · 12%",
+      act: "hath purchased",
+      prize: "ONE SOUL",
+    };
+  }
+  if (kind === "solLegendary") {
+    return {
+      desk: "MIDDLE DESK · LEGENDARY · 8 SOL · 4%",
+      act: "hath purchased",
+      prize: "ONE SOUL",
+    };
   }
   if (kind === "pearl") {
     return { desk: "MIDDLE DESK · 650 PEARL", act: "hath purchased", prize: "ONE SOUL" };
@@ -124,10 +158,11 @@ function kindCopy(kind, sinDegree) {
     };
   }
   if (kind === "cleanse") {
+    const latin = sinLatin(sinDegree);
     return {
-      desk: sinDegree ? `CLEANSING DESK · DEGREE ${sinDegree}` : "CLEANSING DESK",
+      desk: latin ? `CLEANSING DESK · ${latin}` : "CLEANSING DESK",
       act: "hath washed",
-      prize: "ONE IGNOBLE SIN",
+      prize: latin && sinDegree !== 5 ? latin : "ONE IGNOBLE SIN",
     };
   }
   if (kind === "fa") {
@@ -152,7 +187,15 @@ export function nftChainOf(kind, nftChain) {
     return nftChain;
   }
   if (kind === "eth" || kind === "ethOne" || kind === "ethTwo") return "ethereum";
-  if (kind === "sol" || kind === "pearl" || kind === "cleanse" || kind === "fa") {
+  if (
+    kind === "sol" ||
+    kind === "solRare" ||
+    kind === "solEpic" ||
+    kind === "solLegendary" ||
+    kind === "pearl" ||
+    kind === "cleanse" ||
+    kind === "fa"
+  ) {
     return "solana";
   }
   return "bitcoin";
@@ -163,6 +206,10 @@ function chainLabel(chain, kind) {
   if (kind === "ethTwo") return "ETHEREUM 2 ETH NFT";
   if (kind === "ethOne") return "ETHEREUM 1 ETH NFT";
   if (kind === "eth") return "ETHEREUM 0.5 ETH NFT";
+  if (kind === "solLegendary") return "SOLANA NFT · LEGENDARY · 4%";
+  if (kind === "solEpic") return "SOLANA NFT · EPIC · 12%";
+  if (kind === "solRare") return "SOLANA NFT · RARE · 24%";
+  if (kind === "sol") return "SOLANA NFT · COMMON · 60%";
   if (chain === "ethereum") return "ETHEREUM NFT";
   if (chain === "solana") return "SOLANA NFT";
   return "BITCOIN ORDINALS NFT";
@@ -238,7 +285,7 @@ export function certificateSvg(payload, options = {}) {
   const holderSize = holderRaw.length > 24 ? 32 : holderRaw.length > 16 ? 40 : 50;
   const paid = escapeXml(
     payload.sinDegree
-      ? `${payload.btcAmount} · DEGREE ${payload.sinDegree}`
+      ? `${payload.btcAmount} · ${sinLatin(payload.sinDegree) || `DEGREE ${payload.sinDegree}`}`
       : payload.btcAmount || "",
   );
   const issued = escapeXml(String(payload.issuedAt || "").slice(0, 10));
@@ -257,6 +304,13 @@ export function certificateSvg(payload, options = {}) {
   if (payload.kind === "ethTwo") {
     traits.motto = "duo extrema · ether carissimus";
     traits.palette = PALETTES[1];
+  }
+  if (payload.kind === "solLegendary") {
+    traits.motto = "rara avis · octo solana";
+    traits.palette = PALETTES[2];
+  }
+  if (payload.kind === "cleanse" && payload.sinDegree && payload.sinDegree <= 4) {
+    traits.motto = `${sinLatin(payload.sinDegree).toLowerCase()} · peccatum venale`;
   }
   const { palette: c, seed } = traits;
   const rand = rng(seed ^ 0x9e3779b9);

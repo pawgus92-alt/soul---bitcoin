@@ -14,13 +14,17 @@ import {
   ETH_ONE_AMOUNT,
   ETH_TWO_AMOUNT,
   SOL_ADDRESS,
-  SOL_AMOUNT,
+  SOL_COMMON_AMOUNT,
+  SOL_EPIC_AMOUNT,
+  SOL_LEGENDARY_AMOUNT,
+  SOL_RARE_AMOUNT,
   cleanseSolAmount,
   formatSolLabel,
 } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 import { useNftSupply } from "@/lib/nft-supply";
 import { useBtcQuote } from "@/lib/quote-context";
+import { sinLadderClass } from "@/lib/sins";
 
 function NftCaps() {
   const { copy } = useI18n();
@@ -30,6 +34,21 @@ function NftCaps() {
       <li>{copy.nftRemaining(supply.bitcoin.remaining, supply.bitcoin.max, "bitcoin")}</li>
       <li>{copy.nftLuckyRemaining(supply.lucky.remaining, supply.lucky.max)}</li>
       <li>{copy.nftRemaining(supply.solana.remaining, supply.solana.max, "solana")}</li>
+      <li>
+        {copy.nftSolCommonRemaining(supply.solCommon.remaining, supply.solCommon.max)}
+      </li>
+      <li>
+        {copy.nftSolRareRemaining(supply.solRare.remaining, supply.solRare.max)}
+      </li>
+      <li>
+        {copy.nftSolEpicRemaining(supply.solEpic.remaining, supply.solEpic.max)}
+      </li>
+      <li>
+        {copy.nftSolLegendaryRemaining(
+          supply.solLegendary.remaining,
+          supply.solLegendary.max,
+        )}
+      </li>
       <li>
         {copy.nftRemaining(supply.ethereum.remaining, supply.ethereum.max, "ethereum")}
       </li>
@@ -86,10 +105,23 @@ function LivePrice() {
         </>
       ) : null}
       {solQuote ? (
-        <p>
-          {SOL_AMOUNT} SOL · {formatUsd(solQuote.usdAmount)} ·{" "}
-          {formatUsd(solQuote.usdPerSol)} / SOL · Coinbase
-        </p>
+        <>
+          <p>
+            {SOL_COMMON_AMOUNT} SOL ·{" "}
+            {formatUsd(solQuote.usdPerSol * SOL_COMMON_AMOUNT)} ·{" "}
+            {formatUsd(solQuote.usdPerSol)} / SOL · Coinbase
+          </p>
+          <p>
+            {SOL_RARE_AMOUNT} SOL · {formatUsd(solQuote.usdPerSol * SOL_RARE_AMOUNT)}
+          </p>
+          <p>
+            {SOL_EPIC_AMOUNT} SOL · {formatUsd(solQuote.usdPerSol * SOL_EPIC_AMOUNT)}
+          </p>
+          <p>
+            {SOL_LEGENDARY_AMOUNT} SOL ·{" "}
+            {formatUsd(solQuote.usdPerSol * SOL_LEGENDARY_AMOUNT)}
+          </p>
+        </>
       ) : null}
     </div>
   );
@@ -171,6 +203,9 @@ export default function App() {
               {copy.heroTitle}
               <span className="block text-primary">{copy.heroAccent}</span>
             </h1>
+            <p className="font-heading max-w-xl text-2xl italic leading-snug text-primary sm:text-3xl">
+              {copy.siteSlogan}
+            </p>
             <p className="max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
               {copy.heroBody(quote ? formatUsd(quote.usdAmount) : "1 BTC")}
             </p>
@@ -181,6 +216,9 @@ export default function App() {
               </p>
               <p className="max-w-lg text-xs leading-5 text-primary">
                 {copy.ethHint}
+              </p>
+              <p className="max-w-lg text-xs leading-5 text-muted-foreground">
+                {copy.solHint}
               </p>
               <p className="max-w-lg text-xs leading-5 text-muted-foreground">
                 {copy.midClassHint}
@@ -225,7 +263,9 @@ export default function App() {
                 </li>
                 <li>
                   {copy.skuBulletSol(
-                    solQuote ? formatUsd(solQuote.usdAmount) : "10 SOL",
+                    solQuote
+                      ? formatUsd(solQuote.usdPerSol * SOL_COMMON_AMOUNT)
+                      : "0.5 SOL",
                   )}
                 </li>
                 <li>{copy.skuBulletNft}</li>
@@ -290,17 +330,24 @@ export default function App() {
               {copy.sinDegrees.map((item) => (
                 <Card
                   key={item.degree}
-                  className={
-                    item.reserved
-                      ? "border-dashed border-primary/20 bg-card/40"
-                      : "border-primary/20 bg-card/70"
-                  }
+                  className={sinLadderClass(item.degree, item.reserved)}
                 >
                   <CardHeader>
+                    <div className="mb-2 h-[2px] w-full bg-black/50">
+                      <div
+                        className="h-[2px] bg-primary"
+                        style={{ width: `${Math.min(item.degree, 5) * 20}%` }}
+                      />
+                    </div>
                     <p className={kicker}>{item.kicker}</p>
-                    <CardTitle className="font-heading text-2xl text-primary">
+                    <CardTitle className="font-heading text-3xl text-primary">
                       {item.title}
                     </CardTitle>
+                    {item.reserved ? null : (
+                      <p className="font-heading text-2xl tracking-wide text-[#e4c36a]">
+                        {formatSolLabel(cleanseSolAmount(item.degree))}
+                      </p>
+                    )}
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm leading-6 text-muted-foreground">
@@ -310,11 +357,7 @@ export default function App() {
                       <p className="mt-4 text-[11px] tracking-[0.16em] text-primary/80 uppercase">
                         {copy.cleanseReserved}
                       </p>
-                    ) : (
-                      <p className="mt-4 font-mono text-xs tracking-[0.16em] text-primary">
-                        {formatSolLabel(cleanseSolAmount(item.degree))}
-                      </p>
-                    )}
+                    ) : null}
                   </CardContent>
                 </Card>
               ))}
@@ -395,16 +438,16 @@ export default function App() {
               />
               <SoulCertificate
                 compact
-                kind="sol"
+                kind="solLegendary"
                 holder="Signora Sol"
-                serial="AE-1666-SOL-C0FFEEBABE01"
+                serial="AE-1666-SLG-C0FFEEBABE01"
                 digest="c0ffeebabe0112233445566778899aabbccddeeff00112233445566778899a06"
-                btcAmount="10 SOL"
+                btcAmount="8 SOL"
                 issuedAt={new Date("1666-06-06T16:06:00Z")}
                 receiveAddress="7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
                 nftChain="solana"
-                edition={12}
-                editionMax={250}
+                edition={45}
+                editionMax={50}
               />
               <SoulCertificate
                 compact
@@ -485,6 +528,7 @@ export default function App() {
       <footer className="border-t border-primary/15">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-5 py-8 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>{copy.footerDesk}</p>
+          <p className="italic text-primary">{copy.siteSlogan}</p>
           <p>{copy.vatLine}</p>
         </div>
         <p className="mx-auto max-w-6xl px-5 pb-8 text-center text-[11px] leading-5 text-muted-foreground">

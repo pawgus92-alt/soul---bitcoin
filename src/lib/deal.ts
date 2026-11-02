@@ -1,3 +1,8 @@
+import {
+  SOL_RARITY_META,
+  type SolRarity,
+} from "@/lib/sol-rarity";
+
 export const DEAL_USD = 100_000;
 export const SELL_BTC = 0.5;
 /** First ten Ethereum souls: editions 1–10 at 0.5 ETH. */
@@ -8,7 +13,12 @@ export const ETH_ONE_AMOUNT = 1;
 export const ETH_TWO_AMOUNT = 2;
 /** Default Ethereum desk (the first ten). */
 export const ETH_AMOUNT = ETH_HALF_AMOUNT;
-export const SOL_AMOUNT = 10;
+export const SOL_COMMON_AMOUNT = SOL_RARITY_META.common.amount;
+export const SOL_RARE_AMOUNT = SOL_RARITY_META.rare.amount;
+export const SOL_EPIC_AMOUNT = SOL_RARITY_META.epic.amount;
+export const SOL_LEGENDARY_AMOUNT = SOL_RARITY_META.legendary.amount;
+/** Default Solana desk: common souls at 0.5 SOL. */
+export const SOL_AMOUNT = SOL_COMMON_AMOUNT;
 export const FA_AMOUNT = 8.88;
 /** Ordinary Bitcoin souls: editions 1–7 at a flat 1 BTC. */
 export const BTC_REGULAR_AMOUNT = 1;
@@ -20,9 +30,9 @@ export const CLEANSE_SOL_FIRST = 1.5;
 export const CLEANSE_SOL_BINANCE = 8.88;
 export const CLEANSE_SOL_BY_DEGREE: Record<1 | 2 | 3 | 4 | 5, number> = {
   1: CLEANSE_SOL_FIRST,
-  2: 3.345,
-  3: 5.19,
-  4: 7.035,
+  2: 2.5,
+  3: 4,
+  4: 6,
   5: CLEANSE_SOL_BINANCE,
 };
 export const CLEANSE_SOL_RANGE = `${CLEANSE_SOL_FIRST}–${CLEANSE_SOL_BINANCE} SOL`;
@@ -42,6 +52,9 @@ export type DealKind =
   | "buy"
   | "sell"
   | "sol"
+  | "solRare"
+  | "solEpic"
+  | "solLegendary"
   | "pearl"
   | "eth"
   | "ethOne"
@@ -50,6 +63,7 @@ export type DealKind =
   | "fa"
   | "lucky";
 export type EthDealKind = "eth" | "ethOne" | "ethTwo";
+export type SolDealKind = "sol" | "solRare" | "solEpic" | "solLegendary";
 export type DealAsset = "BTC" | "SOL" | "PEARL" | "ETH";
 export type DealChain = "bitcoin" | "solana" | "ethereum";
 export type DealClass = "private" | "middle";
@@ -57,9 +71,13 @@ export type NftChain = "bitcoin" | "solana" | "ethereum";
 
 export const NFT_MAX: Record<NftChain, number> = {
   bitcoin: 10,
-  solana: 250,
+  solana: 50,
   ethereum: 15,
 };
+export const SOL_COMMON_MAX = SOL_RARITY_META.common.count;
+export const SOL_RARE_MAX = SOL_RARITY_META.rare.count;
+export const SOL_EPIC_MAX = SOL_RARITY_META.epic.count;
+export const SOL_LEGENDARY_MAX = SOL_RARITY_META.legendary.count;
 /** Ordinary Bitcoin souls: editions 1–7 at a flat 1 BTC. */
 export const BTC_REGULAR_MAX = 7;
 /** Last three of ten: editions 8–10, 888 luck charters at 8 BTC. */
@@ -104,6 +122,33 @@ export const DEALS: Record<DealKind, DealSpec> = {
   },
   sol: {
     kind: "sol",
+    asset: "SOL",
+    chain: "solana",
+    nftChain: "solana",
+    deskClass: "middle",
+    address: SOL_ADDRESS,
+    unit: "SOL",
+  },
+  solRare: {
+    kind: "solRare",
+    asset: "SOL",
+    chain: "solana",
+    nftChain: "solana",
+    deskClass: "middle",
+    address: SOL_ADDRESS,
+    unit: "SOL",
+  },
+  solEpic: {
+    kind: "solEpic",
+    asset: "SOL",
+    chain: "solana",
+    nftChain: "solana",
+    deskClass: "middle",
+    address: SOL_ADDRESS,
+    unit: "SOL",
+  },
+  solLegendary: {
+    kind: "solLegendary",
     asset: "SOL",
     chain: "solana",
     nftChain: "solana",
@@ -186,11 +231,33 @@ export function isEthKind(kind: DealKind): kind is EthDealKind {
   return kind === "eth" || kind === "ethOne" || kind === "ethTwo";
 }
 
+export function isSolKind(kind: DealKind): kind is SolDealKind {
+  return (
+    kind === "sol" ||
+    kind === "solRare" ||
+    kind === "solEpic" ||
+    kind === "solLegendary"
+  );
+}
+
 export function ethAmountOf(kind: DealKind) {
   if (kind === "ethOne") return ETH_ONE_AMOUNT;
   if (kind === "ethTwo") return ETH_TWO_AMOUNT;
   if (kind === "eth") return ETH_HALF_AMOUNT;
   return 0;
+}
+
+export function solRarityOf(kind: DealKind): SolRarity | null {
+  if (kind === "solLegendary") return "legendary";
+  if (kind === "solEpic") return "epic";
+  if (kind === "solRare") return "rare";
+  if (kind === "sol") return "common";
+  return null;
+}
+
+export function solAmountOf(kind: DealKind) {
+  const rarity = solRarityOf(kind);
+  return rarity ? SOL_RARITY_META[rarity].amount : 0;
 }
 
 export function cleanseSolAmount(degree?: number | null) {
@@ -221,8 +288,8 @@ export function expectedAtomic(
   if (kind === "cleanse") {
     return String(Math.round(cleanseSolAmount(sinDegree) * 1_000_000_000));
   }
-  if (kind === "sol") {
-    return String(SOL_AMOUNT * 1_000_000_000);
+  if (isSolKind(kind)) {
+    return String(Math.round(solAmountOf(kind) * 1_000_000_000));
   }
   if (kind === "fa") return String(Math.round(FA_AMOUNT * 1_000_000_000));
   if (kind === "pearl") return String(PEARL_AMOUNT * 10 ** PEARL_DECIMALS);
@@ -239,7 +306,7 @@ export function formatDealAmount(
   sinDegree?: number | null,
 ) {
   if (kind === "cleanse") return formatSolLabel(cleanseSolAmount(sinDegree));
-  if (kind === "sol") return `${SOL_AMOUNT} SOL`;
+  if (isSolKind(kind)) return `${solAmountOf(kind)} SOL`;
   if (kind === "fa") return `${FA_AMOUNT} SOL`;
   if (kind === "pearl") return `${PEARL_AMOUNT} PEARL`;
   if (kind === "sell") return `${SELL_BTC.toFixed(8)} BTC`;
@@ -258,7 +325,7 @@ export function formatAtomic(kind: DealKind, atomic: string | number) {
     return `${whole}.${frac} ETH`;
   }
   const value = Number(atomic);
-  if (kind === "sol" || kind === "cleanse" || kind === "fa") {
+  if (isSolKind(kind) || kind === "cleanse" || kind === "fa") {
     return `${(value / 1_000_000_000).toFixed(4)} SOL`;
   }
   if (kind === "pearl") {
@@ -269,11 +336,26 @@ export function formatAtomic(kind: DealKind, atomic: string | number) {
 
 export const SERIAL_TAG: Record<
   DealKind,
-  "BUY" | "SELL" | "SOL" | "PRL" | "ETH" | "ET1" | "ET2" | "CLN" | "FA8" | "B88"
+  | "BUY"
+  | "SELL"
+  | "SOL"
+  | "SRR"
+  | "SEP"
+  | "SLG"
+  | "PRL"
+  | "ETH"
+  | "ET1"
+  | "ET2"
+  | "CLN"
+  | "FA8"
+  | "B88"
 > = {
   buy: "BUY",
   sell: "SELL",
   sol: "SOL",
+  solRare: "SRR",
+  solEpic: "SEP",
+  solLegendary: "SLG",
   pearl: "PRL",
   eth: "ETH",
   ethOne: "ET1",

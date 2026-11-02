@@ -7,24 +7,53 @@ import {
   ETH_ONE_MAX,
   ETH_TWO_MAX,
   NFT_MAX,
+  SOL_COMMON_MAX,
+  SOL_EPIC_MAX,
+  SOL_LEGENDARY_MAX,
+  SOL_RARE_MAX,
   type NftChain,
 } from "@/lib/deal";
+import { solEditionsOf, type SolRarity } from "@/lib/sol-rarity";
 
 const STORAGE_KEY = "maison-nft-editions";
 
-export type NftPool = "regular" | "lucky" | "ethHalf" | "ethOne" | "ethTwo";
+export type NftPool =
+  | "regular"
+  | "lucky"
+  | "ethHalf"
+  | "ethOne"
+  | "ethTwo"
+  | "solCommon"
+  | "solRare"
+  | "solEpic"
+  | "solLegendary";
 
 type Ledger = Record<NftChain, number> & {
   lucky: number;
   ethOne: number;
   ethTwo: number;
+  solCommon: number;
+  solRare: number;
+  solEpic: number;
+  solLegendary: number;
 };
 type Listener = () => void;
 
 const listeners = new Set<Listener>();
 
 function empty(): Ledger {
-  return { bitcoin: 0, solana: 0, ethereum: 0, lucky: 0, ethOne: 0, ethTwo: 0 };
+  return {
+    bitcoin: 0,
+    solana: 0,
+    ethereum: 0,
+    lucky: 0,
+    ethOne: 0,
+    ethTwo: 0,
+    solCommon: 0,
+    solRare: 0,
+    solEpic: 0,
+    solLegendary: 0,
+  };
 }
 
 function read(): Ledger {
@@ -40,6 +69,10 @@ function read(): Ledger {
       lucky: Math.min(Number(parsed.lucky) || 0, BTC_LUCKY_MAX),
       ethOne: Math.min(Number(parsed.ethOne) || 0, ETH_ONE_MAX),
       ethTwo: Math.min(Number(parsed.ethTwo) || 0, ETH_TWO_MAX),
+      solCommon: Math.min(Number(parsed.solCommon) || 0, SOL_COMMON_MAX),
+      solRare: Math.min(Number(parsed.solRare) || 0, SOL_RARE_MAX),
+      solEpic: Math.min(Number(parsed.solEpic) || 0, SOL_EPIC_MAX),
+      solLegendary: Math.min(Number(parsed.solLegendary) || 0, SOL_LEGENDARY_MAX),
     };
   } catch {
     return empty();
@@ -69,6 +102,15 @@ export type NftEdition = {
   remaining: number;
 };
 
+function solIssued(ledger: Ledger) {
+  return (
+    Math.min(ledger.solCommon, SOL_COMMON_MAX) +
+    Math.min(ledger.solRare, SOL_RARE_MAX) +
+    Math.min(ledger.solEpic, SOL_EPIC_MAX) +
+    Math.min(ledger.solLegendary, SOL_LEGENDARY_MAX)
+  );
+}
+
 export function nftSupply(chain: NftChain): NftEdition {
   const ledger = read();
   if (chain === "bitcoin") {
@@ -89,6 +131,16 @@ export function nftSupply(chain: NftChain): NftEdition {
       Math.min(ledger.ethOne, ETH_ONE_MAX) +
       Math.min(ledger.ethTwo, ETH_TWO_MAX);
     const max = NFT_MAX.ethereum;
+    return {
+      chain,
+      edition: issued,
+      max,
+      remaining: Math.max(0, max - issued),
+    };
+  }
+  if (chain === "solana") {
+    const issued = solIssued(ledger);
+    const max = NFT_MAX.solana;
     return {
       chain,
       edition: issued,
@@ -156,6 +208,37 @@ export function ethTwoSupply(): NftEdition {
   };
 }
 
+function solPoolSupply(rarity: SolRarity, issued: number, max: number): NftEdition {
+  const slots = solEditionsOf(rarity);
+  const edition = issued > 0 ? slots[issued - 1] : 0;
+  return {
+    chain: "solana",
+    edition,
+    max,
+    remaining: Math.max(0, max - issued),
+  };
+}
+
+export function solCommonSupply(): NftEdition {
+  return solPoolSupply("common", Math.min(read().solCommon, SOL_COMMON_MAX), SOL_COMMON_MAX);
+}
+
+export function solRareSupply(): NftEdition {
+  return solPoolSupply("rare", Math.min(read().solRare, SOL_RARE_MAX), SOL_RARE_MAX);
+}
+
+export function solEpicSupply(): NftEdition {
+  return solPoolSupply("epic", Math.min(read().solEpic, SOL_EPIC_MAX), SOL_EPIC_MAX);
+}
+
+export function solLegendarySupply(): NftEdition {
+  return solPoolSupply(
+    "legendary",
+    Math.min(read().solLegendary, SOL_LEGENDARY_MAX),
+    SOL_LEGENDARY_MAX,
+  );
+}
+
 export function allNftSupply() {
   return {
     bitcoin: nftSupply("bitcoin"),
@@ -166,6 +249,28 @@ export function allNftSupply() {
     ethHalf: ethHalfSupply(),
     ethOne: ethOneSupply(),
     ethTwo: ethTwoSupply(),
+    solCommon: solCommonSupply(),
+    solRare: solRareSupply(),
+    solEpic: solEpicSupply(),
+    solLegendary: solLegendarySupply(),
+  };
+}
+
+function claimSolRarity(
+  ledger: Ledger,
+  rarity: SolRarity,
+  key: "solCommon" | "solRare" | "solEpic" | "solLegendary",
+  max: number,
+): NftEdition | null {
+  if (ledger[key] >= max) return null;
+  ledger[key] += 1;
+  write(ledger);
+  const slots = solEditionsOf(rarity);
+  return {
+    chain: "solana",
+    edition: slots[ledger[key] - 1],
+    max: NFT_MAX.solana,
+    remaining: Math.max(0, max - ledger[key]),
   };
 }
 
@@ -229,16 +334,19 @@ export function claimNftEdition(
       remaining: Math.max(0, ETH_HALF_MAX - ledger.ethereum),
     };
   }
-  if (ledger[chain] >= NFT_MAX[chain]) return null;
-  ledger[chain] += 1;
-  write(ledger);
-  const max = NFT_MAX[chain];
-  return {
-    chain,
-    edition: ledger[chain],
-    max,
-    remaining: Math.max(0, max - ledger[chain]),
-  };
+  if (chain === "solana" && pool === "solRare") {
+    return claimSolRarity(ledger, "rare", "solRare", SOL_RARE_MAX);
+  }
+  if (chain === "solana" && pool === "solEpic") {
+    return claimSolRarity(ledger, "epic", "solEpic", SOL_EPIC_MAX);
+  }
+  if (chain === "solana" && pool === "solLegendary") {
+    return claimSolRarity(ledger, "legendary", "solLegendary", SOL_LEGENDARY_MAX);
+  }
+  if (chain === "solana") {
+    return claimSolRarity(ledger, "common", "solCommon", SOL_COMMON_MAX);
+  }
+  return null;
 }
 
 export function useNftSupply(chain: NftChain): NftEdition;
@@ -277,4 +385,28 @@ export function useEthTwoSupply() {
   const [, bump] = useState(0);
   useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
   return ethTwoSupply();
+}
+
+export function useSolCommonSupply() {
+  const [, bump] = useState(0);
+  useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
+  return solCommonSupply();
+}
+
+export function useSolRareSupply() {
+  const [, bump] = useState(0);
+  useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
+  return solRareSupply();
+}
+
+export function useSolEpicSupply() {
+  const [, bump] = useState(0);
+  useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
+  return solEpicSupply();
+}
+
+export function useSolLegendarySupply() {
+  const [, bump] = useState(0);
+  useEffect(() => subscribeNftSupply(() => bump((n) => n + 1)), []);
+  return solLegendarySupply();
 }

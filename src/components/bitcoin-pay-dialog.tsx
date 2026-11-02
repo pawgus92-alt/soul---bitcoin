@@ -37,7 +37,6 @@ import {
   FA_AMOUNT,
   PEARL_AMOUNT,
   SELL_BTC,
-  SOL_AMOUNT,
   cleanseSolAmount,
   ethAmountOf,
   expectedAtomic,
@@ -46,6 +45,8 @@ import {
   formatSolLabel,
   getDeal,
   isEthKind,
+  isSolKind,
+  solAmountOf,
   type DealKind,
 } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
@@ -57,6 +58,10 @@ import {
   useLuckyBtcSupply,
   useNftSupply,
   useRegularBtcSupply,
+  useSolCommonSupply,
+  useSolEpicSupply,
+  useSolLegendarySupply,
+  useSolRareSupply,
   type NftPool,
 } from "@/lib/nft-supply";
 import {
@@ -65,7 +70,7 @@ import {
   type CertificateNft,
 } from "@/lib/ordinals";
 import { useBtcQuote } from "@/lib/quote-context";
-import { isOpenSinDegree, type SinDegree } from "@/lib/sins";
+import { isOpenSinDegree, sinLadderClass, type SinDegree } from "@/lib/sins";
 import { watchDeskPayment, type PaymentWatch } from "@/lib/watch";
 
 type Step = "sins" | "invoice" | "watching" | "need-buyer" | "minting" | "done";
@@ -88,6 +93,27 @@ function invoiceCopy(
       badge: copy.solInvoiceBadge,
       title: copy.solInvoiceTitle,
       description: copy.solInvoiceDescription(usd),
+    };
+  }
+  if (kind === "solRare") {
+    return {
+      badge: copy.solRareInvoiceBadge,
+      title: copy.solRareInvoiceTitle,
+      description: copy.solRareInvoiceDescription(usd),
+    };
+  }
+  if (kind === "solEpic") {
+    return {
+      badge: copy.solEpicInvoiceBadge,
+      title: copy.solEpicInvoiceTitle,
+      description: copy.solEpicInvoiceDescription(usd),
+    };
+  }
+  if (kind === "solLegendary") {
+    return {
+      badge: copy.solLegendaryInvoiceBadge,
+      title: copy.solLegendaryInvoiceTitle,
+      description: copy.solLegendaryInvoiceDescription(usd),
     };
   }
   if (kind === "pearl") {
@@ -160,6 +186,10 @@ function nftPoolOf(kind: DealKind): NftPool {
   if (kind === "ethOne") return "ethOne";
   if (kind === "ethTwo") return "ethTwo";
   if (kind === "eth") return "ethHalf";
+  if (kind === "solRare") return "solRare";
+  if (kind === "solEpic") return "solEpic";
+  if (kind === "solLegendary") return "solLegendary";
+  if (kind === "sol") return "solCommon";
   return "regular";
 }
 
@@ -199,14 +229,20 @@ export function BitcoinPayDialog({
   const ethHalf = useEthHalfSupply();
   const ethOne = useEthOneSupply();
   const ethTwo = useEthTwoSupply();
+  const solCommon = useSolCommonSupply();
+  const solRare = useSolRareSupply();
+  const solEpic = useSolEpicSupply();
+  const solLegendary = useSolLegendarySupply();
   const sell = kind === "sell";
   const btcBuy = kind === "buy";
   const luckyDesk = kind === "lucky";
   const ethBuy = isEthKind(kind);
   const ethCoin = ethAmountOf(kind);
+  const solBuy = isSolKind(kind);
+  const solCoin = solAmountOf(kind);
   const cleansing = kind === "cleanse";
   const faBlessing = kind === "fa";
-  const solDesk = kind === "sol" || cleansing || faBlessing;
+  const solDesk = solBuy || cleansing || faBlessing;
   const payLabel =
     triggerLabel ??
     (cleansing
@@ -243,8 +279,8 @@ export function BitcoinPayDialog({
             ? formatUsd(solQuote.usdPerSol * FA_AMOUNT)
             : cleansing && solQuote
               ? formatUsd(solQuote.usdPerSol * cleanseSol)
-              : kind === "sol" && solQuote
-                ? formatUsd(solQuote.usdAmount)
+              : solBuy && solQuote
+                ? formatUsd(solQuote.usdPerSol * solCoin)
                 : formatBtc(BTC_REGULAR_AMOUNT);
   const soldOut = luckyDesk
     ? luckyBtc.remaining <= 0
@@ -256,7 +292,15 @@ export function BitcoinPayDialog({
           ? ethTwo.remaining <= 0
           : kind === "eth"
             ? ethHalf.remaining <= 0
-            : supply.remaining <= 0;
+            : kind === "solRare"
+              ? solRare.remaining <= 0
+              : kind === "solEpic"
+                ? solEpic.remaining <= 0
+                : kind === "solLegendary"
+                  ? solLegendary.remaining <= 0
+                  : kind === "sol"
+                    ? solCommon.remaining <= 0
+                    : supply.remaining <= 0;
   const invoice = invoiceCopy(kind, copy, invoiceUsd, paidLabel);
   const payUri =
     deal.chain === "solana"
@@ -268,7 +312,7 @@ export function BitcoinPayDialog({
               ? FA_AMOUNT
               : cleansing
                 ? cleanseSol
-                : SOL_AMOUNT,
+                : solCoin,
           deal.mint,
         )
       : deal.chain === "ethereum"
@@ -591,18 +635,24 @@ export function BitcoinPayDialog({
                     }}
                     className={
                       openDegree
-                        ? "rounded-md border border-primary/20 bg-black/30 p-4 text-left hover:border-primary/50 hover:bg-black/50"
-                        : "cursor-not-allowed rounded-md border border-dashed border-primary/15 bg-black/10 p-4 text-left opacity-70"
+                        ? `rounded-md p-4 text-left hover:brightness-110 ${sinLadderClass(item.degree)}`
+                        : `cursor-not-allowed rounded-md p-4 text-left opacity-70 ${sinLadderClass(item.degree, true)}`
                     }
                   >
+                    <div className="mb-3 h-[2px] w-full bg-black/50">
+                      <div
+                        className="h-[2px] bg-primary"
+                        style={{ width: `${Math.min(item.degree, 5) * 20}%` }}
+                      />
+                    </div>
                     <p className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">
                       {item.kicker}
                     </p>
-                    <p className="font-heading mt-1 text-xl text-primary">
+                    <p className="font-heading mt-1 text-2xl text-primary">
                       {item.title}
                     </p>
                     {openDegree ? (
-                      <p className="mt-1 font-mono text-xs tracking-[0.14em] text-primary">
+                      <p className="font-heading mt-1 text-xl tracking-wide text-[#e4c36a]">
                         {formatSolLabel(cleanseSolAmount(item.degree))}
                       </p>
                     ) : null}
@@ -704,7 +754,7 @@ export function BitcoinPayDialog({
                             ? solQuote.usdPerSol * FA_AMOUNT
                             : cleansing
                               ? solQuote.usdPerSol * cleanseSol
-                              : solQuote.usdAmount,
+                              : solQuote.usdPerSol * solCoin,
                         )} at ${formatUsd(solQuote.usdPerSol)} / SOL`}
                       </p>
                     ) : null}
@@ -737,11 +787,31 @@ export function BitcoinPayDialog({
                             ? copy.nftEthOneRemaining(ethOne.remaining, ethOne.max)
                             : kind === "ethTwo"
                               ? copy.nftEthTwoRemaining(ethTwo.remaining, ethTwo.max)
-                              : copy.nftRemaining(
-                                  supply.remaining,
-                                  supply.max,
-                                  deal.nftChain,
-                                )}
+                              : kind === "sol"
+                                ? copy.nftSolCommonRemaining(
+                                    solCommon.remaining,
+                                    solCommon.max,
+                                  )
+                                : kind === "solRare"
+                                  ? copy.nftSolRareRemaining(
+                                      solRare.remaining,
+                                      solRare.max,
+                                    )
+                                  : kind === "solEpic"
+                                    ? copy.nftSolEpicRemaining(
+                                        solEpic.remaining,
+                                        solEpic.max,
+                                      )
+                                    : kind === "solLegendary"
+                                      ? copy.nftSolLegendaryRemaining(
+                                          solLegendary.remaining,
+                                          solLegendary.max,
+                                        )
+                                      : copy.nftRemaining(
+                                          supply.remaining,
+                                          supply.max,
+                                          deal.nftChain,
+                                        )}
                     </p>
                   </div>
                   <div>
@@ -832,9 +902,11 @@ export function BitcoinPayDialog({
                           ? copy.ethTwoAcceptTerms
                           : cleansing
                             ? copy.cleanseAcceptTerms(paidLabel)
-                            : sell
-                              ? copy.acceptSellTerms
-                              : copy.acceptTerms}
+                            : solBuy
+                              ? copy.solAcceptTerms(paidLabel)
+                              : sell
+                                ? copy.acceptSellTerms
+                                : copy.acceptTerms}
               </span>
             </label>
 

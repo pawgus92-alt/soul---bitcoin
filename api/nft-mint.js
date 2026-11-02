@@ -70,6 +70,35 @@ export default async function handler(request, response) {
       },
       { embedded: CERTIFICATE_PLATES },
     );
+    const solRarity = {
+      sol: { rarity: "COMMON", encounter: "60%", pool: "30 of 50" },
+      solRare: { rarity: "RARE", encounter: "24%", pool: "12 of 50" },
+      solEpic: { rarity: "EPIC", encounter: "12%", pool: "6 of 50" },
+      solLegendary: { rarity: "LEGENDARY", encounter: "4%", pool: "2 of 50" },
+    }[payload.kind];
+    const sinLatin = {
+      1: "VANITAS",
+      2: "AVARITIA",
+      3: "INVIDIA",
+      4: "SUPERBIA",
+      5: "DEGREE V",
+    }[Number(payload.sinDegree)];
+    const attributes = [
+      { trait_type: "chain", value: chain },
+      { trait_type: "desk", value: payload.kind || chain },
+      { trait_type: "serial", value: serial },
+      { trait_type: "edition", value: `${edition} / ${max || "?"}` },
+    ];
+    if (solRarity) {
+      attributes.push(
+        { trait_type: "rarity", value: solRarity.rarity },
+        { trait_type: "encounter", value: solRarity.encounter },
+        { trait_type: "pool", value: solRarity.pool },
+      );
+    }
+    if (sinLatin) {
+      attributes.push({ trait_type: "sin", value: sinLatin });
+    }
     json(response, 200, {
       orderId: tokenId,
       receiveAddress,
@@ -85,15 +114,11 @@ export default async function handler(request, response) {
       metadata: {
         name: `Maison Æternum · ${serial}`,
         symbol: "AE1666",
-        description:
-          "Unique gothic soul certificate. The NFT lives on the chain of purchase and is minted to the buyer, never the desk.",
+        description: solRarity
+          ? `Unique gothic soul certificate. ${solRarity.rarity} · encounter ${solRarity.encounter} · ${solRarity.pool}. Minted to the buyer, never the desk.`
+          : "Unique gothic soul certificate. The NFT lives on the chain of purchase and is minted to the buyer, never the desk.",
         bytes: Buffer.byteLength(svg, "utf8"),
-        attributes: [
-          { trait_type: "chain", value: chain },
-          { trait_type: "desk", value: payload.kind || chain },
-          { trait_type: "serial", value: serial },
-          { trait_type: "edition", value: `${edition} / ${max || "?"}` },
-        ],
+        attributes,
       },
     });
   } catch (error) {

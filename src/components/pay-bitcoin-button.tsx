@@ -1,7 +1,9 @@
 import {
   Bitcoin,
   Coins,
+  Crown,
   Droplets,
+  Gem,
   Hexagon,
   Sparkles,
 } from "lucide-react";
@@ -19,11 +21,29 @@ import {
   SHOW_PEARL_DESK,
   SHOW_SELL_DESK,
   isEthKind,
+  isSolKind,
+  solAmountOf,
   type DealKind,
 } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useBtcQuote } from "@/lib/quote-context";
+
+function solButtonLabel(
+  kind: DealKind,
+  copy: ReturnType<typeof useI18n>["copy"],
+  usd: string | null,
+) {
+  const base =
+    kind === "solLegendary"
+      ? copy.buySolLegendary
+      : kind === "solEpic"
+        ? copy.buySolEpic
+        : kind === "solRare"
+          ? copy.buySolRare
+          : copy.buySol;
+  return usd ? `${base} · ${usd}` : base;
+}
 
 export function PayBitcoinButton({
   className,
@@ -42,13 +62,13 @@ export function PayBitcoinButton({
     : null;
   const ethUsd = (amount: number) =>
     ethQuote ? formatUsd(ethQuote.usdPerEth * amount) : null;
+  const solUsd = (amount: number) =>
+    solQuote ? formatUsd(solQuote.usdPerSol * amount) : null;
   const label =
     kind === "sell"
       ? copy.sellSoul
-      : kind === "sol"
-        ? solQuote
-          ? `${copy.buySol} · ${formatUsd(solQuote.usdAmount)}`
-          : copy.buySol
+      : isSolKind(kind)
+        ? solButtonLabel(kind, copy, solUsd(solAmountOf(kind)))
         : kind === "pearl"
           ? copy.buyPearl
           : kind === "cleanse"
@@ -78,9 +98,11 @@ export function PayBitcoinButton({
                         : copy.payAmount(formatBtc(BTC_REGULAR_AMOUNT));
 
   const icon =
-    kind === "sol" ? (
-      <Coins data-icon="inline-start" />
-    ) : kind === "pearl" ? (
+    kind === "solLegendary" ? (
+      <Crown data-icon="inline-start" />
+    ) : kind === "solEpic" ? (
+      <Gem data-icon="inline-start" />
+    ) : kind === "solRare" || kind === "sol" || kind === "pearl" ? (
       <Coins data-icon="inline-start" />
     ) : kind === "cleanse" ? (
       <Droplets data-icon="inline-start" />
@@ -98,7 +120,10 @@ export function PayBitcoinButton({
       triggerClassName={className}
       triggerLabel={label}
       triggerVariant={
-        kind === "buy" || kind === "lucky" || kind === "ethTwo"
+        kind === "buy" ||
+        kind === "lucky" ||
+        kind === "ethTwo" ||
+        kind === "solLegendary"
           ? "default"
           : "outline"
       }
@@ -132,6 +157,9 @@ export function DealButtons({
       {showMiddle ? (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
           <PayBitcoinButton kind="sol" className={buttonClassName} />
+          <PayBitcoinButton kind="solRare" className={buttonClassName} />
+          <PayBitcoinButton kind="solEpic" className={buttonClassName} />
+          <PayBitcoinButton kind="solLegendary" className={buttonClassName} />
           <PayBitcoinButton kind="cleanse" className={buttonClassName} />
           {locale === "zh" ? (
             <PayBitcoinButton kind="fa" className={buttonClassName} />

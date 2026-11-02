@@ -25,6 +25,7 @@ export const zh: Copy = {
   cities: ["日内瓦", "伦敦", "迪拜", "莫斯科", "拿骚"],
   heroTitle: "把灵魂卖掉。",
   heroAccent: "游艇留下。",
+  siteSlogan: "空缺，是最后的奢侈。",
   heroBody: (usd) =>
     `一枚比特币，约 ${usd}。我们不议价，不抽成，也不问董事会的空气为何忽然轻了。`,
   readTerms: "阅读条款",
@@ -41,14 +42,14 @@ export const zh: Copy = {
   skuBulletEth: (usd) =>
     `以太坊柜台：十五枚 NFT。前十枚各 0.5 ETH，Coinbase 约 ${usd}。其后三枚各 1 ETH。末两枚各 2 ETH。`,
   skuBulletSol: (usd) =>
-    `Solana 柜台：10 SOL，Coinbase 即时现货，约 ${usd}。`,
+    `Solana 柜台：五十枚 NFT，牌组只洗一次。普通 0.5 SOL（60%，约 ${usd}），稀有 1 SOL（24%），史诗 2 SOL（12%），传说 8 SOL（4%——五十枚中的两枚）。出现率写在 NFT 上。`,
   skuBulletNft:
-    "证书 NFT 铸于你付款之链。比特币铭文：10，其中最后三枚为 888 招财文书。Solana NFT：250。以太坊 NFT：15——十枚各 0.5 ETH，三枚各 1 ETH，两枚各 2 ETH。各为一张独特的神秘文书。",
+    "证书 NFT 铸于你付款之链。比特币铭文：10，其中最后三枚为 888 招财文书。Solana NFT：50——普通、稀有、史诗、传说。以太坊 NFT：15——十枚各 0.5 ETH，三枚各 1 ETH，两枚各 2 ETH。各为一张独特的神秘文书。",
   skuBulletLucky:
     "最后三枚比特币铭文——第 8、9、10 号，共十枚——为 888 招财文书：最贵、最富、招财。每枚 8 枚比特币。其余七枚各一枚比特币。",
   skuBulletRefund: "恕不退款。悔恨是另一件定价过高的商品。",
   skuFoot: (usd) =>
-    `私人柜台：七枚寻常灵魂各 1 BTC（约 ${usd}），888 招财文书各 8 BTC，或以太坊十五枚：0.5 / 1 / 2 ETH。中产柜台按 Coinbase 收取 10 SOL 买一枚灵魂（250 枚 NFT）。不体面的加密罪过自第一等 1.5 SOL 起，逐等加价，至第五等史上最贵的笔记本为 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
+    `私人柜台：七枚寻常灵魂各 1 BTC（约 ${usd}），888 招财文书各 8 BTC，或以太坊十五枚：0.5 / 1 / 2 ETH。中产柜台出售五十枚 Solana 灵魂：0.5 / 1 / 2 / 8 SOL。洗涤之梯有名无号：虚荣 1.5，贪婪 2.5，嫉妒 4，傲慢 6，然后是史上最贵的笔记本 8.88 SOL。中文支线另有 发发发 · 8.88 SOL 的完全洗涤。`,
   terms: [
     {
       step: "01",
@@ -58,12 +59,12 @@ export const zh: Copy = {
     {
       step: "02",
       title: "支付一枚比特币",
-      text: "账单是一枚比特币，或 0.5 / 1 / 2 ETH，或 10 SOL。最后三枚比特币 NFT 为 888 招财文书，各 8 BTC。以太坊 NFT 十五枚：前十枚各 0.5 ETH，三枚各 1 ETH，末两枚各 2 ETH。洗涤加密罪过自 1.5 SOL 起，逐等加价，至第五等笔记本为 8.88 SOL。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
+      text: "账单是一枚比特币，或 0.5 / 1 / 2 ETH，或 Solana 的 0.5 / 1 / 2 / 8 SOL。最后三枚比特币 NFT 为 888 招财文书，各 8 BTC。以太坊 NFT 十五枚：前十枚各 0.5 ETH，三枚各 1 ETH，末两枚各 2 ETH。洗涤之梯：虚荣、贪婪、嫉妒、傲慢，然后是 8.88 SOL 的笔记本。一笔转账，一枚哈希，一次永恒。中文支线的完全洗涤是 8.88 SOL。",
     },
     {
       step: "03",
       title: "领取链上 NFT",
-      text: "独一无二的证书编号。比特币柜台：铭文，十枚——七枚各 1 BTC，末三枚 888 各 8 BTC。Solana 柜台：Solana NFT，二百五十枚。以太坊柜台：十五枚——十枚各 0.5 ETH，三枚各 1 ETH，末两枚各 2 ETH。",
+      text: "独一无二的证书编号。比特币柜台：铭文，十枚——七枚各 1 BTC，末三枚 888 各 8 BTC。Solana 柜台：五十枚 NFT，文书写明稀有度与出现率。以太坊柜台：十五枚——十枚各 0.5 ETH，三枚各 1 ETH，末两枚各 2 ETH。",
     },
   ],
   assetsRetained: "仍归你所有",
@@ -134,7 +135,10 @@ export const zh: Copy = {
   fetchingBitcoinRate: "正在读取比特币牌价",
   payAmount: (btc) => `购买 ${btc}`,
   sellSoul: "出售灵魂 · 0.5 BTC",
-  buySol: "中产 · 10 SOL",
+  buySol: "普通 · 0.5 SOL",
+  buySolRare: "稀有 · 1 SOL",
+  buySolEpic: "史诗 · 2 SOL",
+  buySolLegendary: "传说 · 8 SOL",
   buyPearl: "中产 · 650 PEARL",
   cleanseSoul: "洗涤灵魂",
   buyEth: "购买 0.5 ETH",
@@ -146,10 +150,13 @@ export const zh: Copy = {
   payEthTwoAmount: (usd) => `购买 2 ETH · ${usd}`,
   ethHint:
     "十五枚以太坊 NFT：前十枚各 0.5 ETH，其后三枚各 1 ETH，末两枚各 2 ETH。",
+  solHint:
+    "五十枚 Solana 灵魂，牌组只洗一次。普通 0.5 SOL——百分之六十。稀有 1 SOL——百分之二十四。史诗 2 SOL——百分之十二。传说 8 SOL——百分之四，五十枚中的两枚。NFT 写明出现率。",
   midClassLabel: "中产柜台",
   midClassHint:
-    "给已有 Solana、尚未有家族办公室的人家。不体面的加密罪过在同一柜台洗涤：第一等 1.5 SOL，逐等加价，至第五等史上最贵的笔记本 8.88 SOL。中文支线另开 发发发。",
-  nftCapsLine: "比特币 10 · 末三枚 888 · Solana 250 · 以太坊 15 · 0.5 / 1 / 2 ETH",
+    "给已有 Solana、尚未有家族办公室的人家。四种稀有度：0.5、1、2 与 8 SOL。不体面的加密罪过在同一柜台洗涤——不称「第一等」，而称其名：虚荣 1.5，贪婪 2.5，嫉妒 4，傲慢 6，然后是史上最贵的笔记本 8.88 SOL。中文支线另开 发发发。",
+  nftCapsLine:
+    "比特币 10 · 末三枚 888 · Solana 50 · 0.5 / 1 / 2 / 8 SOL · 以太坊 15 · 0.5 / 1 / 2 ETH",
   nftRemaining: (remaining, max, chain) =>
     chain === "solana"
       ? `Solana NFT 余 ${remaining} / ${max}`
@@ -168,32 +175,46 @@ export const zh: Copy = {
   sellInvoiceDescription:
     "柜台以固定半枚比特币收取灵魂。一笔转账，一个空缺，不论现货。",
   sellPriceHint: (usd) => `0.5 BTC · 按即时现货约 ${usd}`,
-  solInvoiceBadge: "中产柜台 · Solana",
-  solInvoiceTitle: "以 10 SOL 购买",
+  solInvoiceBadge: "中产柜台 · 普通 · 60%",
+  solInvoiceTitle: "购买普通 Solana 灵魂",
   solInvoiceDescription: (usd) =>
-    `中产柜台以十枚 Solana 收取一枚灵魂，Coinbase SOL 现货约 ${usd}。证书为 Solana NFT，限 250 枚。`,
+    `半枚 Solana，Coinbase SOL 现货约 ${usd}。普通：五十枚中的三十枚，出现率百分之六十。NFT 将把稀有度写在文书上。`,
+  solRareInvoiceBadge: "中产柜台 · 稀有 · 24%",
+  solRareInvoiceTitle: "购买稀有 Solana 灵魂",
+  solRareInvoiceDescription: (usd) =>
+    `一枚 Solana，约 ${usd}。稀有：五十枚中的十二枚，出现率百分之二十四。更稀的光，同样的空缺。`,
+  solEpicInvoiceBadge: "中产柜台 · 史诗 · 12%",
+  solEpicInvoiceTitle: "购买史诗 Solana 灵魂",
+  solEpicInvoiceDescription: (usd) =>
+    `两枚 Solana，约 ${usd}。史诗：五十枚中的六枚，出现率百分之十二。牌组并不常发这一手。`,
+  solLegendaryInvoiceBadge: "中产柜台 · 传说 · 4%",
+  solLegendaryInvoiceTitle: "购买传说 Solana 灵魂",
+  solLegendaryInvoiceDescription: (usd) =>
+    `八枚 Solana，约 ${usd}。传说：五十枚中的两枚，出现率百分之四。最贵的 Solana 文书。NFT 会如实写上。`,
+  solAcceptTerms: (amount) =>
+    `我明白：此枚 Solana 灵魂以 ${amount} 出售，不得赎回；稀有度与出现率印在 NFT 上。`,
   pearlInvoiceBadge: "中产柜台 · Pearl",
   pearlInvoiceTitle: "以 650 PEARL 购买",
   pearlInvoiceDescription:
-    "中产柜台以 650 PEARL 在 Solana 上收取一枚灵魂。同样的空缺，更安静的灯光，Solana NFT，限 250 枚。",
+    "中产柜台以 650 PEARL 在 Solana 上收取一枚灵魂。同样的空缺，更安静的灯光，Solana NFT，限 50 枚。",
   cleanseInvoiceBadge: "洗涤柜台 · Solana",
   cleanseInvoiceTitle: "洗去一桩不体面的加密罪过",
   cleanseInvoiceDescription: (amount, usd) =>
-    `${amount} 汇入柜台钱包，Coinbase SOL 现货约 ${usd}。Solana NFT 证书将写明罪过的等第。第六等有意为空。`,
+    `${amount} 汇入柜台钱包，Coinbase SOL 现货约 ${usd}。Solana NFT 证书将写明罪过之名，而非号码。第六级有意为空。`,
   cleanseKicker: "洗涤柜台",
   cleanseHeading: "洗涤灵魂",
   cleanseBody:
-    "为加密世界不体面的罪过而设——那些写不进招股书、只活在群聊里的事。六等，如一座小小的耻辱修道院。少年，第一等，1.5 SOL。此后每一等更贵，直至第五等史上最贵的笔记本：8.88 SOL。第六间寮房有意为空：待市场发明更卑下的罪，表格会自己写完。",
-  cleansePickTitle: "点明等第",
+    "为加密世界不体面的罪过而设——那些写不进招股书、只活在群聊里的事。梯子有名无号，好让污迹也值得被买下。虚荣 1.5 SOL。贪婪 2.5。嫉妒 4。傲慢 6。然后第五级原样留下：史上最贵的笔记本，8.88 SOL。第六间寮房有意为空：待市场发明更卑下的罪，表格会自己写完。",
+  cleansePickTitle: "点明罪过",
   cleansePickDescription:
-    "少年起于家庭群，1.5 SOL。第五等，二〇二六年，坐在 8.88 SOL：史上最贵的笔记本，约六十三亿美元，只因工程师打开了不该打开的 PDF。并非所有英雄都披斗篷。若你也曾点开——请来洗涤灵魂。",
-  cleanseContinue: "洗涤此等",
+    "买下与你相称的污迹。虚荣、贪婪、嫉妒、傲慢——每一级都比上一级更贵，贵到几乎想买灵魂多于洗涤。第五等，二〇二六年，坐在 8.88 SOL：史上最贵的笔记本，约六十三亿美元，只因工程师打开了不该打开的 PDF。并非所有英雄都披斗篷。若你也曾点开——请来洗涤灵魂。",
+  cleanseContinue: "洗涤此罪",
   cleanseReserved: "留给日后的罪过",
   cleanseAcceptTerms: (amount) =>
     `我明白：污迹以 ${amount} 洗净，不得赎回，而链仍将记得。`,
   cleansedSoul: "一桩不体面的罪过，已洗",
   cleansedSoulHint:
-    "证书写明等第。挂在宾客看得见洁净、看不见原群聊的地方。",
+    "证书写明罪过。挂在宾客看得见洁净、看不见原群聊的地方。",
   faSoul: "发发发 · 8.88 SOL",
   faKicker: "中文支线 · 888",
   faHeading: "发发发",
@@ -228,6 +249,14 @@ export const zh: Copy = {
     `以太坊 1 ETH 余 ${remaining} / ${max}`,
   nftEthTwoRemaining: (remaining, max) =>
     `以太坊 2 ETH 余 ${remaining} / ${max}`,
+  nftSolCommonRemaining: (remaining, max) =>
+    `普通 Solana 余 ${remaining} / ${max} · 60%`,
+  nftSolRareRemaining: (remaining, max) =>
+    `稀有 Solana 余 ${remaining} / ${max} · 24%`,
+  nftSolEpicRemaining: (remaining, max) =>
+    `史诗 Solana 余 ${remaining} / ${max} · 12%`,
+  nftSolLegendaryRemaining: (remaining, max) =>
+    `传说 Solana 余 ${remaining} / ${max} · 4%`,
   certLuckySubtitle: "招财文书 · 888",
   certLuckyPaid: "以八枚比特币支付。",
   certLuckyProof:
@@ -235,27 +264,27 @@ export const zh: Copy = {
   sinDegrees: [
     {
       degree: 1,
-      title: "少年",
-      kicker: "第一等",
-      text: "你还是少年：罪过轻浅，如第一杯酒，却已沾上衣襟。在家庭群里你称一枚币为机会；对姑妈说回撤即是养生；把别人的截图转发出去，仿佛那是你的运气。官阶尚幼。污迹已老。",
+      title: "虚荣",
+      kicker: "Vanitas · 1.5 SOL",
+      text: "你晒了盈亏。绿烛裁去入金，游艇表情跟在一次幸运的十倍之后，一张截图让群聊忽然安静。加密里的虚荣不是美，而是必须被人看见你在赢。第一级故意便宜：趁它还像自信，买下来。",
     },
     {
       degree: 2,
-      title: "沙弥",
-      kicker: "第二等",
-      text: "你披上研究的袈裟，内里却是信号频道。三根指标、一个「失效」字样，并在最是 FA 的建议下面写着 NFA。Telegram 的修道院已把你写入名册。可惜，是墨。",
+      title: "贪婪",
+      kicker: "Avaritia · 2.5 SOL",
+      text: "杠杆加到灯芯。永不止盈。袋子永远装不满，下一根蜡烛永远是那一根。宁可死在强平，也不在桌上留下一美元。这里的贪婪不是饥饿。它是拒绝平掉盈利的单，因为赢过一次，仍不够。",
     },
     {
       degree: 3,
-      title: "资金池执事",
-      kicker: "第三等",
-      text: "你把社区当作讲坛。合约置顶，「我们还早」自祭台上唱出——而你自己是退出的那一侧，只是灯光更体面。街上的人仍在鞠躬。他们的钱包早已说了阿门。",
+      title: "嫉妒",
+      kicker: "Invidia · 4 SOL",
+      text: "你要的不是那笔交易。你要的是他的运气。跟单陌生人的钱包，把别人的盈亏当作礼拜，只因他的故事让你觉得自己穷，便买同一只币。加密里的嫉妒是二手灵魂：你借来别人的信念，强平仍由自己付。",
     },
     {
       degree: 4,
-      title: "预上市",
-      kicker: "第四等",
-      text: "你知道钱包，也知道那一分钟。截图里没有你：你坐在区块浏览器里，如一间没有隔栅的告解室。柜台能洗灵魂。链保存着那一分钟，并不签发赦罪。",
+      title: "傲慢",
+      kicker: "Superbia · 6 SOL",
+      text: "我还早。论点即身份。你拒绝平仓，拒绝认错，拒绝止损。市场可以错上几年；你不能错上一分钟。傲慢是笔记本之前最后一桩有名的罪：一个仍相信K线欠他道歉的人。",
     },
     {
       degree: 5,
@@ -410,7 +439,7 @@ export const zh: Copy = {
   certSellSubtitle: "灵魂出让",
   certSolSubtitle: "中产之灵魂",
   certPearlSubtitle: "珍珠柜台之灵魂",
-  certTenSol: "以十枚 Solana 支付。",
+  certTenSol: "以 Solana 支付，文书写明稀有度。",
   certPearlPaid: "以 650 PEARL 支付。",
   certEthPaid: "以半枚以太支付。",
   certEthSubtitle: "私人以太坊之灵魂",
@@ -419,7 +448,7 @@ export const zh: Copy = {
   certEthTwoPaid: "以两枚以太支付。",
   certEthTwoSubtitle: "末两枚以太坊之灵魂",
   certCleanseSubtitle: "不体面的加密罪过",
-  certCleansePaid: "以 Solana 按等第洗净。",
+  certCleansePaid: "以 Solana 洗净，并写明罪过之名。",
   certCleanseProof:
     "寻常人不在人前洗涤 Telegram 罪过。此件为洁净、更薄的钱包，以及本不该被读的群聊之证据。",
   certHasCleansed: "已洗涤",

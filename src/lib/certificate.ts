@@ -8,7 +8,7 @@ import {
 } from "@/lib/deal";
 
 export const CERTIFICATE_SERIAL_RE =
-  /^AE-1666-(BUY|SELL|SOL|PRL|ETH|ET1|ET2|CLN|FA8|B88)-[0-9A-F]{12}$/;
+  /^AE-1666-(BUY|SELL|SOL|SRR|SEP|SLG|PRL|ETH|ET1|ET2|CLN|FA8|B88)-[0-9A-F]{12}$/;
 
 export type CertificateRecord = {
   serial: string;
