@@ -18,13 +18,13 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   bitcoinPayUri,
-  formatBtc,
+  ethereumPayUri,
   formatUsd,
   solanaPayUri,
 } from "@/lib/bitcoin";
 import {
   issueCertificate,
-  isBitcoinAddress,
+  isReceiveAddress,
   resolveReceiveAddress,
   satsToBtc,
   type CertificateRecord,
@@ -41,6 +41,7 @@ import {
   type DealKind,
 } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
+import { claimNftEdition, useNftSupply } from "@/lib/nft-supply";
 import {
   createCertificateNft,
   fetchCertificateNft,
@@ -77,11 +78,35 @@ function invoiceCopy(
       description: copy.pearlInvoiceDescription,
     };
   }
+  if (kind === "eth") {
+    return {
+      badge: copy.ethInvoiceBadge,
+      title: copy.ethInvoiceTitle,
+      description: copy.ethInvoiceDescription(usd),
+    };
+  }
   return {
     badge: copy.invoiceBadge,
     title: copy.invoiceTitle,
     description: copy.invoiceDescription(usd),
   };
+}
+
+function payAddressLabel(
+  chain: ReturnType<typeof getDeal>["chain"],
+  copy: ReturnType<typeof useI18n>["copy"],
+) {
+  if (chain === "bitcoin") return copy.bitcoinAddress;
+  if (chain === "ethereum") return copy.ethereumAddress;
+  return copy.payAddress;
+}
+
+function hasPositiveAtomic(value: string) {
+  try {
+    return BigInt(value) > 0n;
+  } catch {
+    return false;
+  }
 }
 
 export function BitcoinPayDialog({
@@ -98,14 +123,32 @@ export function BitcoinPayDialog({
   icon?: ReactNode;
 }) {
   const { copy } = useI18n();
-  const { quote, loading, error: quoteError, refresh } = useBtcQuote();
+  const {
+    quote,
+    ethQuote,
+    loading,
+    ethLoading,
+    error: quoteError,
+    refresh,
+  } = useBtcQuote();
   const deal = getDeal(kind);
+  const supply = useNftSupply(deal.nftChain);
   const sell = kind === "sell";
   const btcBuy = kind === "buy";
+  const ethBuy = kind === "eth";
   const payLabel = triggerLabel ?? (sell ? copy.sellSoul : copy.payInBitcoin);
-  const dealBtc = sell ? SELL_BTC : quote?.btcAmount;
-  const paidLabel = formatDealAmount(kind, dealBtc);
-  const ready = !btcBuy || Boolean(quote);
+  const dealCoin = sell
+    ? SELL_BTC
+    : ethBuy
+      ? ethQuote?.ethAmount
+      : quote?.btcAmount;
+  const paidLabel = formatDealAmount(kind, dealCoin);
+  const ready = btcBuy
+    ? Boolean(quote)
+    : ethBuy
+      ? Boolean(ethQuote)
+      : true;
+  const soldOut = supply.remaining <= 0;
   const invoice = invoiceCopy(kind, copy, formatUsd(DEAL_USD));
   const payUri =
     deal.chain === "solana"
@@ -114,7 +157,9 @@ export function BitcoinPayDialog({
           kind === "sol" ? SOL_AMOUNT : PEARL_AMOUNT,
           deal.mint,
         )
-      : bitcoinPayUri(deal.address, dealBtc ?? SELL_BTC);
+      : deal.chain === "ethereum"
+        ? ethereumPayUri(deal.address, dealCoin ?? 0)
+        : bitcoinPayUri(deal.address, dealCoin ?? SELL_BTC);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("invoice");
   const [name, setName] = useState("");
@@ -130,7 +175,8 @@ export function BitcoinPayDialog({
   const [watch, setWatch] = useState<PaymentWatch | null>(null);
   const closeLocked = useRef(false);
   const finishing = useRef(false);
-  const expected = expectedAtomic(kind, dealBtc ?? 0);
+  const openedAt = useRef(Math.floor(Date.now() / 1000));
+  const expected = expectedAtomic(kind, dealCoin ?? 0);
 
   function reset() {
     closeLocked.current = false;
@@ -147,6 +193,7 @@ export function BitcoinPayDialog({
     setIssuedAt(null);
     setWatch(null);
     finishing.current = false;
+    openedAt.current = Math.floor(Date.now() / 1000);
   }
 
   async function copyPayAddress() {
@@ -185,16 +232,20 @@ export function BitcoinPayDialog({
   }
 
   function startWatch() {
-    if (btcBuy && !quote) {
+    if ((btcBuy && !quote) || (ethBuy && !ethQuote)) {
       setError(copy.waitForRate);
+      return;
+    }
+    if (soldOut) {
+      setError(copy.nftSoldOut);
       return;
     }
     if (!accepted) {
       setError(copy.tickTheBox);
       return;
     }
-    if (nftAddress.trim() && !isBitcoinAddress(nftAddress)) {
-      setError(copy.invalidReceiveAddress);
+    if (nftAddress.trim() && !isReceiveAddress(deal.nftChain, nftAddress)) {
+      setError(copy.invalidReceiveAddress(deal.nftChain));
       return;
     }
     setError(null);
@@ -206,11 +257,21 @@ export function BitcoinPayDialog({
     closeLocked.current = true;
     setStep("minting");
     try {
+      const edition = claimNftEdition(deal.nftChain);
+      if (!edition) {
+        setError(copy.nftSoldOut);
+        setStep("invoice");
+        finishing.current = false;
+        return;
+      }
       const record = await issueCertificate({
         kind,
         holder: name.trim() || copy.anonymousHolder,
         btcAmount: paidLabel,
-        receiveAddress: resolveReceiveAddress(nftAddress),
+        receiveAddress: resolveReceiveAddress(nftAddress, deal.nftChain),
+        nftChain: deal.nftChain,
+        edition: edition.edition,
+        editionMax: edition.max,
         txid: payment.txid || undefined,
         explorerUrl: payment.explorer,
       });
@@ -221,13 +282,14 @@ export function BitcoinPayDialog({
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : copy.certNftFailed);
       setStep("watching");
+      finishing.current = false;
     } finally {
       closeLocked.current = false;
     }
   }
 
   useEffect(() => {
-    if (step !== "watching" || expected <= 0) return;
+    if (step !== "watching" || !hasPositiveAtomic(expected)) return;
     let cancelled = false;
     const tick = async () => {
       try {
@@ -236,6 +298,7 @@ export function BitcoinPayDialog({
           address: deal.address,
           expected,
           mint: deal.mint,
+          since: openedAt.current,
         });
         if (cancelled) return;
         setWatch(next);
@@ -261,6 +324,7 @@ export function BitcoinPayDialog({
 
   useEffect(() => {
     if (step !== "done" || !nft?.orderId || nft.inscriptionId) return;
+    if (deal.nftChain !== "bitcoin") return;
     let cancelled = false;
     const tick = async () => {
       try {
@@ -275,10 +339,13 @@ export function BitcoinPayDialog({
       cancelled = true;
       window.clearInterval(timer);
     };
-  }, [step, nft?.orderId, nft?.inscriptionId]);
+  }, [step, nft?.orderId, nft?.inscriptionId, deal.nftChain]);
 
   const postageReady = Boolean(
-    nft?.chargeAddress && nft.chargeSats && !nft.inscriptionId,
+    deal.nftChain === "bitcoin" &&
+      nft?.chargeAddress &&
+      nft.chargeSats &&
+      !nft.inscriptionId,
   );
   const postageUri =
     postageReady && nft?.chargeAddress && nft.chargeSats
@@ -288,6 +355,11 @@ export function BitcoinPayDialog({
           "Maison Aeternum NFT",
         )
       : "";
+  const askingRate =
+    (btcBuy && loading && !quote) || (ethBuy && ethLoading && !ethQuote);
+  const silentRate =
+    (btcBuy && Boolean(quoteError) && !quote) ||
+    (ethBuy && !ethLoading && !ethQuote);
 
   return (
     <Dialog
@@ -305,6 +377,7 @@ export function BitcoinPayDialog({
         }
         setOpen(next);
         if (!next) reset();
+        if (next) openedAt.current = Math.floor(Date.now() / 1000);
       }}
     >
       <DialogTrigger
@@ -341,7 +414,7 @@ export function BitcoinPayDialog({
               <DialogDescription>{invoice.description}</DialogDescription>
             </DialogHeader>
 
-            {btcBuy && loading && !quote ? (
+            {askingRate ? (
               <div className="flex min-h-40 flex-col items-center justify-center gap-3 py-8 text-center">
                 <LoaderCircle className="size-6 animate-spin text-primary" />
                 <p className="text-sm text-muted-foreground">
@@ -350,10 +423,10 @@ export function BitcoinPayDialog({
               </div>
             ) : null}
 
-            {btcBuy && quoteError && !quote ? (
+            {silentRate ? (
               <div className="space-y-3 rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm">
                 <p className="text-destructive">
-                  {copy.rateDeskSilentDetail(quoteError)}
+                  {copy.rateDeskSilentDetail(quoteError || copy.rateDeskSilent)}
                 </p>
                 <Button variant="outline" onClick={refresh}>
                   {copy.fetchRateAgain}
@@ -380,20 +453,37 @@ export function BitcoinPayDialog({
                         {`${formatUsd(DEAL_USD)} at ${formatUsd(quote.usdPerBtc)} / BTC`}
                       </p>
                     ) : null}
+                    {ethBuy && ethQuote ? (
+                      <p className="font-mono text-sm text-muted-foreground">
+                        {`${formatUsd(DEAL_USD)} at ${formatUsd(ethQuote.usdPerEth)} / ETH`}
+                      </p>
+                    ) : null}
                     {sell && quote ? (
                       <p className="font-mono text-sm text-muted-foreground">
                         {copy.sellPriceHint(formatUsd(SELL_BTC * quote.usdPerBtc))}
                       </p>
                     ) : null}
-                    {quote && deal.chain === "bitcoin" ? (
+                    {(kind === "buy" || sell) && quote ? (
                       <p className="mt-1 text-[11px] text-muted-foreground">
                         {copy.spotVia(quote.source)}
                       </p>
                     ) : null}
+                    {ethBuy && ethQuote ? (
+                      <p className="mt-1 text-[11px] text-muted-foreground">
+                        {copy.spotVia(ethQuote.source)}
+                      </p>
+                    ) : null}
+                    <p className="mt-2 text-xs text-primary">
+                      {copy.nftRemaining(
+                        supply.remaining,
+                        supply.max,
+                        deal.nftChain,
+                      )}
+                    </p>
                   </div>
                   <div>
                     <p className="mb-1 text-[11px] tracking-[0.22em] text-primary/80 uppercase">
-                      {deal.chain === "bitcoin" ? copy.bitcoinAddress : copy.payAddress}
+                      {payAddressLabel(deal.chain, copy)}
                     </p>
                     <div className="flex items-start gap-2">
                       <code className="block flex-1 break-all rounded-md border border-primary/20 bg-black/40 px-2 py-2 font-mono text-[11px] leading-relaxed text-primary">
@@ -416,6 +506,12 @@ export function BitcoinPayDialog({
               </div>
             ) : null}
 
+            {soldOut ? (
+              <p className="border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                {copy.nftSoldOut}
+              </p>
+            ) : null}
+
             <p className="border border-primary/20 bg-black/30 px-3 py-2 text-sm text-primary">
               {copy.vatLine}
             </p>
@@ -434,18 +530,18 @@ export function BitcoinPayDialog({
 
             <label className="grid gap-1.5">
               <span className="text-[11px] tracking-[0.22em] text-primary/80 uppercase">
-                {copy.nftReceiveLabel}
+                {copy.nftReceiveLabel(deal.nftChain)}
               </span>
               <Input
                 value={nftAddress}
                 onChange={(event) => setNftAddress(event.target.value)}
-                placeholder={copy.nftReceivePlaceholder}
+                placeholder={copy.nftReceivePlaceholder(deal.nftChain)}
                 className="h-10 bg-black/30 font-mono text-sm"
                 autoComplete="off"
                 spellCheck={false}
               />
               <span className="text-xs leading-5 text-muted-foreground">
-                {copy.nftReceiveHint}
+                {copy.nftReceiveHint(deal.nftChain)}
               </span>
             </label>
 
@@ -471,8 +567,16 @@ export function BitcoinPayDialog({
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 {copy.remainLiving}
               </Button>
-              <Button type="button" onClick={startWatch} disabled={!ready}>
-                {ready ? copy.sendAmount(paidLabel) : copy.waitingForRate}
+              <Button
+                type="button"
+                onClick={startWatch}
+                disabled={!ready || soldOut}
+              >
+                {soldOut
+                  ? copy.nftSoldOut
+                  : ready
+                    ? copy.sendAmount(paidLabel)
+                    : copy.waitingForRate}
               </Button>
             </DialogFooter>
           </>
@@ -482,7 +586,7 @@ export function BitcoinPayDialog({
           <div className="flex min-h-64 flex-col items-center justify-center gap-4 py-10 text-center">
             <LoaderCircle className="size-8 animate-spin text-primary" />
             <DialogTitle className="font-heading text-2xl">
-              {step === "minting" ? copy.watchingMempool : copy.watchingMempool}
+              {copy.watchingMempool}
             </DialogTitle>
             <DialogDescription>
               {step === "minting"
@@ -494,7 +598,7 @@ export function BitcoinPayDialog({
             </p>
             <p className="font-mono text-xs text-muted-foreground">
               {copy.receivedOf(
-                formatAtomic(kind, watch?.received ?? 0),
+                formatAtomic(kind, watch?.received ?? "0"),
                 formatAtomic(kind, expected),
               )}
             </p>
@@ -531,6 +635,9 @@ export function BitcoinPayDialog({
               btcAmount={settledBtc || certificate.btcAmount}
               issuedAt={issuedAt ?? new Date(certificate.issuedAt)}
               nft={nft}
+              nftChain={deal.nftChain}
+              edition={certificate.edition}
+              editionMax={certificate.editionMax}
               txid={certificate.txid}
               explorerUrl={certificate.explorerUrl}
             />
@@ -543,7 +650,7 @@ export function BitcoinPayDialog({
                     {copy.nftPostageTitle}
                   </p>
                   <p className="font-heading text-2xl text-primary">
-                    {formatBtc(satsToBtc(nft!.chargeSats!))}
+                    {formatAtomic("buy", String(nft!.chargeSats || 0))}
                   </p>
                   <code className="block break-all font-mono text-[11px] text-primary">
                     {nft!.chargeAddress}

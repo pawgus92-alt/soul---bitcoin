@@ -1,8 +1,8 @@
 export type PaymentWatch = {
-  chain: "bitcoin" | "solana";
+  chain: "bitcoin" | "solana" | "ethereum";
   address: string;
-  expected: number;
-  received: number;
+  expected: string;
+  received: string;
   paid: boolean;
   txid: string | null;
   confirmed: boolean;
@@ -11,17 +11,19 @@ export type PaymentWatch = {
 };
 
 export async function watchDeskPayment(input: {
-  chain: "bitcoin" | "solana";
+  chain: "bitcoin" | "solana" | "ethereum";
   address: string;
-  expected: number;
+  expected: string | number;
   mint?: string;
+  since?: number;
 }): Promise<PaymentWatch> {
   const params = new URLSearchParams({
     chain: input.chain,
     address: input.address,
-    expected: String(Math.round(input.expected)),
+    expected: String(input.expected),
   });
   if (input.mint) params.set("mint", input.mint);
+  if (input.since) params.set("since", String(input.since));
   const response = await fetch(`/api/pay-watch?${params}`, {
     headers: { accept: "application/json" },
   });

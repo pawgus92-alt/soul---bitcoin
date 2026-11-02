@@ -9,12 +9,19 @@ import {
   type ReactNode,
 } from "react";
 
-import { fetchBtcQuote, type BtcQuote } from "@/lib/bitcoin";
+import {
+  fetchBtcQuote,
+  fetchEthQuote,
+  type BtcQuote,
+  type EthQuote,
+} from "@/lib/bitcoin";
 import { useI18n } from "@/lib/i18n";
 
 type QuoteState = {
   quote: BtcQuote | null;
+  ethQuote: EthQuote | null;
   loading: boolean;
+  ethLoading: boolean;
   error: string | null;
   refresh: () => void;
 };
@@ -24,16 +31,17 @@ const QuoteContext = createContext<QuoteState | null>(null);
 export function QuoteProvider({ children }: { children: ReactNode }) {
   const { copy } = useI18n();
   const [quote, setQuote] = useState<BtcQuote | null>(null);
+  const [ethQuote, setEthQuote] = useState<EthQuote | null>(null);
   const [loading, setLoading] = useState(true);
+  const [ethLoading, setEthLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const fallbackError = useRef(`${copy.rateDeskSilent} ${copy.fetchRateAgain}.`);
   fallbackError.current = `${copy.rateDeskSilent} ${copy.fetchRateAgain}.`;
 
   const refresh = useCallback(() => {
-    const request = fetchBtcQuote();
     setLoading(true);
     setError(null);
-    request
+    void fetchBtcQuote()
       .then((next) => {
         setQuote(next);
         setError(null);
@@ -46,6 +54,11 @@ export function QuoteProvider({ children }: { children: ReactNode }) {
       .finally(() => {
         setLoading(false);
       });
+    setEthLoading(true);
+    void fetchEthQuote()
+      .then(setEthQuote)
+      .catch(() => setEthQuote(null))
+      .finally(() => setEthLoading(false));
   }, []);
 
   useEffect(() => {
@@ -55,8 +68,8 @@ export function QuoteProvider({ children }: { children: ReactNode }) {
   }, [refresh]);
 
   const value = useMemo(
-    () => ({ quote, loading, error, refresh }),
-    [quote, loading, error, refresh],
+    () => ({ quote, ethQuote, loading, ethLoading, error, refresh }),
+    [quote, ethQuote, loading, ethLoading, error, refresh],
   );
 
   return <QuoteContext.Provider value={value}>{children}</QuoteContext.Provider>;

@@ -1,6 +1,8 @@
 const MEMPOOL = "https://mempool.space/api";
 const BLOCKSTREAM = "https://blockstream.info/api";
 const SOLANA = "https://api.mainnet-beta.solana.com";
+const BLOCKSCOUT = "https://eth.blockscout.com/api/v2";
+const ETH_RPC = "https://ethereum.publicnode.com";
 
 async function fetchJson(url, ms = 8000) {
   const controller = new AbortController();
@@ -29,6 +31,25 @@ function query(request) {
   }
 }
 
+function txTime(value) {
+  if (value == null || value === "") return null;
+  if (typeof value === "number") {
+    return value > 1e12 ? Math.floor(value / 1000) : value;
+  }
+  const asNumber = Number(value);
+  if (Number.isFinite(asNumber) && asNumber > 0) {
+    return asNumber > 1e12 ? Math.floor(asNumber / 1000) : asNumber;
+  }
+  const parsed = Date.parse(String(value));
+  return Number.isNaN(parsed) ? null : Math.floor(parsed / 1000);
+}
+
+function isRecent(time, since) {
+  if (!since) return true;
+  if (time == null) return true;
+  return time >= since;
+}
+
 async function solanaRpc(method, params) {
   const response = await fetch(SOLANA, {
     method: "POST",
@@ -50,18 +71,7 @@ function bitcoinIncoming(tx, address) {
   return sats;
 }
 
-async function watchBitcoin(address, expected) {
-  let stats;
-  try {
-    stats = await fetchJson(`${MEMPOOL}/address/${encodeURIComponent(address)}`);
-  } catch {
-    stats = await fetchJson(
-      `${BLOCKSTREAM}/address/${encodeURIComponent(address)}`,
-    );
-  }
-  const received =
-    Number(stats.chain_stats?.funded_txo_sum || 0) +
-    Number(stats.mempool_stats?.funded_txo_sum || 0);
+async function watchBitcoin(address, expected, since) {
   let txs = [];
   try {
     txs = await fetchJson(
@@ -78,24 +88,27 @@ async function watchBitcoin(address, expected) {
       txs = [];
     }
   }
-  let txid;
+  let txid = null;
   let confirmed = false;
+  let received = 0;
   for (const tx of txs) {
     const incoming = bitcoinIncoming(tx, address);
-    if (incoming >= expected) {
-      txid = tx.txid;
-      confirmed = Boolean(tx.status?.confirmed);
-      break;
-    }
+    const time = txTime(tx.status?.block_time);
+    const unconfirmed = !tx.status?.confirmed;
+    if (incoming < expected) continue;
+    if (!unconfirmed && !isRecent(time, since)) continue;
+    received = incoming;
+    txid = tx.txid;
+    confirmed = Boolean(tx.status?.confirmed);
+    break;
   }
-  const paid = received >= expected && expected > 0;
   return {
     chain: "bitcoin",
     address,
-    expected,
-    received,
-    paid,
-    txid: txid || null,
+    expected: String(expected),
+    received: String(received),
+    paid: expected > 0 && received >= expected,
+    txid,
     confirmed,
     explorer: txid
       ? `https://mempool.space/tx/${txid}`
@@ -127,7 +140,7 @@ function tokenDelta(tx, owner, mint) {
   );
 }
 
-async function watchSolana(address, expected, mint) {
+async function watchSolana(address, expected, mint, since) {
   const signatures = await solanaRpc("getSignaturesForAddress", [
     address,
     { limit: 20 },
@@ -136,17 +149,13 @@ async function watchSolana(address, expected, mint) {
   let txid = null;
   let confirmed = false;
   for (const item of signatures || []) {
+    if (!isRecent(txTime(item.blockTime), since)) continue;
     const tx = await solanaRpc("getTransaction", [
       item.signature,
       { encoding: "jsonParsed", maxSupportedTransactionVersion: 0 },
     ]);
     if (!tx) continue;
     const incoming = mint ? tokenDelta(tx, address, mint) : solDelta(tx, address);
-    if (incoming > received) {
-      received = incoming;
-      txid = item.signature;
-      confirmed = item.confirmationStatus === "finalized";
-    }
     if (incoming >= expected) {
       received = incoming;
       txid = item.signature;
@@ -157,14 +166,75 @@ async function watchSolana(address, expected, mint) {
   return {
     chain: "solana",
     address,
-    expected,
-    received,
+    expected: String(expected),
+    received: String(received),
     paid: expected > 0 && received >= expected,
     txid,
     confirmed,
     explorer: txid
       ? `https://solscan.io/tx/${txid}`
       : `https://solscan.io/account/${address}`,
+  };
+}
+
+async function ethBalance(address) {
+  try {
+    const data = await fetchJson(
+      `${BLOCKSCOUT}/addresses/${encodeURIComponent(address)}`,
+    );
+    return BigInt(data.coin_balance || "0");
+  } catch {
+    const response = await fetch(ETH_RPC, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "eth_getBalance",
+        params: [address, "latest"],
+      }),
+    });
+    const data = await response.json();
+    return BigInt(data.result || "0x0");
+  }
+}
+
+async function watchEthereum(address, expectedRaw, since) {
+  const expected = BigInt(expectedRaw || "0");
+  const addr = address.toLowerCase();
+  let received = 0n;
+  let txid = null;
+  let confirmed = false;
+  try {
+    const txs = await fetchJson(
+      `${BLOCKSCOUT}/addresses/${encodeURIComponent(address)}/transactions?filter=to`,
+    );
+    for (const tx of txs.items || []) {
+      const to = String(tx.to?.hash || "").toLowerCase();
+      const value = BigInt(tx.value || "0");
+      const time = txTime(tx.timestamp);
+      if (to !== addr || value < expected) continue;
+      if (!isRecent(time, since)) continue;
+      received = value;
+      txid = tx.hash || null;
+      confirmed = tx.status === "ok" && Boolean(tx.block_number);
+      break;
+    }
+  } catch {
+    const balance = await ethBalance(address);
+    if (expected > 0n && balance >= expected) received = expected;
+  }
+  return {
+    chain: "ethereum",
+    address,
+    expected: expected.toString(),
+    received: received.toString(),
+    paid: expected > 0n && received >= expected,
+    txid,
+    confirmed,
+    explorer: txid
+      ? `https://etherscan.io/tx/${txid}`
+      : `https://etherscan.io/address/${address}`,
   };
 }
 
@@ -177,18 +247,27 @@ export default async function handler(request, response) {
     const params = query(request);
     const chain = params.get("chain");
     const address = String(params.get("address") || "").trim();
-    const expected = Number(params.get("expected") || 0);
+    const expectedRaw = params.get("expected") || "0";
     const mint = params.get("mint") || undefined;
+    const since = Number(params.get("since") || 0) || 0;
     if (!address || !chain) {
       json(response, 400, { error: "chain and address are required" });
       return;
     }
     if (chain === "bitcoin") {
-      json(response, 200, await watchBitcoin(address, expected));
+      json(response, 200, await watchBitcoin(address, Number(expectedRaw), since));
       return;
     }
     if (chain === "solana") {
-      json(response, 200, await watchSolana(address, expected, mint));
+      json(
+        response,
+        200,
+        await watchSolana(address, Number(expectedRaw), mint, since),
+      );
+      return;
+    }
+    if (chain === "ethereum") {
+      json(response, 200, await watchEthereum(address, expectedRaw, since));
       return;
     }
     json(response, 400, { error: "unknown chain" });

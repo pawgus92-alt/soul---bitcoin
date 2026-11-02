@@ -1,7 +1,7 @@
-import { Bitcoin, Coins, Gem, LoaderCircle } from "lucide-react";
+import { Bitcoin, Coins, Gem, Hexagon, LoaderCircle } from "lucide-react";
 
 import { BitcoinPayDialog } from "@/components/bitcoin-pay-dialog";
-import { formatBtc } from "@/lib/bitcoin";
+import { formatBtc, formatEth } from "@/lib/bitcoin";
 import type { DealKind } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ export function PayBitcoinButton({
   kind?: DealKind;
 }) {
   const { copy } = useI18n();
-  const { quote, loading } = useBtcQuote();
+  const { quote, ethQuote, loading, ethLoading } = useBtcQuote();
   const label =
     kind === "sell"
       ? copy.sellSoul
@@ -23,17 +23,29 @@ export function PayBitcoinButton({
         ? copy.buySol
         : kind === "pearl"
           ? copy.buyPearl
-          : quote
-            ? copy.payAmount(formatBtc(quote.btcAmount))
-            : loading
-              ? copy.fetchingBitcoinRate
-              : copy.payInBitcoin;
+          : kind === "eth"
+            ? ethQuote
+              ? copy.payEthAmount(formatEth(ethQuote.ethAmount))
+              : ethLoading
+                ? copy.fetchingEthRate
+                : copy.buyEth
+            : quote
+              ? copy.payAmount(formatBtc(quote.btcAmount))
+              : loading
+                ? copy.fetchingBitcoinRate
+                : copy.payInBitcoin;
 
   const icon =
     kind === "sol" ? (
       <Coins data-icon="inline-start" />
     ) : kind === "pearl" ? (
       <Gem data-icon="inline-start" />
+    ) : kind === "eth" ? (
+      ethLoading && !ethQuote ? (
+        <LoaderCircle data-icon="inline-start" className="animate-spin" />
+      ) : (
+        <Hexagon data-icon="inline-start" />
+      )
     ) : !kind || kind === "buy" ? (
       loading && !quote ? (
         <LoaderCircle data-icon="inline-start" className="animate-spin" />
@@ -69,6 +81,7 @@ export function DealButtons({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
         <PayBitcoinButton kind="buy" className={buttonClassName} />
         <PayBitcoinButton kind="sell" className={buttonClassName} />
+        <PayBitcoinButton kind="eth" className={buttonClassName} />
       </div>
       {showMiddle ? (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">

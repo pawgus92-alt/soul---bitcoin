@@ -3,17 +3,19 @@ import {
   chiselOrderUrl,
   inscriptionExplorerUrl,
 } from "@/lib/certificate";
-import type { DealKind } from "@/lib/deal";
+import type { DealKind, NftChain } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
 
 function nftLabel(
   copy: ReturnType<typeof useI18n>["copy"],
   nft?: CertificateNft,
+  chain: NftChain = "bitcoin",
 ) {
   if (!nft) return copy.certNftPending;
   if (nft.inscriptionId) return copy.certNftMinted;
   if (nft.status === "inscribing") return copy.certNftInscribing;
   if (nft.status === "error") return copy.certNftFailed;
+  if (chain !== "bitcoin" && nft.status === "minted") return copy.certNftMinted;
   return copy.certNftPending;
 }
 
@@ -21,6 +23,7 @@ function subtitleFor(kind: DealKind, copy: ReturnType<typeof useI18n>["copy"]) {
   if (kind === "sell") return copy.certSellSubtitle;
   if (kind === "sol") return copy.certSolSubtitle;
   if (kind === "pearl") return copy.certPearlSubtitle;
+  if (kind === "eth") return copy.certEthSubtitle;
   return copy.certSubtitle;
 }
 
@@ -28,6 +31,7 @@ function taglineFor(kind: DealKind, copy: ReturnType<typeof useI18n>["copy"]) {
   if (kind === "sell") return copy.certHalfBitcoin;
   if (kind === "sol") return copy.certTenSol;
   if (kind === "pearl") return copy.certPearlPaid;
+  if (kind === "eth") return copy.certEthPaid;
   return copy.certVeryRich;
 }
 
@@ -37,6 +41,14 @@ function proofFor(kind: DealKind, copy: ReturnType<typeof useI18n>["copy"]) {
   return copy.certProof;
 }
 
+function nftExplorerUrl(nft: CertificateNft, chain: NftChain) {
+  if (nft.orderUrl) return nft.orderUrl;
+  if (chain === "bitcoin" && nft.inscriptionId) {
+    return inscriptionExplorerUrl(nft.inscriptionId);
+  }
+  return "";
+}
+
 export function SoulCertificate({
   holder,
   serial,
@@ -44,6 +56,9 @@ export function SoulCertificate({
   issuedAt,
   kind = "buy",
   nft,
+  nftChain = "bitcoin",
+  edition,
+  editionMax,
   txid,
   explorerUrl,
 }: {
@@ -53,6 +68,9 @@ export function SoulCertificate({
   issuedAt: Date;
   kind?: DealKind;
   nft?: CertificateNft | null;
+  nftChain?: NftChain;
+  edition?: number;
+  editionMax?: number;
   txid?: string;
   explorerUrl?: string;
 }) {
@@ -62,7 +80,10 @@ export function SoulCertificate({
     month: "long",
     year: "numeric",
   }).format(issuedAt);
-  const orderUrl = nft?.orderUrl || (nft?.orderId ? chiselOrderUrl(nft.orderId) : "");
+  const orderUrl =
+    nft?.orderUrl ||
+    (nftChain === "bitcoin" && nft?.orderId ? chiselOrderUrl(nft.orderId) : "");
+  const viewUrl = nft ? nftExplorerUrl(nft, nftChain) : "";
 
   return (
     <article
@@ -124,9 +145,19 @@ export function SoulCertificate({
               <dd>{date}</dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-[#7a1f2b]">{copy.certNft}</dt>
-              <dd className="normal-case">{nftLabel(copy, nft ?? undefined)}</dd>
+              <dt className="text-[#7a1f2b]">{copy.certNft(nftChain)}</dt>
+              <dd className="normal-case">
+                {nftLabel(copy, nft ?? undefined, nftChain)}
+              </dd>
             </div>
+            {edition && editionMax ? (
+              <div className="flex gap-2">
+                <dt className="text-[#7a1f2b]">No.</dt>
+                <dd className="font-mono normal-case">
+                  {copy.certEdition(edition, editionMax)}
+                </dd>
+              </div>
+            ) : null}
             {txid ? (
               <div className="flex gap-2">
                 <dt className="text-[#7a1f2b]">{copy.certTx}</dt>
@@ -153,7 +184,7 @@ export function SoulCertificate({
         </div>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-[10px] tracking-[0.12em] uppercase">
-          {nft?.inscriptionId ? (
+          {nftChain === "bitcoin" && nft?.inscriptionId ? (
             <a
               href={inscriptionExplorerUrl(nft.inscriptionId)}
               target="_blank"
@@ -163,9 +194,9 @@ export function SoulCertificate({
               {copy.certViewOrdinal}
             </a>
           ) : null}
-          {orderUrl ? (
+          {orderUrl || viewUrl ? (
             <a
-              href={orderUrl}
+              href={orderUrl || viewUrl}
               target="_blank"
               rel="noreferrer"
               className="text-[#1e3a6e] underline"

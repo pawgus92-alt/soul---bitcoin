@@ -5,9 +5,24 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatBtc, formatUsd } from "@/lib/bitcoin";
-import { BTC_ADDRESS, DEAL_USD, SOL_ADDRESS } from "@/lib/deal";
+import { BTC_ADDRESS, DEAL_USD, ETH_ADDRESS, SOL_ADDRESS } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
+import { useNftSupply } from "@/lib/nft-supply";
 import { useBtcQuote } from "@/lib/quote-context";
+
+function NftCaps() {
+  const { copy } = useI18n();
+  const supply = useNftSupply();
+  return (
+    <ul className="space-y-1 text-[11px] leading-5 text-primary/80">
+      <li>{copy.nftRemaining(supply.bitcoin.remaining, supply.bitcoin.max, "bitcoin")}</li>
+      <li>{copy.nftRemaining(supply.solana.remaining, supply.solana.max, "solana")}</li>
+      <li>
+        {copy.nftRemaining(supply.ethereum.remaining, supply.ethereum.max, "ethereum")}
+      </li>
+    </ul>
+  );
+}
 
 function LivePrice() {
   const { copy } = useI18n();
@@ -146,9 +161,12 @@ export default function App() {
               <ul className="space-y-3 text-sm leading-6 text-muted-foreground">
                 <li>{copy.skuBulletOne}</li>
                 <li>{copy.skuBulletSettle(formatUsd(DEAL_USD))}</li>
+                <li>{copy.skuBulletEth(formatUsd(DEAL_USD))}</li>
+                <li>{copy.skuBulletNft}</li>
                 <li>{copy.skuBulletRefund}</li>
                 <li>{copy.vatLine}</li>
               </ul>
+              <NftCaps />
               <Separator className="bg-primary/15" />
               <p className="text-xs leading-5 text-muted-foreground">
                 {copy.skuFoot(formatUsd(DEAL_USD))}
@@ -263,8 +281,12 @@ export default function App() {
                 BTC {BTC_ADDRESS}
               </p>
               <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
+                ETH {ETH_ADDRESS}
+              </p>
+              <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
                 SOL {SOL_ADDRESS}
               </p>
+              <NftCaps />
             </div>
           </div>
         </section>

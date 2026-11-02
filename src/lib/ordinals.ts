@@ -12,6 +12,9 @@ export type CertificateNft = {
   expiration?: number;
   inscriptionId?: string;
   orderUrl?: string;
+  chain?: "bitcoin" | "solana" | "ethereum";
+  edition?: number;
+  max?: number;
   error?: string;
 };
 
@@ -26,6 +29,21 @@ async function readNft(response: Response): Promise<CertificateNft> {
 export async function createCertificateNft(
   record: CertificateRecord,
 ): Promise<CertificateNft> {
+  const chain = record.nftChain || "bitcoin";
+  if (chain !== "bitcoin") {
+    const response = await fetch("/api/nft-mint", {
+      method: "POST",
+      headers: { "content-type": "application/json", accept: "application/json" },
+      body: JSON.stringify({
+        chain,
+        serial: record.serial,
+        receiveAddress: record.receiveAddress,
+        edition: record.edition,
+        max: record.editionMax,
+      }),
+    });
+    return readNft(response);
+  }
   const response = await fetch("/api/inscribe", {
     method: "POST",
     headers: { "content-type": "application/json", accept: "application/json" },
@@ -37,6 +55,8 @@ export async function createCertificateNft(
       btcAmount: record.btcAmount,
       issuedAt: record.issuedAt,
       receiveAddress: record.receiveAddress,
+      edition: record.edition,
+      max: record.editionMax,
     }),
   });
   return readNft(response);

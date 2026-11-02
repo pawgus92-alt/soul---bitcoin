@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 import inscribe from "./api/inscribe.js";
+import nftMint from "./api/nft-mint.js";
 import payWatch from "./api/pay-watch.js";
 
 function readJsonBody(request: IncomingMessage) {
@@ -40,7 +41,9 @@ export default defineConfig({
               ? inscribe
               : pathName === "/api/pay-watch"
                 ? payWatch
-                : null;
+                : pathName === "/api/nft-mint"
+                  ? nftMint
+                  : null;
           if (!route) {
             next();
             return;
@@ -89,6 +92,11 @@ export default defineConfig({
         target: "https://api.coinbase.com",
         changeOrigin: true,
         rewrite: () => "/v2/prices/BTC-USD/spot",
+      },
+      "/api/eth-usd": {
+        target: "https://api.coinbase.com",
+        changeOrigin: true,
+        rewrite: () => "/v2/prices/ETH-USD/spot",
       },
     },
   },

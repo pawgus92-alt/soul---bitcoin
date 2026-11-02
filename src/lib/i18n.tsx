@@ -8,6 +8,8 @@ import {
   type ReactNode,
 } from "react";
 
+import type { NftChain } from "@/lib/deal";
+
 export type Locale = "en" | "ru";
 
 type CopyItem = { title: string; text: string };
@@ -41,6 +43,8 @@ export type Copy = {
   fetchRateAgain: string;
   skuBulletOne: string;
   skuBulletSettle: (usd: string) => string;
+  skuBulletEth: (usd: string) => string;
+  skuBulletNft: string;
   skuBulletRefund: string;
   skuFoot: (usd: string) => string;
   terms: Step[];
@@ -64,8 +68,14 @@ export type Copy = {
   sellSoul: string;
   buySol: string;
   buyPearl: string;
+  buyEth: string;
+  fetchingEthRate: string;
+  payEthAmount: (eth: string) => string;
   midClassLabel: string;
   midClassHint: string;
+  nftCapsLine: string;
+  nftRemaining: (remaining: number, max: number, chain: NftChain) => string;
+  nftSoldOut: string;
   invoiceBadge: string;
   invoiceTitle: string;
   invoiceDescription: (usd: string) => string;
@@ -79,11 +89,15 @@ export type Copy = {
   pearlInvoiceBadge: string;
   pearlInvoiceTitle: string;
   pearlInvoiceDescription: string;
+  ethInvoiceBadge: string;
+  ethInvoiceTitle: string;
+  ethInvoiceDescription: (usd: string) => string;
   askingMarket: string;
   rateDeskSilentDetail: (detail: string) => string;
   amountDue: string;
   spotVia: (source: string) => string;
   bitcoinAddress: string;
+  ethereumAddress: string;
   payAddress: string;
   copyAddress: string;
   copiedJacket: string;
@@ -111,11 +125,12 @@ export type Copy = {
   printCertificate: string;
   returnToSociety: string;
   anonymousHolder: string;
-  nftReceiveLabel: string;
-  nftReceivePlaceholder: string;
-  nftReceiveHint: string;
-  invalidReceiveAddress: string;
-  certNft: string;
+  nftReceiveLabel: (chain: NftChain) => string;
+  nftReceivePlaceholder: (chain: NftChain) => string;
+  nftReceiveHint: (chain: NftChain) => string;
+  invalidReceiveAddress: (chain: NftChain) => string;
+  certNft: (chain: NftChain) => string;
+  certEdition: (edition: number, max: number) => string;
   certNftPending: string;
   certNftInscribing: string;
   certNftMinted: string;
@@ -144,6 +159,8 @@ export type Copy = {
   certPearlSubtitle: string;
   certTenSol: string;
   certPearlPaid: string;
+  certEthPaid: string;
+  certEthSubtitle: string;
   certMidProof: string;
   certNo: string;
   certPaid: string;
@@ -182,9 +199,13 @@ const en: Copy = {
   skuBulletOne: "One soul. No instalments. No family package.",
   skuBulletSettle: (usd) =>
     `Settlement is ${usd} converted at the live BTC/USD spot rate.`,
+  skuBulletEth: (usd) =>
+    `The same ${usd} may be paid in Ethereum at the live ETH spot. Fifty inner NFTs, no more.`,
+  skuBulletNft:
+    "Bitcoin Ordinal NFTs: 25. Solana NFTs: 250. Ethereum inner NFTs: 50.",
   skuBulletRefund: "No refunds. Remorse is a separate, overpriced product.",
   skuFoot: (usd) =>
-    `The private desk is still ${usd} in Bitcoin. The middle desk takes 10 SOL or 650 PEARL, without the yacht lighting.`,
+    `The private desk is ${usd} in Bitcoin (25 Ordinals) or ${usd} in Ethereum (50 inner NFTs). The middle desk takes 10 SOL or 650 PEARL on Solana (250 NFTs).`,
   terms: [
     {
       step: "01",
@@ -198,8 +219,8 @@ const en: Copy = {
     },
     {
       step: "03",
-      title: "Receive the Bitcoin NFT",
-      text: "A unique certificate code, inscribed on Bitcoin as an Ordinal. Keep it beside the second passport.",
+      title: "Receive the chain NFT",
+      text: "A unique certificate code. Bitcoin desk: Ordinal, 25 pieces. Solana desk: Solana NFT, 250 pieces. Ethereum desk: inner NFT, 50 pieces.",
     },
   ],
   assetsRetained: "Assets retained",
@@ -275,9 +296,20 @@ const en: Copy = {
   sellSoul: "Sell soul · 0.5 BTC",
   buySol: "Middle class · 10 SOL",
   buyPearl: "Middle class · 650 PEARL",
+  buyEth: "Buy · ETH",
+  fetchingEthRate: "Fetching Ethereum rate",
+  payEthAmount: (eth) => `Buy ${eth}`,
   midClassLabel: "Middle desk",
   midClassHint:
     "For households that have Solana and a pearl, but not yet a family office.",
+  nftCapsLine: "Bitcoin 25 · Solana 250 · ETH inner 50",
+  nftRemaining: (remaining, max, chain) =>
+    chain === "solana"
+      ? `Solana NFT ${remaining} of ${max} remaining`
+      : chain === "ethereum"
+        ? `ETH inner NFT ${remaining} of ${max} remaining`
+        : `Bitcoin Ordinal ${remaining} of ${max} remaining`,
+  nftSoldOut: "This NFT edition is sold out. The soul will have to wait.",
   invoiceBadge: "Live Bitcoin invoice",
   invoiceTitle: "Buy in Bitcoin",
   invoiceDescription: (usd) =>
@@ -290,16 +322,21 @@ const en: Copy = {
   solInvoiceBadge: "Middle desk · Solana",
   solInvoiceTitle: "Buy with 10 SOL",
   solInvoiceDescription:
-    "The middle desk takes one soul for ten Solana, sent to the Solana address. The certificate is still a Bitcoin Ordinal NFT.",
+    "The middle desk takes one soul for ten Solana, sent to the Solana address. The certificate is a Solana NFT, limited to 250.",
   pearlInvoiceBadge: "Middle desk · Pearl",
   pearlInvoiceTitle: "Buy with 650 PEARL",
   pearlInvoiceDescription:
-    "The middle desk takes one soul for 650 PEARL on Solana. Same vacancy, quieter lighting, Bitcoin NFT certificate.",
+    "The middle desk takes one soul for 650 PEARL on Solana. Same vacancy, quieter lighting, Solana NFT certificate, limited to 250.",
+  ethInvoiceBadge: "Private desk · Ethereum",
+  ethInvoiceTitle: "Buy in Ethereum",
+  ethInvoiceDescription: (usd) =>
+    `One soul is ${usd}. Settlement is the live ETH amount at the current spot rate, sent to the Ethereum desk. Inner NFT, limited to 50.`,
   askingMarket: "Asking the market what a soul costs this minute.",
   rateDeskSilentDetail: (detail) => `The rate desk is silent. ${detail}`,
   amountDue: "Amount due",
   spotVia: (source) => `Spot via ${source}`,
   bitcoinAddress: "Bitcoin address",
+  ethereumAddress: "Ethereum address",
   payAddress: "Pay to",
   copyAddress: "Copy address",
   copiedJacket: "Copied to the dinner jacket.",
@@ -312,19 +349,19 @@ const en: Copy = {
   remainLiving: "Remain among the living",
   sendAmount: (btc) => `Send ${btc}`,
   waitingForRate: "Waiting for the rate",
-  waitForRate: "Wait for the live Bitcoin rate before sending.",
+  waitForRate: "Wait for the live rate before sending.",
   tickTheBox: "Tick the box. A soul does not leave on a verbal instruction.",
   watchingMempool: "Watching the chain",
   watchingChain: "Waiting for the payment to hit the desk wallet.",
   paymentWaiting: "Nothing has arrived yet. Send the invoice, then keep this tab open.",
-  paymentSeen: "Payment seen. Issuing the unique Bitcoin NFT certificate.",
+  paymentSeen: "Payment seen. Issuing the unique NFT certificate.",
   receivedOf: (received, expected) => `Received ${received} of ${expected}`,
   viewPayment: "View payment",
   settlingHint: (btc) =>
     `Send ${btc} to the desk wallet. The certificate is issued only after the chain shows the transfer.`,
   boughtSoul: "You bought one soul",
   boughtSoulHint:
-    "The certificate has a unique code and is minted as a Bitcoin Ordinal NFT. Hang this where the guests can see it and the tax office cannot.",
+    "The certificate has a unique code and is minted as an NFT on the chain you paid. Hang this where the guests can see it and the tax office cannot.",
   soldSoul: "You sold one soul",
   soldSoulHint:
     "Half a bitcoin, a unique code, and a Bitcoin Ordinal NFT. Keep the certificate away from the chaplain.",
@@ -333,13 +370,37 @@ const en: Copy = {
   printCertificate: "Print certificate",
   returnToSociety: "Return to society",
   anonymousHolder: "Anonymous Collector",
-  nftReceiveLabel: "Bitcoin address for the NFT",
-  nftReceivePlaceholder: "bc1p… taproot preferred",
-  nftReceiveHint:
-    "The certificate is inscribed as a Bitcoin Ordinal and sent here. Leave empty and the desk holds the NFT against the unique code.",
-  invalidReceiveAddress:
-    "That is not a Bitcoin address. Use bc1… or leave the field empty.",
-  certNft: "Bitcoin NFT",
+  nftReceiveLabel: (chain) =>
+    chain === "solana"
+      ? "Solana address for the NFT"
+      : chain === "ethereum"
+        ? "Ethereum address for the inner NFT"
+        : "Bitcoin address for the NFT",
+  nftReceivePlaceholder: (chain) =>
+    chain === "solana"
+      ? "SoL… wallet address"
+      : chain === "ethereum"
+        ? "0x… Ethereum address"
+        : "bc1p… taproot preferred",
+  nftReceiveHint: (chain) =>
+    chain === "solana"
+      ? "The certificate is minted as a Solana NFT and sent here. Leave empty and the desk holds it against the unique code."
+      : chain === "ethereum"
+        ? "The certificate is minted as an Ethereum inner NFT and sent here. Leave empty and the desk holds it against the unique code."
+        : "The certificate is inscribed as a Bitcoin Ordinal and sent here. Leave empty and the desk holds the NFT against the unique code.",
+  invalidReceiveAddress: (chain) =>
+    chain === "solana"
+      ? "That is not a Solana address. Use a Solana wallet or leave the field empty."
+      : chain === "ethereum"
+        ? "That is not an Ethereum address. Use 0x… or leave the field empty."
+        : "That is not a Bitcoin address. Use bc1… or leave the field empty.",
+  certNft: (chain) =>
+    chain === "solana"
+      ? "Solana NFT"
+      : chain === "ethereum"
+        ? "ETH inner NFT"
+        : "Bitcoin NFT",
+  certEdition: (edition, max) => `Edition ${edition} / ${max}`,
   certNftPending: "Awaiting inscription postage",
   certNftInscribing: "Inscribing on Bitcoin",
   certNftMinted: "Inscribed on Bitcoin",
@@ -371,6 +432,8 @@ const en: Copy = {
   certPearlSubtitle: "of a Pearl-Desk Soul",
   certTenSol: "paid in ten Solana.",
   certPearlPaid: "paid in 650 PEARL.",
+  certEthPaid: "paid in Ethereum.",
+  certEthSubtitle: "of a Private Ethereum Soul",
   certMidProof:
     "Ordinary people do not settle eternity in SOL or PEARL. This document is proof of ambition, a thinner wallet, and the same empty interior.",
   certNo: "No.",
@@ -410,9 +473,13 @@ const ru: Copy = {
   skuBulletOne: "Одна душа. Без рассрочки. Без семейного пакета.",
   skuBulletSettle: (usd) =>
     `Расчёт — ${usd}, конвертированные по живому спот-курсу BTC/USD.`,
+  skuBulletEth: (usd) =>
+    `Те же ${usd} можно оплатить в Ethereum по живому споту ETH. Inner NFT — пятьдесят, не больше.`,
+  skuBulletNft:
+    "Bitcoin Ordinal NFT: 25. Solana NFT: 250. Ethereum inner NFT: 50.",
   skuBulletRefund: "Возвратов нет. Раскаяние — отдельный, чрезмерно дорогой продукт.",
   skuFoot: (usd) =>
-    `Частный стол по-прежнему ${usd} в Bitcoin. Средний стол берёт 10 SOL или 650 PEARL, без яхтенного света.`,
+    `Частный стол — ${usd} в Bitcoin (25 Ordinal) или ${usd} в Ethereum (50 inner NFT). Средний стол берёт 10 SOL или 650 PEARL в Solana (250 NFT).`,
   terms: [
     {
       step: "01",
@@ -426,8 +493,8 @@ const ru: Copy = {
     },
     {
       step: "03",
-      title: "Получите Bitcoin NFT",
-      text: "Уникальный код сертификата, вписанный в Bitcoin как Ordinal. Держите его рядом со вторым паспортом.",
+      title: "Получите NFT сети",
+      text: "Уникальный код сертификата. Стол Bitcoin: Ordinal, 25 штук. Стол Solana: Solana NFT, 250 штук. Стол Ethereum: inner NFT, 50 штук.",
     },
   ],
   assetsRetained: "Оставленные активы",
@@ -503,9 +570,20 @@ const ru: Copy = {
   sellSoul: "Продать душу · 0.5 BTC",
   buySol: "Средний класс · 10 SOL",
   buyPearl: "Средний класс · 650 PEARL",
+  buyEth: "Купить · ETH",
+  fetchingEthRate: "Запрашиваем курс Ethereum",
+  payEthAmount: (eth) => `Купить ${eth}`,
   midClassLabel: "Средний стол",
   midClassHint:
     "Для тех, у кого есть Solana и жемчуг, но ещё нет family office.",
+  nftCapsLine: "Bitcoin 25 · Solana 250 · ETH inner 50",
+  nftRemaining: (remaining, max, chain) =>
+    chain === "solana"
+      ? `Solana NFT: осталось ${remaining} из ${max}`
+      : chain === "ethereum"
+        ? `ETH inner NFT: осталось ${remaining} из ${max}`
+        : `Bitcoin Ordinal: осталось ${remaining} из ${max}`,
+  nftSoldOut: "Этот тираж NFT распродан. Душе придётся подождать.",
   invoiceBadge: "Живой счёт в Bitcoin",
   invoiceTitle: "Купить за Bitcoin",
   invoiceDescription: (usd) =>
@@ -518,16 +596,21 @@ const ru: Copy = {
   solInvoiceBadge: "Средний стол · Solana",
   solInvoiceTitle: "Купить за 10 SOL",
   solInvoiceDescription:
-    "Средний стол берёт одну душу за десять Solana на адрес Solana. Сертификат всё равно Bitcoin Ordinal NFT.",
+    "Средний стол берёт одну душу за десять Solana на адрес Solana. Сертификат — Solana NFT, тираж 250.",
   pearlInvoiceBadge: "Средний стол · Pearl",
   pearlInvoiceTitle: "Купить за 650 PEARL",
   pearlInvoiceDescription:
-    "Средний стол берёт одну душу за 650 PEARL в сети Solana. Та же вакансия, тише свет, сертификат — Bitcoin NFT.",
+    "Средний стол берёт одну душу за 650 PEARL в сети Solana. Та же вакансия, тише свет, сертификат — Solana NFT, тираж 250.",
+  ethInvoiceBadge: "Частный стол · Ethereum",
+  ethInvoiceTitle: "Купить за Ethereum",
+  ethInvoiceDescription: (usd) =>
+    `Одна душа стоит ${usd}. К оплате — живая сумма ETH по текущему споту, на Ethereum-кошелёк стола. Inner NFT, тираж 50.`,
   askingMarket: "Спрашиваем рынок, сколько стоит душа в эту минуту.",
   rateDeskSilentDetail: (detail) => `Стол котировок молчит. ${detail}`,
   amountDue: "К оплате",
   spotVia: (source) => `Спот через ${source}`,
   bitcoinAddress: "Адрес Bitcoin",
+  ethereumAddress: "Адрес Ethereum",
   payAddress: "Куда платить",
   copyAddress: "Скопировать адрес",
   copiedJacket: "Скопировано во внутренний карман смокинга.",
@@ -540,20 +623,20 @@ const ru: Copy = {
   remainLiving: "Остаться среди живых",
   sendAmount: (btc) => `Отправить ${btc}`,
   waitingForRate: "Ждём курс",
-  waitForRate: "Дождитесь живого курса Bitcoin, прежде чем отправлять.",
+  waitForRate: "Дождитесь живого курса, прежде чем отправлять.",
   tickTheBox: "Поставьте галочку. Душа не уходит по устной инструкции.",
   watchingMempool: "Смотрим сеть",
   watchingChain: "Ждём, пока платёж дойдёт до кошелька стола.",
   paymentWaiting:
     "Пока ничего не пришло. Отправьте счёт и не закрывайте вкладку.",
-  paymentSeen: "Платёж виден. Выдаём уникальный Bitcoin NFT-сертификат.",
+  paymentSeen: "Платёж виден. Выдаём уникальный NFT-сертификат.",
   receivedOf: (received, expected) => `Получено ${received} из ${expected}`,
   viewPayment: "Открыть платёж",
   settlingHint: (btc) =>
     `Отправьте ${btc} на кошелёк стола. Сертификат выдаётся только когда сеть покажет перевод.`,
   boughtSoul: "Вы купили одну душу",
   boughtSoulHint:
-    "У сертификата уникальный код, он чеканится как Bitcoin Ordinal NFT. Повесьте это там, где гости увидят, а налоговая — нет.",
+    "У сертификата уникальный код, он чеканится как NFT в той сети, которой вы оплатили. Повесьте это там, где гости увидят, а налоговая — нет.",
   soldSoul: "Вы продали одну душу",
   soldSoulHint:
     "Полбиткоина, уникальный код и Bitcoin Ordinal NFT. Сертификат держите подальше от капеллана.",
@@ -562,13 +645,37 @@ const ru: Copy = {
   printCertificate: "Печать сертификата",
   returnToSociety: "Вернуться в общество",
   anonymousHolder: "Анонимный коллекционер",
-  nftReceiveLabel: "Адрес Bitcoin для NFT",
-  nftReceivePlaceholder: "bc1p… лучше taproot",
-  nftReceiveHint:
-    "Сертификат вписывается как Bitcoin Ordinal и уходит сюда. Оставьте пустым — стол будет держать NFT против уникального кода.",
-  invalidReceiveAddress:
-    "Это не адрес Bitcoin. Укажите bc1… или оставьте поле пустым.",
-  certNft: "Bitcoin NFT",
+  nftReceiveLabel: (chain) =>
+    chain === "solana"
+      ? "Адрес Solana для NFT"
+      : chain === "ethereum"
+        ? "Адрес Ethereum для inner NFT"
+        : "Адрес Bitcoin для NFT",
+  nftReceivePlaceholder: (chain) =>
+    chain === "solana"
+      ? "SoL… адрес кошелька"
+      : chain === "ethereum"
+        ? "0x… адрес Ethereum"
+        : "bc1p… лучше taproot",
+  nftReceiveHint: (chain) =>
+    chain === "solana"
+      ? "Сертификат чеканится как Solana NFT и уходит сюда. Оставьте пустым — стол будет держать его против уникального кода."
+      : chain === "ethereum"
+        ? "Сертификат чеканится как Ethereum inner NFT и уходит сюда. Оставьте пустым — стол будет держать его против уникального кода."
+        : "Сертификат вписывается как Bitcoin Ordinal и уходит сюда. Оставьте пустым — стол будет держать NFT против уникального кода.",
+  invalidReceiveAddress: (chain) =>
+    chain === "solana"
+      ? "Это не адрес Solana. Укажите кошелёк Solana или оставьте поле пустым."
+      : chain === "ethereum"
+        ? "Это не адрес Ethereum. Укажите 0x… или оставьте поле пустым."
+        : "Это не адрес Bitcoin. Укажите bc1… или оставьте поле пустым.",
+  certNft: (chain) =>
+    chain === "solana"
+      ? "Solana NFT"
+      : chain === "ethereum"
+        ? "ETH inner NFT"
+        : "Bitcoin NFT",
+  certEdition: (edition, max) => `Тираж ${edition} / ${max}`,
   certNftPending: "Ждём комиссию за надпись",
   certNftInscribing: "Вписывается в Bitcoin",
   certNftMinted: "Вписан в Bitcoin",
@@ -600,6 +707,8 @@ const ru: Copy = {
   certPearlSubtitle: "души жемчужного стола",
   certTenSol: "за десять Solana.",
   certPearlPaid: "за 650 PEARL.",
+  certEthPaid: "за Ethereum.",
+  certEthSubtitle: "души частного Ethereum",
   certMidProof:
     "Обычные люди не рассчитываются с вечностью в SOL или PEARL. Этот документ — доказательство амбиции, более тонкого кошелька и того же пустого нутра.",
   certNo: "№",

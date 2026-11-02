@@ -49,9 +49,11 @@ function certificateSvg(payload) {
       ? "MIDDLE DESK · 10 SOL"
       : payload.kind === "pearl"
         ? "MIDDLE DESK · 650 PEARL"
-        : sell
-          ? "SOUL DISPOSAL"
-          : "SOUL ACQUISITION";
+        : payload.kind === "eth"
+          ? "PRIVATE DESK · ETH INNER NFT"
+          : sell
+            ? "SOUL DISPOSAL"
+            : "SOUL ACQUISITION";
   return `<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480">
   <rect width="720" height="480" fill="#f4e6c8"/>
   <rect x="14" y="14" width="692" height="452" fill="none" stroke="#7a1f2b" stroke-width="4"/>
@@ -62,7 +64,7 @@ function certificateSvg(payload) {
   <text x="360" y="232" text-anchor="middle" fill="#1f6b4a" font-size="20" font-family="Times New Roman,serif">${sell ? "SOLD ONE SOUL" : "BOUGHT ONE SOUL"}</text>
   <text x="360" y="268" text-anchor="middle" fill="#5c3d24" font-size="14" font-family="Times New Roman,serif">${paid} · ${issued}</text>
   <text x="360" y="336" text-anchor="middle" fill="#2a1a12" font-size="18" font-family="Courier New,monospace">${serial}</text>
-  <text x="360" y="400" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="Times New Roman,serif">BITCOIN ORDINAL NFT</text>
+  <text x="360" y="400" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="Times New Roman,serif">${payload.kind === "eth" ? "ETHEREUM INNER NFT" : payload.kind === "sol" || payload.kind === "pearl" ? "SOLANA NFT" : "BITCOIN ORDINAL NFT"}</text>
 </svg>`;
 }
 

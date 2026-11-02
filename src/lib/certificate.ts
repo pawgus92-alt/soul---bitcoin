@@ -1,6 +1,14 @@
-import { BTC_ADDRESS, SERIAL_TAG, type DealKind } from "@/lib/deal";
+import {
+  BTC_ADDRESS,
+  ETH_ADDRESS,
+  SERIAL_TAG,
+  SOL_ADDRESS,
+  type DealKind,
+  type NftChain,
+} from "@/lib/deal";
 
-export const CERTIFICATE_SERIAL_RE = /^AE-1666-(BUY|SELL|SOL|PRL)-[0-9A-F]{12}$/;
+export const CERTIFICATE_SERIAL_RE =
+  /^AE-1666-(BUY|SELL|SOL|PRL|ETH)-[0-9A-F]{12}$/;
 
 export type CertificateRecord = {
   serial: string;
@@ -10,21 +18,47 @@ export type CertificateRecord = {
   btcAmount: string;
   issuedAt: string;
   receiveAddress: string;
+  nftChain: NftChain;
+  edition?: number;
+  editionMax?: number;
   txid?: string;
   explorerUrl?: string;
 };
 
 const BECH32 = /^(bc1)[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{25,87}$/i;
 const BASE58 = /^[13][1-9A-HJ-NP-Za-km-z]{25,34}$/;
+const SOLANA_RE = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+const ETH_RE = /^0x[0-9a-fA-F]{40}$/;
 
 export function isBitcoinAddress(value: string): boolean {
   const address = value.trim();
   return BECH32.test(address) || BASE58.test(address);
 }
 
-export function resolveReceiveAddress(value: string): string {
+export function isSolanaAddress(value: string): boolean {
   const address = value.trim();
-  return address || BTC_ADDRESS;
+  return SOLANA_RE.test(address);
+}
+
+export function isEthereumAddress(value: string): boolean {
+  return ETH_RE.test(value.trim());
+}
+
+export function isReceiveAddress(chain: NftChain, value: string): boolean {
+  if (chain === "solana") return isSolanaAddress(value);
+  if (chain === "ethereum") return isEthereumAddress(value);
+  return isBitcoinAddress(value);
+}
+
+export function resolveReceiveAddress(
+  value: string,
+  chain: NftChain = "bitcoin",
+): string {
+  const address = value.trim();
+  if (address) return address;
+  if (chain === "solana") return SOL_ADDRESS;
+  if (chain === "ethereum") return ETH_ADDRESS;
+  return BTC_ADDRESS;
 }
 
 function bytesToHex(bytes: Uint8Array) {
@@ -38,6 +72,9 @@ export async function issueCertificate(input: {
   holder: string;
   btcAmount: string;
   receiveAddress: string;
+  nftChain: NftChain;
+  edition?: number;
+  editionMax?: number;
   txid?: string;
   explorerUrl?: string;
 }): Promise<CertificateRecord> {
@@ -70,6 +107,9 @@ export async function issueCertificate(input: {
     btcAmount: input.btcAmount,
     issuedAt,
     receiveAddress: input.receiveAddress,
+    nftChain: input.nftChain,
+    edition: input.edition,
+    editionMax: input.editionMax,
     txid: input.txid,
     explorerUrl: input.explorerUrl,
   };

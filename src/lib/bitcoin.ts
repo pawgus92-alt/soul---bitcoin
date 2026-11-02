@@ -1,4 +1,4 @@
-import { BTC_ADDRESS, DEAL_USD } from "@/lib/deal";
+import { BTC_ADDRESS, DEAL_USD, ETH_ADDRESS } from "@/lib/deal";
 
 export type BtcQuote = {
   usdPerBtc: number;
@@ -85,6 +85,81 @@ export function bitcoinPayUri(
 
 export function bitcoinUri(amount: number) {
   return bitcoinPayUri(BTC_ADDRESS, amount);
+}
+
+export type EthQuote = {
+  usdPerEth: number;
+  ethAmount: number;
+  source: string;
+  fetchedAt: number;
+};
+
+export async function fetchEthQuote(): Promise<EthQuote> {
+  const errors: string[] = [];
+
+  const coinbaseUrls = [
+    "/api/eth-usd",
+    "https://api.coinbase.com/v2/prices/ETH-USD/spot",
+  ];
+
+  for (const url of coinbaseUrls) {
+    try {
+      const data = await readJson(url);
+      const usdPerEth = Number(data?.data?.amount);
+      if (usdPerEth > 0) {
+        return {
+          usdPerEth,
+          ethAmount: DEAL_USD / usdPerEth,
+          source: "Coinbase",
+          fetchedAt: Date.now(),
+        };
+      }
+      errors.push(`${url} returned an empty rate.`);
+    } catch (error) {
+      errors.push(error instanceof Error ? error.message : `${url} failed.`);
+    }
+  }
+
+  try {
+    const data = await readJson(
+      "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd",
+    );
+    const usdPerEth = Number(data?.ethereum?.usd);
+    if (usdPerEth > 0) {
+      return {
+        usdPerEth,
+        ethAmount: DEAL_USD / usdPerEth,
+        source: "CoinGecko",
+        fetchedAt: Date.now(),
+      };
+    }
+    errors.push("CoinGecko returned an empty rate.");
+  } catch (error) {
+    errors.push(error instanceof Error ? error.message : "CoinGecko failed.");
+  }
+
+  throw new Error(errors.join(" "));
+}
+
+export function formatEth(value: number) {
+  return `${value.toFixed(6)} ETH`;
+}
+
+function ethToWei(eth: number) {
+  const [whole, frac = ""] = eth.toFixed(18).split(".");
+  return BigInt(whole + frac.padEnd(18, "0")).toString();
+}
+
+export function ethereumPayUri(
+  address: string,
+  amount: number,
+  label = "Maison Aeternum",
+) {
+  return `ethereum:${address}?value=${ethToWei(amount)}&label=${encodeURIComponent(label)}`;
+}
+
+export function ethereumUri(amount: number) {
+  return ethereumPayUri(ETH_ADDRESS, amount);
 }
 
 export function solanaPayUri(
