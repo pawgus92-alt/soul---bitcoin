@@ -126,27 +126,31 @@ export function PayBitcoinButton({
 export function DealButtons({
   className,
   buttonClassName,
-  showMiddle = true,
+  desks = "all",
 }: {
   className?: string;
   buttonClassName?: string;
-  showMiddle?: boolean;
+  desks?: "bitcoin" | "alt" | "all";
 }) {
   const { locale } = useI18n();
+  const showBitcoin = desks === "bitcoin" || desks === "all";
+  const showAlt = desks === "alt" || desks === "all";
   return (
     <div className={cn("flex flex-col gap-3", className)}>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
-        <PayBitcoinButton kind="buy" className={buttonClassName} />
-        <PayBitcoinButton kind="lucky" className={buttonClassName} />
-        {SHOW_SELL_DESK ? (
-          <PayBitcoinButton kind="sell" className={buttonClassName} />
-        ) : null}
-        <PayBitcoinButton kind="eth" className={buttonClassName} />
-        <PayBitcoinButton kind="ethOne" className={buttonClassName} />
-        <PayBitcoinButton kind="ethTwo" className={buttonClassName} />
-      </div>
-      {showMiddle ? (
+      {showBitcoin ? (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
+          <PayBitcoinButton kind="buy" className={buttonClassName} />
+          <PayBitcoinButton kind="lucky" className={buttonClassName} />
+          {SHOW_SELL_DESK ? (
+            <PayBitcoinButton kind="sell" className={buttonClassName} />
+          ) : null}
+        </div>
+      ) : null}
+      {showAlt ? (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
+          <PayBitcoinButton kind="eth" className={buttonClassName} />
+          <PayBitcoinButton kind="ethOne" className={buttonClassName} />
+          <PayBitcoinButton kind="ethTwo" className={buttonClassName} />
           <PayBitcoinButton kind="sol" className={buttonClassName} />
           <PayBitcoinButton kind="solRare" className={buttonClassName} />
           <PayBitcoinButton kind="solEpic" className={buttonClassName} />

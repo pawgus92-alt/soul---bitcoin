@@ -122,6 +122,8 @@ export const zh: Copy = {
   contractHeading: "一份关于一次永恒的契约",
   contractBody: (usd) =>
     `你买的不是救赎。你卖的是无法在船上向宾客展示的那一件。价格是一枚比特币，约 ${usd}。`,
+  otherDesksHint: "以太坊、Solana 与洗涤柜台见「契约」。",
+  altDesksKicker: "其余柜台",
   footerDesk: "Maison Æternum · 私人收购柜台 · Est. 1666",
   ledger: [
     { city: "日内瓦", client: "家族办公室", amount: "1 BTC" },

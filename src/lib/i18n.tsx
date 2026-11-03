@@ -77,6 +77,8 @@ export type Copy = {
   closing: string;
   contractHeading: string;
   contractBody: (usd: string) => string;
+  otherDesksHint: string;
+  altDesksKicker: string;
   footerDesk: string;
   ledger: LedgerRow[];
   payInBitcoin: string;
@@ -402,6 +404,8 @@ const en: Copy = {
   contractHeading: "A contract for one eternity",
   contractBody: (usd) =>
     `You are not buying salvation. You are selling the one thing that cannot be shown to guests on the boat. The price is one bitcoin, about ${usd}.`,
+  otherDesksHint: "Ethereum, Solana and the cleanse desk are under Contract.",
+  altDesksKicker: "Other desks",
   footerDesk: "Maison Æternum · Private Acquisition Desk · Est. 1666",
   ledger: [
     { city: "Geneva", client: "Family office", amount: "1 BTC" },
@@ -890,6 +894,8 @@ const ru: Copy = {
   contractHeading: "Контракт на одну вечность",
   contractBody: (usd) =>
     `Вы не покупаете спасение. Вы продаёте единственное, что нельзя показать гостям на палубе. Цена — один биткоин, около ${usd}.`,
+  otherDesksHint: "Ethereum, Solana и стол очищения — во вкладке «Контракт».",
+  altDesksKicker: "Остальные столы",
   footerDesk: "Maison Æternum · Частный стол приобретений · Est. 1666",
   ledger: [
     { city: "Женева", client: "Family office", amount: "1 BTC" },

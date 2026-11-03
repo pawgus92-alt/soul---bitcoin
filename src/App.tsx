@@ -40,9 +40,16 @@ function NftCaps() {
   );
 }
 
-function LivePrice() {
+function LivePrice({
+  assets = ["btc"],
+}: {
+  assets?: Array<"btc" | "eth" | "sol">;
+}) {
   const { copy } = useI18n();
   const { quote, ethQuote, solQuote, loading, error, refresh } = useBtcQuote();
+  const showBtc = assets.includes("btc");
+  const showEth = assets.includes("eth");
+  const showSol = assets.includes("sol");
 
   if (loading && !quote) {
     return (
@@ -67,11 +74,13 @@ function LivePrice() {
 
   return (
     <div className="space-y-1 font-mono text-sm text-muted-foreground">
-      <p>
-        {BTC_REGULAR_AMOUNT} BTC · {formatUsd(quote.usdAmount)} ·{" "}
-        {formatUsd(quote.usdPerBtc)} / BTC · Coinbase
-      </p>
-      {ethQuote ? (
+      {showBtc ? (
+        <p>
+          {BTC_REGULAR_AMOUNT} BTC · {formatUsd(quote.usdAmount)} ·{" "}
+          {formatUsd(quote.usdPerBtc)} / BTC · Coinbase
+        </p>
+      ) : null}
+      {showEth && ethQuote ? (
         <>
           <p>
             {ETH_HALF_AMOUNT} ETH · {formatUsd(ethQuote.usdPerEth * ETH_HALF_AMOUNT)} ·{" "}
@@ -85,7 +94,7 @@ function LivePrice() {
           </p>
         </>
       ) : null}
-      {solQuote ? (
+      {showSol && solQuote ? (
         <p>
           {formatUsd(solQuote.usdPerSol)} / SOL · Coinbase
         </p>
@@ -138,7 +147,7 @@ export default function App() {
             <LanguageSwitcher />
             <DealButtons
               className="hidden sm:flex"
-              showMiddle={false}
+              desks="bitcoin"
             />
           </div>
         </div>
@@ -177,16 +186,19 @@ export default function App() {
               {copy.heroBody(quote ? formatUsd(quote.usdAmount) : "1 BTC")}
             </p>
             <div className="flex flex-col gap-3">
-              <DealButtons buttonClassName="h-12 px-6 text-base" />
+              <DealButtons
+                desks="bitcoin"
+                buttonClassName="h-12 px-6 text-base"
+              />
               <p className="max-w-lg text-xs leading-5 text-primary">
                 {copy.luckyHint}
               </p>
-              <p className="max-w-lg text-xs leading-5 text-primary">
-                {copy.ethHint}
-              </p>
-              <p className="max-w-lg text-xs leading-5 text-muted-foreground">
-                {copy.midClassHint}
-              </p>
+              <a
+                href="#contract"
+                className="max-w-lg text-xs leading-5 text-muted-foreground hover:text-primary"
+              >
+                {copy.otherDesksHint}
+              </a>
               <a
                 href="#terms"
                 className="inline-flex h-12 w-fit items-center justify-center border border-primary/25 px-5 text-sm tracking-[0.16em] text-primary uppercase hover:bg-primary/10"
@@ -454,33 +466,45 @@ export default function App() {
         </section>
 
         <section id="contract" className="mx-auto w-full max-w-6xl px-5 py-16">
-          <div className="grid gap-10 border border-primary/20 bg-card/60 p-6 md:grid-cols-[1fr_auto] md:p-10">
-            <div className="space-y-4">
-              <p className={kicker}>{copy.closing}</p>
-              <h2 className="font-heading text-4xl sm:text-5xl">
-                {copy.contractHeading}
-              </h2>
-              <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                {copy.contractBody(quote ? formatUsd(quote.usdAmount) : "1 BTC")}
-              </p>
-              <p className="max-w-xl text-sm leading-6 text-primary">
-                {copy.vatLine}
-              </p>
+          <div className="space-y-10 border border-primary/20 bg-card/60 p-6 md:p-10">
+            <div className="grid gap-10 md:grid-cols-[1fr_auto]">
+              <div className="space-y-4">
+                <p className={kicker}>{copy.closing}</p>
+                <h2 className="font-heading text-4xl sm:text-5xl">
+                  {copy.contractHeading}
+                </h2>
+                <p className="max-w-xl text-sm leading-6 text-muted-foreground">
+                  {copy.contractBody(quote ? formatUsd(quote.usdAmount) : "1 BTC")}
+                </p>
+                <p className="max-w-xl text-sm leading-6 text-primary">
+                  {copy.vatLine}
+                </p>
+              </div>
+              <div className="flex flex-col items-start justify-center gap-3">
+                <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
+                  BTC {BTC_ADDRESS}
+                </p>
+                <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
+                  ETH {ETH_ADDRESS}
+                </p>
+                <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
+                  SOL {SOL_ADDRESS}
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col items-start justify-center gap-3">
-              <DealButtons buttonClassName="h-12 px-6 text-base" />
-              <p className="max-w-xs text-[11px] tracking-[0.16em] text-primary/80 uppercase">
-                {copy.midClassLabel}
+            <div className="space-y-4 border-t border-primary/15 pt-8">
+              <p className={kicker}>{copy.altDesksKicker}</p>
+              <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                {copy.ethHint}
               </p>
-              <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
-                BTC {BTC_ADDRESS}
+              <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                {copy.midClassHint}
               </p>
-              <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
-                ETH {ETH_ADDRESS}
-              </p>
-              <p className="max-w-xs break-all font-mono text-[11px] text-muted-foreground">
-                SOL {SOL_ADDRESS}
-              </p>
+              <LivePrice assets={["eth", "sol"]} />
+              <DealButtons
+                desks="alt"
+                buttonClassName="h-12 px-6 text-base"
+              />
               <NftCaps />
             </div>
           </div>
