@@ -1,3 +1,11 @@
+import {
+  CuratorSection,
+  GateRiddle,
+  HouseNav,
+  ManifestSection,
+  MirrorRoom,
+  OwnersWall,
+} from "@/components/house-chambers";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { DealButtons, PayBitcoinButton } from "@/components/pay-bitcoin-button";
 import { SoulCertificate } from "@/components/soul-certificate";
@@ -123,7 +131,8 @@ export default function App() {
               {copy.deskLine}
             </p>
           </a>
-          <nav className="hidden items-center gap-6 text-[11px] tracking-[0.16em] text-muted-foreground uppercase md:flex">
+          <nav className="hidden max-w-3xl flex-wrap items-center justify-end gap-x-5 gap-y-1 text-[11px] tracking-[0.16em] text-muted-foreground uppercase md:flex">
+            <HouseNav />
             <a href="#terms" className="hover:text-primary">
               {copy.navTerms}
             </a>
@@ -257,6 +266,9 @@ export default function App() {
             </CardContent>
           </Card>
         </section>
+
+        <ManifestSection />
+        <GateRiddle />
 
         <section id="terms" className="border-y border-primary/10 bg-black/20">
           <div className="mx-auto grid w-full max-w-6xl gap-10 px-5 py-16 md:grid-cols-3">
@@ -398,7 +410,20 @@ export default function App() {
             <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">
               {copy.folioBody}
             </p>
-            <div className="mt-10 grid gap-8 lg:grid-cols-3">
+            <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <SoulCertificate
+                compact
+                kind="buy"
+                holder="Baron von Ledger"
+                serial="AE-1666-B01-7F3A9C2E41D8"
+                digest="7f3a9c2e41d80112233445566778899aabbccddeeff00112233445566778899"
+                btcAmount="1.00000000 BTC"
+                issuedAt={new Date("1666-06-06T16:06:00Z")}
+                receiveAddress="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
+                nftChain="bitcoin"
+                edition={3}
+                editionMax={10}
+              />
               <SoulCertificate
                 compact
                 kind="lucky"
@@ -414,31 +439,62 @@ export default function App() {
               />
               <SoulCertificate
                 compact
-                kind="sol"
-                holder="Signora Sol"
-                serial="AE-1666-SOL-C0FFEEBABE01"
-                digest="c0ffeebabe0112233445566778899aabbccddeeff00112233445566778899a06"
-                btcAmount="0.5 SOL"
-                issuedAt={new Date("1666-06-06T16:06:00Z")}
-                receiveAddress="7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
-                nftChain="solana"
-              />
-              <SoulCertificate
-                compact
                 kind="ethTwo"
-                holder="Князь Пустой"
-                serial="AE-1666-ET2-F00D1E5C0FFE"
+                holder="Duc de Gwei"
+                serial="AE-1666-E2-F00D1E5C0FFE"
                 digest="51f00d1e5c0ffe9876543210aabbccddeeff00112233445566778899aabbccdd"
-                btcAmount="2 ETH"
+                btcAmount="2.00000000 ETH"
                 issuedAt={new Date("1666-06-06T16:06:00Z")}
                 receiveAddress="0x1111111111111111111111111111111111111111"
                 nftChain="ethereum"
                 edition={15}
                 editionMax={15}
               />
+              <SoulCertificate
+                compact
+                kind="eth"
+                holder="Knyaz Pustoy"
+                serial="AE-1666-E88-F00D1E5C0FFE"
+                digest="e88f00d1e5c0ffe9876543210aabbccddeeff00112233445566778899aabb"
+                btcAmount="0.08800000 ETH"
+                issuedAt={new Date("1666-06-06T16:06:00Z")}
+                receiveAddress="0x2222222222222222222222222222222222222222"
+                nftChain="ethereum"
+                edition={1}
+                editionMax={1}
+              />
+              <SoulCertificate
+                compact
+                kind="cleanse"
+                holder="One Wrong PDF"
+                serial="AE-1666-S888-5E6F7A8B9C0D"
+                digest="5e6f7a8b9c0d112233445566778899aabbccddeeff00112233445566778899"
+                btcAmount="8.88000000 SOL"
+                issuedAt={new Date("1666-06-06T16:06:00Z")}
+                receiveAddress="HzPdKs4nWxqQj8vY2nR5tLmA7cF9bE3wG6hJ1uS0qXyz"
+                nftChain="solana"
+                sinDegree={8}
+                edition={1}
+                editionMax={1}
+              />
+              <SoulCertificate
+                compact
+                kind="sol"
+                holder="The Seeker"
+                serial="AE-1666-S88-COFFEEBABE01"
+                digest="c0ffeebabe0112233445566778899aabbccddeeff00112233445566778899a06"
+                btcAmount="0.88000000 SOL"
+                issuedAt={new Date("1666-06-06T16:06:00Z")}
+                receiveAddress="7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
+                nftChain="solana"
+              />
             </div>
           </div>
         </section>
+
+        <CuratorSection />
+        <OwnersWall />
+        <MirrorRoom />
 
         <section id="clients" className="border-y border-primary/10 bg-black/15">
           <div className="mx-auto w-full max-w-6xl px-5 py-16">

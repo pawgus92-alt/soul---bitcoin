@@ -1,11 +1,7 @@
-import { CERTIFICATE_PLATES } from "./certificate-plates-data.js";
-import { CERTIFICATE_888 } from "./certificate-888-data.js";
 import { certificateSvg } from "../src/lib/gothic-certificate.js";
+import { embeddedPlates } from "./load-plates.js";
 
-const EMBEDDED_PLATES = {
-  ...CERTIFICATE_PLATES,
-  "plate-888.jpg": CERTIFICATE_888,
-};
+const EMBEDDED_PLATES = embeddedPlates();
 
 function json(response, status, body) {
   response.statusCode = status;

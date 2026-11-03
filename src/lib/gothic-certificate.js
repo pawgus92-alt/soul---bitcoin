@@ -293,29 +293,48 @@ export function resolveCertificateAssets(traits, embedded) {
   };
 }
 
-const LUCKY_PLATE_FILE = "plate-888.jpg";
-
-function luckyPlateHref(embedded) {
-  if (embedded && embedded[LUCKY_PLATE_FILE]) return embedded[LUCKY_PLATE_FILE];
-  return `/certificates/${LUCKY_PLATE_FILE}`;
+export function plateFileFor(payload) {
+  const kind = payload.kind;
+  if (kind === "lucky") return "plate-888.jpg";
+  if (kind === "buy") return "plate-btc.jpg";
+  if (kind === "ethTwo") return "plate-eth-last.jpg";
+  if (kind === "eth" || kind === "ethOne") return "plate-eth-shadow.jpg";
+  if (kind === "cleanse" && Number(payload.sinDegree) === 8) return "plate-laptop.jpg";
+  if (kind === "cleanse" || kind === "fa" || isSolRarityKind(kind) || kind === "pearl") {
+    return "plate-seeker.jpg";
+  }
+  return "";
 }
 
-function luckyEightCertificateSvg(payload, options = {}) {
+function plateHref(file, embedded) {
+  if (embedded && embedded[file]) return embedded[file];
+  return `/certificates/${file}`;
+}
+
+function paintedChainName(payload) {
+  const chain = nftChainOf(payload.kind, payload.nftChain);
+  if (chain === "ethereum") return "ETHEREUM";
+  if (chain === "solana") return "SOLANA";
+  return "BITCOIN";
+}
+
+function paintedCertificateSvg(payload, options = {}, plateFile) {
   const W = 1024;
   const H = 1536;
   const serial = escapeXml(payload.serial || "");
   const holderRaw = String(payload.holder || "Anonymous").slice(0, 42);
   const holder = escapeXml(holderRaw);
   const holderSize = holderRaw.length > 28 ? 42 : holderRaw.length > 20 ? 54 : 70;
-  const paid = escapeXml(payload.btcAmount || "8.00000000 BTC");
+  const paid = escapeXml(payload.btcAmount || "");
   const issued = escapeXml(String(payload.issuedAt || "").slice(0, 10));
   const editionNum = payload.edition;
   const editionMax = payload.max || payload.editionMax;
+  const chain = paintedChainName(payload);
   const edition =
     editionNum && editionMax
-      ? `# ${editionNum} / ${editionMax}   ·   NFT ON BITCOIN   ·   8 BTC`
-      : "NFT ON BITCOIN   ·   8 BTC";
-  const plate = luckyPlateHref(options.embedded);
+      ? `# ${editionNum} / ${editionMax}   ·   NFT ON ${chain}   ·   ${payload.btcAmount || ""}`
+      : `NFT ON ${chain}${payload.btcAmount ? `   ·   ${payload.btcAmount}` : ""}`;
+  const plate = plateHref(plateFile, options.embedded);
   const digest = String(payload.digest || payload.serial || "0");
   const overlay = options.overlayFields !== false;
   const fields = overlay
@@ -347,16 +366,17 @@ function luckyEightCertificateSvg(payload, options = {}) {
       .gar { font-family: "Cormorant Garamond", "Times New Roman", serif; }
     </style>
   </defs>
-  <title>Maison Æternum · 888 · ${serial}</title>
-  <desc>${serial} · 888 luck charter · Bitcoin NFT · ${digest.slice(0, 16)}</desc>
+  <title>Maison Æternum · ${escapeXml(plateFile)} · ${serial}</title>
+  <desc>${serial} · ${escapeXml(payload.kind || "charter")} · ${digest.slice(0, 16)}</desc>
   <image href="${plate}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice"/>
   ${fields}
 </svg>`;
 }
 
 export function certificateSvg(payload, options = {}) {
-  if (payload.kind === "lucky") {
-    return luckyEightCertificateSvg(payload, options);
+  const painted = plateFileFor(payload);
+  if (painted) {
+    return paintedCertificateSvg(payload, options, painted);
   }
   const W = 800;
   const H = 1120;

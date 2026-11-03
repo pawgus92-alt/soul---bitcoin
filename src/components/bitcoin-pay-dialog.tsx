@@ -50,6 +50,7 @@ import {
   type DealKind,
 } from "@/lib/deal";
 import { useI18n } from "@/lib/i18n";
+import { levelOfDeal, recordOwner } from "@/lib/owners";
 import {
   claimNftEdition,
   useEthHalfSupply,
@@ -485,6 +486,14 @@ export function BitcoinPayDialog({
       });
       setCertificate(record);
       setIssuedAt(new Date(record.issuedAt));
+      recordOwner({
+        address: dest,
+        alias: name.trim() || copy.anonymousHolder,
+        level: levelOfDeal(kind, paidLabel, sinDegree ?? undefined),
+        chain: deal.nftChain,
+        kind,
+        acquiredAt: record.issuedAt,
+      });
       await mintNft(record);
       setStep("done");
     } catch (reason) {
