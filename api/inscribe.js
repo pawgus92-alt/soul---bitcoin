@@ -1,5 +1,11 @@
 import { CERTIFICATE_PLATES } from "./certificate-plates-data.js";
+import { CERTIFICATE_888 } from "./certificate-888-data.js";
 import { certificateSvg } from "../src/lib/gothic-certificate.js";
+
+const EMBEDDED_PLATES = {
+  ...CERTIFICATE_PLATES,
+  "plate-888.jpg": CERTIFICATE_888,
+};
 
 const CHISEL = "https://api.chisel.xyz";
 const MEMPOOL_FEES = "https://mempool.space/api/v1/fees/recommended";
@@ -143,7 +149,7 @@ export default async function handler(request, response) {
 
     const svg = certificateSvg(
       { ...payload, nftChain: "bitcoin" },
-      { embedded: CERTIFICATE_PLATES },
+      { embedded: EMBEDDED_PLATES },
     );
     const metadata = JSON.stringify({
       p: "maison-aeternum",

@@ -66,20 +66,23 @@ export function SoulCertificate({
     nft?.orderUrl ||
     (nftChain === "bitcoin" && nft?.orderId ? chiselOrderUrl(nft.orderId) : "");
   const viewUrl = nft ? nftExplorerUrl(nft, nftChain) : "";
-  const art = certificateSvg({
-    kind,
-    holder,
-    serial,
-    digest: digest || serial,
-    btcAmount,
-    issuedAt: issuedAt.toISOString(),
-    receiveAddress,
-    edition,
-    editionMax,
-    sinDegree,
-    nftChain,
-    revealEncounter: !compact,
-  });
+  const art = certificateSvg(
+    {
+      kind,
+      holder,
+      serial,
+      digest: digest || serial,
+      btcAmount,
+      issuedAt: issuedAt.toISOString(),
+      receiveAddress,
+      edition,
+      editionMax,
+      sinDegree,
+      nftChain,
+      revealEncounter: !compact,
+    },
+    { overlayFields: !compact },
+  );
 
   return (
     <article

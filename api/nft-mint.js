@@ -1,5 +1,11 @@
 import { CERTIFICATE_PLATES } from "./certificate-plates-data.js";
+import { CERTIFICATE_888 } from "./certificate-888-data.js";
 import { certificateSvg } from "../src/lib/gothic-certificate.js";
+
+const EMBEDDED_PLATES = {
+  ...CERTIFICATE_PLATES,
+  "plate-888.jpg": CERTIFICATE_888,
+};
 
 function json(response, status, body) {
   response.statusCode = status;
@@ -69,7 +75,7 @@ export default async function handler(request, response) {
         max: max || payload.editionMax,
         revealEncounter: true,
       },
-      { embedded: CERTIFICATE_PLATES },
+      { embedded: EMBEDDED_PLATES },
     );
     const solRarity = {
       sol: { rarity: "COMMON", encounter: "60%", pool: "30 of 50" },

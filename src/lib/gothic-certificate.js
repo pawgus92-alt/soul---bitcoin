@@ -293,7 +293,71 @@ export function resolveCertificateAssets(traits, embedded) {
   };
 }
 
+const LUCKY_PLATE_FILE = "plate-888.jpg";
+
+function luckyPlateHref(embedded) {
+  if (embedded && embedded[LUCKY_PLATE_FILE]) return embedded[LUCKY_PLATE_FILE];
+  return `/certificates/${LUCKY_PLATE_FILE}`;
+}
+
+function luckyEightCertificateSvg(payload, options = {}) {
+  const W = 1024;
+  const H = 1536;
+  const serial = escapeXml(payload.serial || "");
+  const holderRaw = String(payload.holder || "Anonymous").slice(0, 42);
+  const holder = escapeXml(holderRaw);
+  const holderSize = holderRaw.length > 28 ? 42 : holderRaw.length > 20 ? 54 : 70;
+  const paid = escapeXml(payload.btcAmount || "8.00000000 BTC");
+  const issued = escapeXml(String(payload.issuedAt || "").slice(0, 10));
+  const editionNum = payload.edition;
+  const editionMax = payload.max || payload.editionMax;
+  const edition =
+    editionNum && editionMax
+      ? `# ${editionNum} / ${editionMax}   ·   NFT ON BITCOIN   ·   8 BTC`
+      : "NFT ON BITCOIN   ·   8 BTC";
+  const plate = luckyPlateHref(options.embedded);
+  const digest = String(payload.digest || payload.serial || "0");
+  const overlay = options.overlayFields !== false;
+  const fields = overlay
+    ? `
+  <defs>
+    <linearGradient id="veil-v-${escapeXml(digest.slice(0, 8))}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#141411" stop-opacity="0"/>
+      <stop offset="18%" stop-color="#141411" stop-opacity="1"/>
+      <stop offset="82%" stop-color="#141411" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#141411" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="188" y="752" width="648" height="112" fill="url(#veil-v-${escapeXml(digest.slice(0, 8))})"/>
+  <text x="${W / 2}" y="832" text-anchor="middle" fill="#f3ead6" font-size="${holderSize}" class="goth">${holder}</text>
+  <rect x="220" y="986" width="584" height="52" fill="url(#veil-v-${escapeXml(digest.slice(0, 8))})"/>
+  <text x="${W / 2}" y="1022" text-anchor="middle" fill="#e8dcc0" font-size="22" letter-spacing="3.2" class="cinzel">${paid}   ·   ${issued}</text>
+  <rect x="220" y="1182" width="584" height="112" fill="url(#veil-v-${escapeXml(digest.slice(0, 8))})"/>
+  <text x="${W / 2}" y="1214" text-anchor="middle" fill="#c4a35a" font-size="13" letter-spacing="6" class="cinzel">UNIQUE CODE</text>
+  <text x="${W / 2}" y="1244" text-anchor="middle" fill="#e4d4a8" font-size="18" font-family="Courier New,monospace">${serial}</text>
+  <text x="${W / 2}" y="1276" text-anchor="middle" fill="#c9b07a" font-size="14" letter-spacing="2.4" class="cinzel">${escapeXml(edition)}</text>`
+    : "";
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  <defs>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&amp;family=Cinzel+Decorative:wght@700&amp;family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&amp;display=swap");
+      .goth { font-family: UnifrakturCook, "Old English Text MT", "Cinzel Decorative", serif; }
+      .cinzel { font-family: "Cinzel Decorative", Cinzel, "Times New Roman", serif; }
+      .gar { font-family: "Cormorant Garamond", "Times New Roman", serif; }
+    </style>
+  </defs>
+  <title>Maison Æternum · 888 · ${serial}</title>
+  <desc>${serial} · 888 luck charter · Bitcoin NFT · ${digest.slice(0, 16)}</desc>
+  <image href="${plate}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice"/>
+  ${fields}
+</svg>`;
+}
+
 export function certificateSvg(payload, options = {}) {
+  if (payload.kind === "lucky") {
+    return luckyEightCertificateSvg(payload, options);
+  }
   const W = 800;
   const H = 1120;
   const serial = escapeXml(payload.serial || "");
@@ -319,10 +383,6 @@ export function certificateSvg(payload, options = {}) {
   const copy = kindCopy(payload.kind, payload.sinDegree, revealEncounter);
   const chain = nftChainOf(payload.kind, payload.nftChain);
   const traits = certificateTraits(payload);
-  if (payload.kind === "lucky") {
-    traits.motto = "888 · fortuna favet divitibus";
-    traits.palette = PALETTES[2];
-  }
   if (payload.kind === "ethTwo") {
     traits.motto = "duo extrema · ether carissimus";
     traits.palette = PALETTES[1];
