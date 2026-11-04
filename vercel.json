@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/cn", "destination": "/index.html" },
+    { "source": "/cn/:path*", "destination": "/index.html" },
+    { "source": "/hierarchy", "destination": "/index.html" },
+    { "source": "/marketplace", "destination": "/index.html" },
+    { "source": "/marketplace/:path*", "destination": "/index.html" },
+    { "source": "/collection", "destination": "/index.html" },
+    { "source": "/mirror", "destination": "/index.html" }
+  ]
+}

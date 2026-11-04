@@ -1,3 +1,5 @@
+import { HierarchyPage } from "@/components/hierarchy-page";
+import { MarketplacePage } from "@/components/marketplace/marketplace-page";
 import {
   CuratorSection,
   GateRiddle,
@@ -26,6 +28,7 @@ import {
   cleanseSolAmount,
   formatSolLabel,
 } from "@/lib/deal";
+import { useDeskView } from "@/lib/hash";
 import { useI18n } from "@/lib/i18n";
 import { useNftSupply } from "@/lib/nft-supply";
 import { useBtcQuote } from "@/lib/quote-context";
@@ -114,6 +117,8 @@ function LivePrice({
 export default function App() {
   const { copy, locale } = useI18n();
   const { quote, ethQuote, solQuote } = useBtcQuote();
+  const view = useDeskView();
+  const manuscript = view !== "desk";
   const kicker =
     locale === "en"
       ? "text-[11px] tracking-[0.28em] text-primary/80 uppercase"
@@ -154,14 +159,28 @@ export default function App() {
           </nav>
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
-            <DealButtons
-              className="hidden sm:flex"
-              desks="bitcoin"
-            />
+            {manuscript ? null : (
+              <DealButtons
+                className="hidden sm:flex"
+                desks="bitcoin"
+              />
+            )}
           </div>
         </div>
       </header>
 
+      {view === "hierarchy" ? <HierarchyPage /> : null}
+      {view === "marketplace" ? <MarketplacePage /> : null}
+      {view === "mirror" ? (
+        <main className="manuscript flex-1">
+          <div className="mx-auto w-full max-w-5xl px-5 py-10">
+            <MirrorRoom />
+          </div>
+        </main>
+      ) : null}
+
+      {view === "desk" ? (
+      <>
       <div className="overflow-hidden border-b border-primary/10 bg-black/20">
         <div className="ticker-track flex w-max gap-10 py-2 pr-10 text-[11px] tracking-[0.16em] text-primary/80 uppercase">
           {[...copy.ledger, ...copy.ledger].map((row, i) => (
@@ -566,6 +585,8 @@ export default function App() {
           </div>
         </section>
       </main>
+      </>
+      ) : null}
 
       <footer className="border-t border-primary/15">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-5 py-8 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">

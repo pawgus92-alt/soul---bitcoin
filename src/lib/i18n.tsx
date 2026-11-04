@@ -1268,13 +1268,36 @@ function isLocale(value: string | null): value is Locale {
   return value === "en" || value === "ru" || value === "zh";
 }
 
+function pathLocale(): Locale | null {
+  if (typeof window === "undefined") return null;
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  if (path === "/cn" || path.startsWith("/cn/")) return "zh";
+  return null;
+}
+
 function detectLocale(): Locale {
   if (typeof window === "undefined") return "en";
+  const fromPath = pathLocale();
+  if (fromPath) return fromPath;
   const saved = window.localStorage.getItem(STORAGE_KEY);
   if (isLocale(saved)) return saved;
   const language = window.navigator.language.toLowerCase();
   if (language.startsWith("zh")) return "zh";
   return language.startsWith("ru") ? "ru" : "en";
+}
+
+function syncLocalePath(locale: Locale) {
+  if (typeof window === "undefined") return;
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  const hash = window.location.hash;
+  const search = window.location.search;
+  if (locale === "zh" && path !== "/cn") {
+    window.history.replaceState(window.history.state, "", `/cn${search}${hash}`);
+    return;
+  }
+  if (locale !== "zh" && (path === "/cn" || path.startsWith("/cn/"))) {
+    window.history.replaceState(window.history.state, "", `/${search}${hash}`.replace(/\/{2,}/, "/"));
+  }
 }
 
 type LocaleState = {
@@ -1300,6 +1323,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);
     window.localStorage.setItem(STORAGE_KEY, next);
+    syncLocalePath(next);
   }, []);
 
   const value = useMemo(

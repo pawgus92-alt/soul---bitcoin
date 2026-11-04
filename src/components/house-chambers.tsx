@@ -55,13 +55,19 @@ export function HouseNav() {
       <a href="#manifest" className="hover:text-primary">
         {house.navManifest}
       </a>
+      <a href="#hierarchy" className="hover:text-primary">
+        {house.navHierarchy}
+      </a>
+      <a href="#marketplace" className="hover:text-primary">
+        {house.navMarket}
+      </a>
       <a href="#curator" className="hover:text-primary">
         {house.navCurator}
       </a>
       <a href="#wall" className="hover:text-primary">
         {house.navWall}
       </a>
-      <a href="#mirrors" className="hover:text-primary">
+      <a href="#mirror" className="hover:text-primary">
         {house.navMirrors}
       </a>
       <a href="#gates" className="hover:text-primary">

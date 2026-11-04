@@ -2,6 +2,8 @@ import { useI18n, type Locale } from "@/lib/i18n";
 
 export type HouseCopy = {
   navManifest: string;
+  navHierarchy: string;
+  navMarket: string;
   navCurator: string;
   navWall: string;
   navMirrors: string;
@@ -57,6 +59,8 @@ export type HouseCopy = {
 
 const en: HouseCopy = {
   navManifest: "Manifest",
+  navHierarchy: "Hierarchy",
+  navMarket: "Vitrine",
   navCurator: "Diary",
   navWall: "Wall",
   navMirrors: "Mirrors",
@@ -159,6 +163,8 @@ const en: HouseCopy = {
 
 const ru: HouseCopy = {
   navManifest: "Манифест",
+  navHierarchy: "Иерархия",
+  navMarket: "Витрина",
   navCurator: "Дневник",
   navWall: "Стена",
   navMirrors: "Зеркала",
@@ -261,6 +267,8 @@ const ru: HouseCopy = {
 
 const zh: HouseCopy = {
   navManifest: "宣言",
+  navHierarchy: "层级",
+  navMarket: "橱窗",
   navCurator: "日记",
   navWall: "墙",
   navMirrors: "镜室",

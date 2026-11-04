@@ -162,6 +162,96 @@
   font-family: var(--font-display);
 }
 
+.manuscript {
+  --ms-bg: #0a0806;
+  --ms-parchment: #d9c9a3;
+  --ms-brass: #8a6a2f;
+  --ms-gold: #6b5420;
+  background: var(--ms-bg);
+  color: var(--ms-parchment);
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+}
+
+.manuscript .ms-latin {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+
+.manuscript .ms-kicker {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ms-brass);
+}
+
+.manuscript .ms-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ms-gold),
+    var(--ms-brass),
+    var(--ms-gold),
+    transparent
+  );
+}
+
+.ms-node {
+  display: block;
+  border: 1px solid color-mix(in srgb, var(--ms-brass) 55%, transparent);
+  background: color-mix(in srgb, #120e0a 88%, var(--ms-gold));
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.ms-node:hover {
+  border-color: var(--ms-brass);
+  background: color-mix(in srgb, #18120c 80%, var(--ms-gold));
+}
+
+.ms-stem {
+  width: 1px;
+  height: 1.25rem;
+  margin-inline: auto;
+  background: var(--ms-gold);
+  opacity: 0.7;
+}
+
+.ms-seal {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--ms-brass);
+  box-shadow:
+    inset 0 0 0 6px #0a0806,
+    inset 0 0 0 7px var(--ms-gold),
+    inset 0 0 0 12px #0a0806,
+    inset 0 0 0 13px color-mix(in srgb, var(--ms-brass) 70%, #3a2a10);
+  background:
+    radial-gradient(circle at 40% 35%, color-mix(in srgb, var(--ms-brass) 35%, transparent), transparent 55%),
+    #1a120c;
+}
+
+@keyframes ms-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.ms-reveal {
+  animation: ms-reveal 700ms ease both;
+}
+
+html[lang^="zh"] .manuscript {
+  font-family: "Noto Serif SC", "Cormorant Garamond", serif;
+}
+
 @media print {
   body * {
     visibility: hidden !important;
