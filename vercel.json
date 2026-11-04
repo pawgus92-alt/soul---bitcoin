@@ -1,5 +1,10 @@
 {
   "rewrites": [
+    { "source": "/api/listings", "destination": "/api/market?op=listings" },
+    { "source": "/api/compliance/screen-address", "destination": "/api/market?op=screen" },
+    { "source": "/api/verify-eth", "destination": "/api/market?op=verify-eth" },
+    { "source": "/api/verify-sol", "destination": "/api/market?op=verify-sol" },
+    { "source": "/api/verify-btc", "destination": "/api/market?op=verify-btc" },
     { "source": "/cn", "destination": "/index.html" },
     { "source": "/cn/:path*", "destination": "/index.html" },
     { "source": "/hierarchy", "destination": "/index.html" },

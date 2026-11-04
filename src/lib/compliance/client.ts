@@ -3,7 +3,7 @@ import { ComplianceCheckFailedError, HighRiskAddressError, SanctionedAddressErro
 import type { ScreenRequest, ScreenResult } from "@/types/compliance";
 
 export async function requestScreen(input: ScreenRequest): Promise<ScreenResult> {
-  const response = await fetch("/api/compliance/screen-address", {
+  const response = await fetch("/api/market?op=screen", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(input),

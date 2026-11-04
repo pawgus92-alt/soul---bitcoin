@@ -4,14 +4,10 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-import screenAddress from "./api/compliance/screen-address.js";
 import inscribe from "./api/inscribe.js";
-import listings from "./api/listings.js";
+import market from "./api/market.js";
 import nftMint from "./api/nft-mint.js";
 import payWatch from "./api/pay-watch.js";
-import verifyBtc from "./api/verify-btc.js";
-import verifyEth from "./api/verify-eth.js";
-import verifySol from "./api/verify-sol.js";
 
 function readJsonBody(request: IncomingMessage) {
   return new Promise<void>((resolve, reject) => {
@@ -50,16 +46,13 @@ export default defineConfig({
                 ? payWatch
                 : pathName === "/api/nft-mint"
                   ? nftMint
-                : pathName === "/api/compliance/screen-address"
-                  ? screenAddress
-                : pathName === "/api/listings"
-                  ? listings
-                : pathName === "/api/verify-eth"
-                  ? verifyEth
-                : pathName === "/api/verify-sol"
-                  ? verifySol
-                : pathName === "/api/verify-btc"
-                  ? verifyBtc
+                : pathName === "/api/market" ||
+                    pathName === "/api/listings" ||
+                    pathName === "/api/compliance/screen-address" ||
+                    pathName === "/api/verify-eth" ||
+                    pathName === "/api/verify-sol" ||
+                    pathName === "/api/verify-btc"
+                  ? market
                   : null;
           if (!route) {
             next();
